@@ -24,7 +24,8 @@
     "eslint": "eslint --ext .js,.jsx,.ts,.tsx src/",
     "eslint:fix": "eslint --ext .js,.jsx,.ts,.tsx src/ --fix",
     "prettier": "prettier --check public/index.html \"src/*.{ts,js,tsx}\"",
-    "prettier:fix": "prettier --write public/index.html \"src/*.{ts,js,tsx}\""
+    "prettier:fix": "prettier --write public/index.html \"src/*.{ts,js,tsx}\"",
+    "prettier:quick": "pretty-quick --pattern public/index.html --pattern \"src/*.{ts,js,tsx}\""
   },
   "eslintConfig": {
     "extends": [
@@ -43,5 +44,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1"
   }
 }
