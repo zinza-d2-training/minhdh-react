@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "streetsidesoftware.code-spell-checker",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "wix.vscode-import-cost",
+    "steoates.autoimport"
+  ],
+  "unwantedRecommendations": []
+}
