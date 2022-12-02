@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './register.css';
 import img1 from '../../images/image1.png';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
