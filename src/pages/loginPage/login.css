@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -87,8 +89,7 @@ form {
   padding: 0px;
   gap: 16px;
   width: 376px;
-  height: 220px;
-  margin-top: 66px;
+  height: 290px;
 }
 
 .boxInpEmail {
@@ -203,6 +204,7 @@ form {
 }
 
 .links {
+  border: none;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -235,6 +237,24 @@ form {
   outline: none;
   border: none;
   cursor: pointer;
+}
+
+.btnLoginDisable {
+  width: 376px;
+  height: 50px;
+  background: #ccc;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+
+.btnLoginDisable span {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: #ffffff;
 }
 
 .btnLogin span {
