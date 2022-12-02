@@ -2,9 +2,9 @@ import img1 from '../../images/image1.png';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import { Typography, Box, TextField } from '@mui/material';
+import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 type Inputs = {
   email: string;
@@ -108,8 +108,9 @@ const BoxPassword = styled.div`
   background: #ffffff;
 `;
 
-const Links = styled.button`
+const Links = styled(Button)`
   border: none;
+  text-decoration: none;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -118,8 +119,8 @@ const Links = styled.button`
   width: 376px;
   height: 20px;
   background: #ffffff;
-  & > span {
-    width: 101px;
+  & > a {
+    width: 180px;
     height: 20px;
     font-family: 'Roboto';
     font-style: normal;
@@ -130,10 +131,11 @@ const Links = styled.button`
     letter-spacing: -0.04px;
     color: #3949ab;
     cursor: pointer;
+    text-decoration: none;
   }
 `;
 
-const ButtonLogin = styled.button`
+const ButtonLogin = styled(Button)`
   width: 376px;
   height: 50px;
   background: #66bb6a;
@@ -151,32 +153,16 @@ const ButtonLogin = styled.button`
   }
 `;
 
-const ButtonLoginDisabled = styled.button`
-  width: 376px;
-  height: 50px;
-  background: #ccc;
-  border-radius: 5px;
-  outline: none;
-  border: none;
-  & > span {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 19px;
-    color: #ffffff;
-  }
-`;
-
-const ButtonSignUp = styled.button`
+const ButtonSignUp = styled(Button)`
   width: 376px;
   height: 50px;
   background: #ffffff;
   border: 1px solid #9ccc65;
   cursor: pointer;
   border-radius: 5px;
-  & > span {
+  & > a {
     width: 376px;
+    text-decoration: none;
     height: 24px;
     font-family: 'Roboto';
     font-style: normal;
@@ -201,8 +187,6 @@ const Label = styled.label`
 `;
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const formSchema = Yup.object().shape({
     email: Yup.string()
       .required('Email không được bỏ trống')
@@ -221,20 +205,10 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = () => {
-    navigate('/user');
-  };
-
-  const forgotPasswordPage = () => {
-    navigate('/forgot-password');
-  };
-
-  const registerPage = () => {
-    navigate('/register');
-  };
+  const onSubmit = () => {};
 
   return (
     <LoginPage>
@@ -292,18 +266,12 @@ const Login = () => {
                   required
                 />
               </BoxPassword>
-              <Links onClick={forgotPasswordPage}>
-                <span>Quên mật khẩu?</span>
+              <Links>
+                <Link to="/forgot-password">Quên mật khẩu ?</Link>
               </Links>
-              {errors.password?.message || errors.email?.message ? (
-                <ButtonLoginDisabled type="submit" disabled={true}>
-                  <span>Đăng nhập</span>
-                </ButtonLoginDisabled>
-              ) : (
-                <ButtonLogin type="submit">
-                  <span>Đăng nhập</span>
-                </ButtonLogin>
-              )}
+              <ButtonLogin type="submit" disabled={!isValid}>
+                <span>Đăng nhập</span>
+              </ButtonLogin>
             </Form>
             <Typography
               sx={{
@@ -312,8 +280,8 @@ const Login = () => {
               }}>
               Hoặc đăng ký tài khoản, nếu bạn chưa đăng ký!
             </Typography>
-            <ButtonSignUp onClick={registerPage}>
-              <span>Đăng ký</span>
+            <ButtonSignUp>
+              <Link to="/register">Đăng ký</Link>
             </ButtonSignUp>
           </ContainerRight>
         </SideRight>
