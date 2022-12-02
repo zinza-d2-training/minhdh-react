@@ -224,8 +224,7 @@ const Login = () => {
     formState: { errors }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = (data: Inputs) => {
-    localStorage.setItem('user', JSON.stringify(data));
+  const onSubmit = () => {
     navigate('/user');
   };
 
