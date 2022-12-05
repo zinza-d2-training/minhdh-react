@@ -15,18 +15,7 @@ import DatePicker from 'react-datepicker';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import 'react-datepicker/dist/react-datepicker.css';
 import InputLabel from '@mui/material/InputLabel';
-
-type Inputs = {
-  cmnd: number;
-  email: string;
-  password: string;
-  name: string;
-  birthday: Date;
-  gender: string;
-  city: string;
-  district: string;
-  guild: string;
-};
+import { useEffect, useState } from 'react';
 
 const LoginPage = styled.div`
   display: flex;
@@ -184,11 +173,78 @@ const Label = styled.label`
   }
 `;
 
-const cities = ['Hà Nội', 'Đà Nẵng', 'TP Hồ Chí Minh'];
+type Inputs = {
+  cmnd: number;
+  email: string;
+  password: string;
+  name: string;
+  birthday: Date;
+  gender: string;
+  provinceId: number;
+  districtId: number;
+  wardId: number;
+};
 
-const districts = ['Cầu Giấy', 'Bắc Từ Liêm', 'Ba Đình'];
+interface Province {
+  id: number;
+  name: string;
+}
 
-const guilds = ['Yên Hòa', 'Dịch Vọng', 'Cổ Nhuế 1'];
+interface District {
+  id: number;
+  name: string;
+  provinceId: number;
+}
+
+interface Ward {
+  id: number;
+  name: string;
+  provinceId: number;
+  districtId: number;
+}
+
+const provinces: Province[] = [
+  { id: 1, name: 'Hà Nội' },
+  { id: 2, name: 'TP Hồ Chí Minh' }
+];
+
+const districts: District[] = [
+  { id: 1, name: 'Quận 1 Hà Nội', provinceId: 1 },
+  { id: 2, name: 'Quận 2 Hà Nội', provinceId: 1 },
+  { id: 3, name: 'Quận 1 TP Hồ Chí Minh', provinceId: 2 },
+  { id: 4, name: 'Quận 2 TP Hồ Chí Minh', provinceId: 2 }
+];
+
+const wards: Ward[] = [
+  { id: 1, name: 'Phường 1 Quận 1 Hà Nội', provinceId: 1, districtId: 1 },
+  { id: 2, name: 'Phường 2 Quận 1 Hà Nội', provinceId: 1, districtId: 1 },
+  { id: 3, name: 'Phường 1 Quận 2 Hà Nội', provinceId: 1, districtId: 2 },
+  { id: 4, name: 'Phường 2 Quận 2 Hà Nội', provinceId: 1, districtId: 2 },
+  {
+    id: 5,
+    name: 'Phường 1 Quận 1 TP Hồ Chí Minh',
+    provinceId: 2,
+    districtId: 1
+  },
+  {
+    id: 6,
+    name: 'Phường 1 Quận 2 TP Hồ Chí Minh',
+    provinceId: 2,
+    districtId: 1
+  },
+  {
+    id: 7,
+    name: 'Phường 2 Quận 1 TP Hồ Chí Minh',
+    provinceId: 2,
+    districtId: 2
+  },
+  {
+    id: 8,
+    name: 'Phường 2 Quận 2 TP Hồ Chí Minh',
+    provinceId: 2,
+    districtId: 2
+  }
+];
 
 const Register = () => {
   const formSchema = Yup.object().shape({
@@ -206,9 +262,9 @@ const Register = () => {
     name: Yup.string().required('Họ và tên không được bỏ trống'),
     birthday: Yup.date().required('Ngày sinh không được bỏ trống'),
     gender: Yup.string().required('Giới tính không được bỏ trống'),
-    city: Yup.string().required('Tỉnh/Thành phố không được bỏ trống'),
-    district: Yup.string().required('Quận/Huyện không được bỏ trống'),
-    guild: Yup.string().required('Phường/Xã không được bỏ trống')
+    provinceId: Yup.number().required('Tỉnh/Thành phố không được bỏ trống'),
+    districtId: Yup.number().required('Quận/Huyện không được bỏ trống'),
+    wardId: Yup.number().required('Phường/Xã không được bỏ trống')
   });
 
   const validationOpt = {
@@ -222,7 +278,33 @@ const Register = () => {
     formState: { errors }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = () => {};
+  const onSubmit = (data: any) => {
+    console.log(data);
+    console.log(province);
+  };
+
+  const [province, setProvince] = useState('');
+  const [district, setDistrict] = useState('');
+
+  const [filterDistrict, setFilterDistrict] = useState<Array<District>>([]);
+
+  const [filterWard, setFilterWard] = useState<Array<Ward>>([]);
+
+  useEffect(() => {
+    const districtElement = districts.filter(
+      (district) => district.provinceId === Number(province)
+    );
+    setFilterDistrict(districtElement);
+  }, [province]);
+
+  useEffect(() => {
+    const wardElement = wards.filter(
+      (ward) =>
+        ward.provinceId === Number(province) &&
+        ward.districtId === Number(district)
+    );
+    setFilterWard(wardElement);
+  }, [province, district]);
 
   return (
     <LoginPage>
@@ -350,7 +432,7 @@ const Register = () => {
                   Tỉnh/Thành phố <span> (*)</span>
                 </Label>
                 <Controller
-                  {...register('city')}
+                  {...register('provinceId')}
                   control={control}
                   render={({ field }) => (
                     <FormControl fullWidth>
@@ -358,17 +440,20 @@ const Register = () => {
                       <Select
                         id="city"
                         {...field}
+                        value={province}
                         onChange={(event) => {
+                          setProvince(event.target.value);
                           field.onChange(event.target.value);
                         }}>
-                        {cities.map((city, index) => (
-                          <MenuItem key={index} value={city}>
-                            {city}
+                        {provinces.map((province, index) => (
+                          <MenuItem key={index} value={province.id}>
+                            {province.name}
                           </MenuItem>
                         ))}
                       </Select>
                       <p className="helpText">
-                        {errors.city?.message && errors.city.message}
+                        {errors.provinceId?.message &&
+                          errors.provinceId.message}
                       </p>
                     </FormControl>
                   )}
@@ -379,7 +464,7 @@ const Register = () => {
                   Quận/Huyện <span> (*)</span>
                 </Label>
                 <Controller
-                  {...register('district')}
+                  {...register('districtId')}
                   control={control}
                   render={({ field }) => (
                     <FormControl fullWidth>
@@ -387,17 +472,20 @@ const Register = () => {
                       <Select
                         id="district"
                         {...field}
+                        value={district}
                         onChange={(event) => {
+                          setDistrict(event.target.value);
                           field.onChange(event.target.value);
                         }}>
-                        {districts.map((district, index) => (
-                          <MenuItem key={index} value={district}>
-                            {district}
+                        {filterDistrict.map((district, index) => (
+                          <MenuItem key={index} value={district.id}>
+                            {district.name}
                           </MenuItem>
                         ))}
                       </Select>
                       <p className="helpText">
-                        {errors.district?.message && errors.district.message}
+                        {errors.districtId?.message &&
+                          errors.districtId.message}
                       </p>
                     </FormControl>
                   )}
@@ -408,25 +496,25 @@ const Register = () => {
                   Xã/Phường <span> (*)</span>
                 </Label>
                 <Controller
-                  {...register('guild')}
+                  {...register('wardId')}
                   control={control}
                   render={({ field }) => (
                     <FormControl fullWidth>
                       <InputLabel>Xã/Phường</InputLabel>
                       <Select
-                        id="guild"
+                        id="ward"
                         {...field}
                         onChange={(event) => {
                           field.onChange(event.target.value);
                         }}>
-                        {guilds.map((guild, index) => (
-                          <MenuItem key={index} value={guild}>
-                            {guild}
+                        {filterWard.map((ward, index) => (
+                          <MenuItem key={index} value={ward.id}>
+                            {ward.name}
                           </MenuItem>
                         ))}
                       </Select>
                       <p className="helpText">
-                        {errors.guild?.message && errors.guild.message}
+                        {errors.wardId?.message && errors.wardId.message}
                       </p>
                     </FormControl>
                   )}
