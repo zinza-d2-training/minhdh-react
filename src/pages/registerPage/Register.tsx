@@ -11,11 +11,14 @@ import {
   FormControl
 } from '@mui/material';
 import styled from '@emotion/styled';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import 'react-datepicker/dist/react-datepicker.css';
 import InputLabel from '@mui/material/InputLabel';
 import { useEffect, useState } from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const LoginPage = styled.div`
   display: flex;
@@ -224,25 +227,25 @@ const wards: Ward[] = [
     id: 5,
     name: 'Phường 1 Quận 1 TP Hồ Chí Minh',
     provinceId: 2,
-    districtId: 1
+    districtId: 3
   },
   {
     id: 6,
     name: 'Phường 1 Quận 2 TP Hồ Chí Minh',
     provinceId: 2,
-    districtId: 1
+    districtId: 4
   },
   {
     id: 7,
     name: 'Phường 2 Quận 1 TP Hồ Chí Minh',
     provinceId: 2,
-    districtId: 2
+    districtId: 3
   },
   {
     id: 8,
     name: 'Phường 2 Quận 2 TP Hồ Chí Minh',
     provinceId: 2,
-    districtId: 2
+    districtId: 4
   }
 ];
 
@@ -278,10 +281,7 @@ const Register = () => {
     formState: { errors }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    console.log(province);
-  };
+  const onSubmit = () => {};
 
   const [province, setProvince] = useState('');
   const [district, setDistrict] = useState('');
@@ -303,6 +303,7 @@ const Register = () => {
         ward.provinceId === Number(province) &&
         ward.districtId === Number(district)
     );
+    console.log(wardElement);
     setFilterWard(wardElement);
   }, [province, district]);
 
@@ -395,19 +396,17 @@ const Register = () => {
                   {...register('birthday')}
                   name="birthday"
                   render={({ field: { value, ...fieldProps } }) => (
-                    <DateBirthday>
-                      <DatePicker
-                        {...fieldProps}
-                        selected={value}
-                        className="inputBirthday"
-                        placeholderText="Ngày/Tháng/Năm"
-                        dateFormat="dd/MM/yyyy"
-                      />
-                      <p className="helpText">
-                        {errors.birthday?.message &&
-                          'Ngày sinh không được bỏ trống'}
-                      </p>
-                    </DateBirthday>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DateBirthday>
+                        <DatePicker
+                          {...fieldProps}
+                          label="Ngày sinh"
+                          value={value}
+                          className="inputBirthday"
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </DateBirthday>
+                    </LocalizationProvider>
                   )}
                 />
               </InputComponent>
@@ -428,7 +427,7 @@ const Register = () => {
                 />
               </InputComponent>
               <InputComponent>
-                <Label htmlFor="city">
+                <Label htmlFor="province">
                   Tỉnh/Thành phố <span> (*)</span>
                 </Label>
                 <Controller
@@ -438,7 +437,7 @@ const Register = () => {
                     <FormControl fullWidth>
                       <InputLabel>Tỉnh/Thành phố</InputLabel>
                       <Select
-                        id="city"
+                        id="province"
                         {...field}
                         value={province}
                         onChange={(event) => {
@@ -492,7 +491,7 @@ const Register = () => {
                 />
               </InputComponent>
               <InputComponent>
-                <Label htmlFor="guild">
+                <Label htmlFor="ward">
                   Xã/Phường <span> (*)</span>
                 </Label>
                 <Controller
