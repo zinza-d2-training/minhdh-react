@@ -12,9 +12,8 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import 'react-datepicker/dist/react-datepicker.css';
 import InputLabel from '@mui/material/InputLabel';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -201,7 +200,6 @@ interface District {
 interface Ward {
   id: number;
   name: string;
-  provinceId: number;
   districtId: number;
 }
 
@@ -218,32 +216,28 @@ const districts: District[] = [
 ];
 
 const wards: Ward[] = [
-  { id: 1, name: 'Phường 1 Quận 1 Hà Nội', provinceId: 1, districtId: 1 },
-  { id: 2, name: 'Phường 2 Quận 1 Hà Nội', provinceId: 1, districtId: 1 },
-  { id: 3, name: 'Phường 1 Quận 2 Hà Nội', provinceId: 1, districtId: 2 },
-  { id: 4, name: 'Phường 2 Quận 2 Hà Nội', provinceId: 1, districtId: 2 },
+  { id: 1, name: 'Phường 1 Quận 1 Hà Nội', districtId: 1 },
+  { id: 2, name: 'Phường 2 Quận 1 Hà Nội', districtId: 1 },
+  { id: 3, name: 'Phường 1 Quận 2 Hà Nội', districtId: 2 },
+  { id: 4, name: 'Phường 2 Quận 2 Hà Nội', districtId: 2 },
   {
     id: 5,
     name: 'Phường 1 Quận 1 TP Hồ Chí Minh',
-    provinceId: 2,
     districtId: 3
   },
   {
     id: 6,
     name: 'Phường 1 Quận 2 TP Hồ Chí Minh',
-    provinceId: 2,
     districtId: 4
   },
   {
     id: 7,
     name: 'Phường 2 Quận 1 TP Hồ Chí Minh',
-    provinceId: 2,
     districtId: 3
   },
   {
     id: 8,
     name: 'Phường 2 Quận 2 TP Hồ Chí Minh',
-    provinceId: 2,
     districtId: 4
   }
 ];
@@ -276,35 +270,23 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    watch,
     control,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
   const onSubmit = () => {};
 
-  const [province, setProvince] = useState('');
-  const [district, setDistrict] = useState('');
+  const provinceId = watch('provinceId');
+  const districtId = watch('districtId');
 
-  const [filterDistrict, setFilterDistrict] = useState<Array<District>>([]);
+  const filterDistricts: District[] = useMemo(() => {
+    return districts.filter((district) => district.provinceId === provinceId);
+  }, [provinceId]);
 
-  const [filterWard, setFilterWard] = useState<Array<Ward>>([]);
-
-  useEffect(() => {
-    const districtElement = districts.filter(
-      (district) => district.provinceId === Number(province)
-    );
-    setFilterDistrict(districtElement);
-  }, [province]);
-
-  useEffect(() => {
-    const wardElement = wards.filter(
-      (ward) =>
-        ward.provinceId === Number(province) &&
-        ward.districtId === Number(district)
-    );
-    console.log(wardElement);
-    setFilterWard(wardElement);
-  }, [province, district]);
+  const filterWards: Ward[] = useMemo(() => {
+    return wards.filter((ward) => ward.districtId === districtId);
+  }, [districtId]);
 
   return (
     <LoginPage>
@@ -432,15 +414,13 @@ const Register = () => {
                 <Controller
                   {...register('provinceId')}
                   control={control}
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormControl fullWidth>
                       <InputLabel>Tỉnh/Thành phố</InputLabel>
                       <Select
                         id="province"
                         {...field}
-                        value={province}
                         onChange={(event) => {
-                          setProvince(event.target.value);
                           field.onChange(event.target.value);
                         }}>
                         {provinces.map((province, index) => (
@@ -450,8 +430,7 @@ const Register = () => {
                         ))}
                       </Select>
                       <p className="helpText">
-                        {errors.provinceId?.message &&
-                          errors.provinceId.message}
+                        {fieldState.error?.message && fieldState.error.message}
                       </p>
                     </FormControl>
                   )}
@@ -464,26 +443,23 @@ const Register = () => {
                 <Controller
                   {...register('districtId')}
                   control={control}
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormControl fullWidth>
                       <InputLabel>Quận/Huyện</InputLabel>
                       <Select
                         id="district"
                         {...field}
-                        value={district}
                         onChange={(event) => {
-                          setDistrict(event.target.value);
                           field.onChange(event.target.value);
                         }}>
-                        {filterDistrict.map((district, index) => (
+                        {filterDistricts.map((district, index) => (
                           <MenuItem key={index} value={district.id}>
                             {district.name}
                           </MenuItem>
                         ))}
                       </Select>
                       <p className="helpText">
-                        {errors.districtId?.message &&
-                          errors.districtId.message}
+                        {fieldState.error?.message && fieldState.error.message}
                       </p>
                     </FormControl>
                   )}
@@ -496,7 +472,7 @@ const Register = () => {
                 <Controller
                   {...register('wardId')}
                   control={control}
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormControl fullWidth>
                       <InputLabel>Xã/Phường</InputLabel>
                       <Select
@@ -505,21 +481,24 @@ const Register = () => {
                         onChange={(event) => {
                           field.onChange(event.target.value);
                         }}>
-                        {filterWard.map((ward, index) => (
+                        {filterWards.map((ward, index) => (
                           <MenuItem key={index} value={ward.id}>
                             {ward.name}
                           </MenuItem>
                         ))}
                       </Select>
                       <p className="helpText">
-                        {errors.wardId?.message && errors.wardId.message}
+                        {fieldState.error?.message && fieldState.error.message}
                       </p>
                     </FormControl>
                   )}
                 />
               </InputComponent>
               <DialogActions>
-                <ButtonContinue type="submit" endIcon={<ArrowForwardIcon />}>
+                <ButtonContinue
+                  type="submit"
+                  disabled={!isValid}
+                  endIcon={<ArrowForwardIcon />}>
                   Tiếp tục
                 </ButtonContinue>
               </DialogActions>
