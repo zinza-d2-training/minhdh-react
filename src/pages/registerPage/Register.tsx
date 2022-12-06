@@ -423,15 +423,13 @@ const Register = () => {
                         onChange={(event) => {
                           field.onChange(event.target.value);
                         }}>
-                        {provinces.map((province, index) => (
-                          <MenuItem key={index} value={province.id}>
+                        {provinces.map((province) => (
+                          <MenuItem key={province.id} value={province.id}>
                             {province.name}
                           </MenuItem>
                         ))}
                       </Select>
-                      <p className="helpText">
-                        {fieldState.error?.message && fieldState.error.message}
-                      </p>
+                      <p className="helpText">{fieldState.error?.message}</p>
                     </FormControl>
                   )}
                 />
@@ -452,15 +450,13 @@ const Register = () => {
                         onChange={(event) => {
                           field.onChange(event.target.value);
                         }}>
-                        {filterDistricts.map((district, index) => (
-                          <MenuItem key={index} value={district.id}>
+                        {filterDistricts.map((district) => (
+                          <MenuItem key={district.id} value={district.id}>
                             {district.name}
                           </MenuItem>
                         ))}
                       </Select>
-                      <p className="helpText">
-                        {fieldState.error?.message && fieldState.error.message}
-                      </p>
+                      <p className="helpText">{fieldState.error?.message}</p>
                     </FormControl>
                   )}
                 />
@@ -481,15 +477,13 @@ const Register = () => {
                         onChange={(event) => {
                           field.onChange(event.target.value);
                         }}>
-                        {filterWards.map((ward, index) => (
-                          <MenuItem key={index} value={ward.id}>
+                        {filterWards.map((ward) => (
+                          <MenuItem key={ward.id} value={ward.id}>
                             {ward.name}
                           </MenuItem>
                         ))}
                       </Select>
-                      <p className="helpText">
-                        {fieldState.error?.message && fieldState.error.message}
-                      </p>
+                      <p className="helpText">{fieldState.error?.message}</p>
                     </FormControl>
                   )}
                 />
