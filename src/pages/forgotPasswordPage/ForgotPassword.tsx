@@ -224,10 +224,10 @@ const ForgotPassword = () => {
               </BoxEmail>
               <DialogActions>
                 <ButtonBack>
-                  <Link to="/">Quay lại</Link>
+                  <Link to="/login">Quay lại</Link>
                 </ButtonBack>
                 <ButtonSend type="submit" disabled={!isValid}>
-                  <Link to="/">Gửi</Link>
+                  <Link to="/login">Gửi</Link>
                 </ButtonSend>
               </DialogActions>
             </Form>

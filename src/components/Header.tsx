@@ -2,6 +2,7 @@ import { Typography, Button } from '@mui/material';
 import styled from '@emotion/styled';
 import logo from '../../../images/Logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Link } from 'react-router-dom';
 
 const Header = styled.div`
   display: flex;
@@ -73,7 +74,7 @@ const ItemInject = styled.div`
   height: 50px;
 `;
 
-const ItemResearch = styled.div`
+const ItemResearch = styled(Button)`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -114,7 +115,8 @@ const ButtonLogin = styled(Button)`
   height: 40px;
   background: #ffffff;
   border-radius: 8px 8px 8px 0px;
-  & > span {
+  & > a {
+    text-decoration: none;
     width: 91px;
     height: 24px;
     font-family: 'Roboto';
@@ -189,12 +191,11 @@ const HeaderHomePage = () => {
               variant="body1"
               sx={{
                 width: '71px',
-                height: '24px',
+                height: '20px',
                 fontFamily: 'Roboto',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '16px',
-                lineHeight: '150%',
+                fontSize: '12px',
                 letterSpacing: '-0.04px',
                 color: '#FFFFFF'
               }}>
@@ -221,7 +222,7 @@ const HeaderHomePage = () => {
           </ItemDocs>
           <ItemLogin>
             <ButtonLogin>
-              <span>Đăng nhập</span>
+              <Link to="/login">Đăng nhập</Link>
             </ButtonLogin>
           </ItemLogin>
         </Menu>

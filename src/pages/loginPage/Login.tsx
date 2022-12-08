@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { loginAsync, selectError } from '../../features/user/userSlice';
 
 type Inputs = {
   email: string;
@@ -208,7 +210,12 @@ const Login = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = () => {};
+  const dispatch = useAppDispatch();
+  const loginFailed = useAppSelector(selectError);
+
+  const onSubmit = (data: Inputs) => {
+    dispatch(loginAsync(data));
+  };
 
   return (
     <LoginPage>
@@ -269,6 +276,11 @@ const Login = () => {
               <Links>
                 <Link to="/forgot-password">Quên mật khẩu ?</Link>
               </Links>
+              {loginFailed && (
+                <Typography sx={{ color: 'red', padding: '5px 0' }}>
+                  Tài khoản hoặc mật khẩu không chính xác
+                </Typography>
+              )}
               <ButtonLogin type="submit" disabled={!isValid}>
                 <span>Đăng nhập</span>
               </ButtonLogin>

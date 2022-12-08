@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import Header from './component_homePage/HeaderHomePage';
+import Header from '../../components/Header';
 import BoxResearch from './component_homePage/BoxResearch';
 import AggregateParameter from './component_homePage/AggregateParameters';
 import ChartOne from './component_homePage/Chart1';
