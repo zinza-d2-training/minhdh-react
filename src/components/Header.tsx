@@ -1,6 +1,6 @@
 import { Typography, Button } from '@mui/material';
 import styled from '@emotion/styled';
-import logo from '../../../images/Logo.png';
+import logo from '../images/Logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link } from 'react-router-dom';
 
