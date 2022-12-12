@@ -17,7 +17,7 @@ const Footer = styled.div`
   background: #2d2188;
 `;
 
-const Frame18 = styled.div`
+const ContainerLeft = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -33,7 +33,7 @@ const Frame18 = styled.div`
   }
 `;
 
-const Frame19 = styled.div`
+const ContainerRight = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -147,7 +147,7 @@ const Cert = styled.img`
 const FooterHomePage = () => {
   return (
     <Footer>
-      <Frame18>
+      <ContainerLeft>
         <Typography
           variant="body2"
           sx={{
@@ -185,8 +185,8 @@ const FooterHomePage = () => {
         <ContainerLogos>
           <Logo2in1 src={logo2in1} alt="" />
         </ContainerLogos>
-      </Frame18>
-      <Frame19>
+      </ContainerLeft>
+      <ContainerRight>
         <Typography
           variant="body2"
           sx={{
@@ -213,7 +213,7 @@ const FooterHomePage = () => {
           </ButtonGGPlay>
         </ContainerButtonApp>
         <Cert src={handle_cert1} alt="" />
-      </Frame19>
+      </ContainerRight>
     </Footer>
   );
 };

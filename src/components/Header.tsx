@@ -102,6 +102,9 @@ const ItemLogin = styled.div`
   padding: 0px;
   width: 135px;
   height: 50px;
+  & > a {
+    text-decoration: none;
+  }
 `;
 
 const ButtonLogin = styled(Button)`
@@ -221,9 +224,9 @@ const HeaderHomePage = () => {
             </Typography>
           </ItemDocs>
           <ItemLogin>
-            <ButtonLogin>
-              <Link to="/login">Đăng nhập</Link>
-            </ButtonLogin>
+            <Link to="/login">
+              <ButtonLogin>Đăng nhập</ButtonLogin>
+            </Link>
           </ItemLogin>
         </Menu>
       </ContainerHeader>

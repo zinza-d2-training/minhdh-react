@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import EastIcon from '@mui/icons-material/East';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
-const Ul = styled.div`
+const Research = styled.div`
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@ const Ul = styled.div`
   border-radius: 12px;
 `;
 
-const Li = styled.div`
+const ResearchItem = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,7 +30,7 @@ const Li = styled.div`
   height: 74px;
 `;
 
-const Frame53 = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -41,7 +41,7 @@ const Frame53 = styled.div`
   height: 74px;
 `;
 
-const Frame57 = styled.div`
+const ContainerInfo = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -51,17 +51,7 @@ const Frame57 = styled.div`
   height: 42px;
 `;
 
-const Frame58 = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0px;
-  gap: 16px;
-  width: 231px;
-  height: 42px;
-`;
-
-const Frame54 = styled.div`
+const IconPeople1 = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -73,7 +63,7 @@ const Frame54 = styled.div`
   border-radius: 6px;
 `;
 
-const Frame542 = styled.div`
+const IconPeople2 = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -85,7 +75,7 @@ const Frame542 = styled.div`
   border-radius: 6px;
 `;
 
-const Frame55 = styled.div`
+const Text = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -105,7 +95,7 @@ const BodySmall = styled.p`
   color: rgba(0, 0, 0, 0.87);
 `;
 
-const Frame56 = styled.div`
+const IconContinue = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -117,14 +107,14 @@ const Frame56 = styled.div`
 
 const BoxResearch = () => {
   return (
-    <Ul>
-      <Li>
-        <Frame53>
-          <Frame57>
-            <Frame54>
+    <Research>
+      <ResearchItem>
+        <Container>
+          <ContainerInfo>
+            <IconPeople1>
               <PeopleAltIcon htmlColor="#5E35B1" />
-            </Frame54>
-            <Frame55>
+            </IconPeople1>
+            <Text>
               <Typography
                 variant="body1"
                 sx={{
@@ -141,20 +131,20 @@ const BoxResearch = () => {
                 Tra cứu chứng nhận tiêm
               </Typography>
               <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
-            </Frame55>
-          </Frame57>
-          <Frame56>
+            </Text>
+          </ContainerInfo>
+          <IconContinue>
             <EastIcon htmlColor="#5E35B1" />
-          </Frame56>
-        </Frame53>
-      </Li>
-      <Li>
-        <Frame53>
-          <Frame58>
-            <Frame542>
+          </IconContinue>
+        </Container>
+      </ResearchItem>
+      <ResearchItem>
+        <Container>
+          <ContainerInfo>
+            <IconPeople2>
               <PeopleAltIcon htmlColor="#1E88E5" />
-            </Frame542>
-            <Frame55>
+            </IconPeople2>
+            <Text>
               <Typography
                 variant="body1"
                 sx={{
@@ -171,14 +161,14 @@ const BoxResearch = () => {
                 Tra cứu kết quả đăng ký
               </Typography>
               <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
-            </Frame55>
-          </Frame58>
-          <Frame56>
+            </Text>
+          </ContainerInfo>
+          <IconContinue>
             <EastIcon htmlColor="#1E88E5" />
-          </Frame56>
-        </Frame53>
-      </Li>
-    </Ul>
+          </IconContinue>
+        </Container>
+      </ResearchItem>
+    </Research>
   );
 };
 

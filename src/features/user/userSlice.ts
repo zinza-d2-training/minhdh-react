@@ -1,21 +1,22 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { saveLocalStorage } from '../../utils/localStorage';
-import { fetchLogin, InfoUser } from './userApi';
+import { fetchLogin, User } from './userApi';
 export interface UserState {
-  info?: InfoUser;
-  token?: string;
+  info: User | null;
+  token: string | null;
   isFetching: boolean;
   error: boolean;
 }
 const initialState: UserState = {
-  token: '',
+  info: null,
+  token: null,
   isFetching: false,
   error: false
 };
 export const loginAsync = createAsyncThunk(
   'user/fetchLogin',
-  async (payload: InfoUser) => {
+  async (payload: User) => {
     const response = await fetchLogin(payload);
     return response.data;
   }

@@ -110,7 +110,7 @@ const BoxPassword = styled.div`
   background: #ffffff;
 `;
 
-const Links = styled(Button)`
+const ButtonForgotPassword = styled(Button)`
   border: none;
   text-decoration: none;
   display: flex;
@@ -118,23 +118,10 @@ const Links = styled(Button)`
   justify-content: flex-end;
   align-items: center;
   padding: 0px;
-  width: 376px;
+  width: 140px;
   height: 20px;
   background: #ffffff;
-  & > a {
-    width: 180px;
-    height: 20px;
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 143%;
-    text-align: right;
-    letter-spacing: -0.04px;
-    color: #3949ab;
-    cursor: pointer;
-    text-decoration: none;
-  }
+  margin-left: 236px;
 `;
 
 const ButtonLogin = styled(Button)`
@@ -162,6 +149,29 @@ const ButtonSignUp = styled(Button)`
   border: 1px solid #9ccc65;
   cursor: pointer;
   border-radius: 5px;
+`;
+
+const ItemForgotPassword = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  & > a {
+    width: 180px;
+    height: 20px;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 143%;
+    text-align: right;
+    letter-spacing: -0.04px;
+    color: #3949ab;
+    cursor: pointer;
+    text-decoration: none;
+  }
+`;
+
+const ItemRegister = styled.div`
   & > a {
     width: 376px;
     text-decoration: none;
@@ -214,7 +224,7 @@ const Login = () => {
   const loginFailed = useAppSelector(selectError);
 
   const onSubmit = (data: Inputs) => {
-    dispatch(loginAsync(data));
+    // dispatch(loginAsync(data));
   };
 
   return (
@@ -273,9 +283,11 @@ const Login = () => {
                   required
                 />
               </BoxPassword>
-              <Links>
-                <Link to="/forgot-password">Quên mật khẩu ?</Link>
-              </Links>
+              <ItemForgotPassword>
+                <Link to="/forgot-password">
+                  <ButtonForgotPassword>Quên mật khẩu ?</ButtonForgotPassword>
+                </Link>
+              </ItemForgotPassword>
               {loginFailed && (
                 <Typography sx={{ color: 'red', padding: '5px 0' }}>
                   Tài khoản hoặc mật khẩu không chính xác
@@ -292,9 +304,11 @@ const Login = () => {
               }}>
               Hoặc đăng ký tài khoản, nếu bạn chưa đăng ký!
             </Typography>
-            <ButtonSignUp>
-              <Link to="/register">Đăng ký</Link>
-            </ButtonSignUp>
+            <ItemRegister>
+              <Link to="/register">
+                <ButtonSignUp>Đăng ký</ButtonSignUp>
+              </Link>
+            </ItemRegister>
           </ContainerRight>
         </SideRight>
       </LoginPageInside>

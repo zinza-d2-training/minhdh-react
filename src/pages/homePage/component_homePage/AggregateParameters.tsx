@@ -18,7 +18,7 @@ const AggregateParameters = styled.div`
   background: #f7fbfe;
 `;
 
-const Frame2 = styled.div`
+const BoxLeft = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -29,24 +29,7 @@ const Frame2 = styled.div`
   background: #ffffff;
 `;
 
-const Frame32 = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 8px;
-  width: 176px;
-  height: 75px;
-  & .i {
-    margin-top: 5px;
-    margin-left: 3px;
-    font-size: 15px;
-    font-weight: 700;
-  }
-`;
-
-const Frame3 = styled.div`
+const BoxCenter = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -57,24 +40,7 @@ const Frame3 = styled.div`
   background: #ffffff;
 `;
 
-const Frame33 = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 8px;
-  width: 158px;
-  height: 75px;
-  & .i {
-    margin-top: 5px;
-    margin-left: 3px;
-    font-size: 15px;
-    font-weight: 700;
-  }
-`;
-
-const Frame4 = styled.div`
+const BoxRight = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -85,7 +51,7 @@ const Frame4 = styled.div`
   background: #ffffff;
 `;
 
-const Frame34 = styled.div`
+const Data = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -105,9 +71,9 @@ const Frame34 = styled.div`
 const AggregateParameter = () => {
   return (
     <AggregateParameters>
-      <Frame2>
+      <BoxLeft>
         <PersonIcon fontSize="large" htmlColor="#281BA4" />
-        <Frame32>
+        <Data>
           <Typography
             variant="body1"
             sx={{
@@ -140,12 +106,12 @@ const AggregateParameter = () => {
             }}>
             11.203.873 <i className="i">(lượt)</i>
           </Typography>
-        </Frame32>
-      </Frame2>
+        </Data>
+      </BoxLeft>
       <Divider orientation="vertical" />
-      <Frame3>
+      <BoxCenter>
         <VaccinesIcon fontSize="large" htmlColor="#281BA4" />
-        <Frame33>
+        <Data>
           <Typography
             variant="body1"
             sx={{
@@ -178,12 +144,12 @@ const AggregateParameter = () => {
             }}>
             1,762,119 <i className="i">(mũi)</i>
           </Typography>
-        </Frame33>
-      </Frame3>
+        </Data>
+      </BoxCenter>
       <Divider orientation="vertical" />
-      <Frame4>
+      <BoxRight>
         <VerifiedUserIcon fontSize="large" htmlColor="#281BA4" />
-        <Frame34>
+        <Data>
           <Typography
             variant="body1"
             sx={{
@@ -216,8 +182,8 @@ const AggregateParameter = () => {
             }}>
             69,523,654 <i className="i">(mũi)</i>
           </Typography>
-        </Frame34>
-      </Frame4>
+        </Data>
+      </BoxRight>
     </AggregateParameters>
   );
 };
