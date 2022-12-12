@@ -5,8 +5,8 @@ import * as Yup from 'yup';
 import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { loginAsync, selectError } from '../../features/user/userSlice';
+import { useAppSelector } from '../../store';
+import { selectError } from '../../features/user/userSlice';
 
 type Inputs = {
   email: string;
@@ -220,12 +220,9 @@ const Login = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const dispatch = useAppDispatch();
   const loginFailed = useAppSelector(selectError);
 
-  const onSubmit = (data: Inputs) => {
-    // dispatch(loginAsync(data));
-  };
+  const onSubmit = () => {};
 
   return (
     <LoginPage>
