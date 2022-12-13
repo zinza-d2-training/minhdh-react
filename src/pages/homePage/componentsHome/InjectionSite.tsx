@@ -513,7 +513,7 @@ const InjectionSites = () => {
                 <StyledTableRow
                   key={element.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <StyledTableCell component="th" scope="row">
+                  <StyledTableCell align="center" component="th" scope="row">
                     {element.id}
                   </StyledTableCell>
                   <StyledTableCell align="center">

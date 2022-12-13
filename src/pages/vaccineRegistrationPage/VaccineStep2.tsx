@@ -14,7 +14,6 @@ import { Link } from 'react-router-dom';
 const VaccineRegistrationStep2 = styled.div`
   position: relative;
   width: 100%;
-  height: 1806px;
   background: #ffffff;
 `;
 

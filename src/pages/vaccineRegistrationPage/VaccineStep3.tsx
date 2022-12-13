@@ -10,7 +10,6 @@ import { jsPDF } from 'jspdf';
 const VaccineRegistrationStep3 = styled.div`
   position: relative;
   width: 100%;
-  height: 1806px;
   background: #ffffff;
 `;
 

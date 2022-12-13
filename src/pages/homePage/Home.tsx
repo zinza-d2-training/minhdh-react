@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import Header from '../../components/Header';
-import BoxResearch from './componentsHome/BoxResearch';
 import AggregateParameter from './componentsHome/AggregateParameters';
 import ChartOne from './componentsHome/Chart1';
 import Footer from '../../components/Footer';
@@ -17,7 +16,6 @@ const Home = () => {
   return (
     <HomePage>
       <Header />
-      <BoxResearch />
       <AggregateParameter />
       <ChartOne />
       <InjectionSite />

@@ -3,8 +3,10 @@ import styled from '@emotion/styled';
 import logo from '../images/Logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link } from 'react-router-dom';
+import BoxResearch from '../pages/homePage/componentsHome/BoxResearch';
+import * as React from 'react';
 
-const Header = styled.div`
+const HeaderApp = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -133,9 +135,15 @@ const ButtonLogin = styled(Button)`
   }
 `;
 
-const HeaderHomePage = () => {
+const Header = () => {
+  const [research, setResearch] = React.useState(false);
+
+  const toggleBoxResearch = () => {
+    setResearch(!research);
+  };
+
   return (
-    <Header>
+    <HeaderApp>
       <ContainerHeader>
         <Brand>
           <Logo src={logo} alt="" />
@@ -156,21 +164,23 @@ const HeaderHomePage = () => {
         </Brand>
         <Menu>
           <ItemHome>
-            <Typography
-              variant="body1"
-              sx={{
-                width: '71px',
-                height: '24px',
-                fontFamily: 'Roboto',
-                fontStyle: 'normal',
-                fontWeight: '500',
-                fontSize: '16px',
-                lineHeight: '150%',
-                letterSpacing: '-0.04px',
-                color: '#FFFFFF'
-              }}>
-              Trang chủ
-            </Typography>
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  width: '71px',
+                  height: '24px',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  letterSpacing: '-0.04px',
+                  color: '#FFFFFF'
+                }}>
+                Trang chủ
+              </Typography>
+            </Link>
           </ItemHome>
           <ItemInject>
             <Link
@@ -193,9 +203,8 @@ const HeaderHomePage = () => {
               </Typography>
             </Link>
           </ItemInject>
-          <ItemResearch>
+          <ItemResearch onClick={toggleBoxResearch}>
             <Typography
-              variant="body1"
               sx={{
                 width: '71px',
                 height: '20px',
@@ -234,8 +243,9 @@ const HeaderHomePage = () => {
           </ItemLogin>
         </Menu>
       </ContainerHeader>
-    </Header>
+      {research && <BoxResearch />}
+    </HeaderApp>
   );
 };
 
-export default HeaderHomePage;
+export default Header;
