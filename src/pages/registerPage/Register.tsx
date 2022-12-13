@@ -18,7 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-const LoginPage = styled.div`
+const RegisterPage = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -29,7 +29,7 @@ const LoginPage = styled.div`
   background: #ffffff;
 `;
 
-const LoginPageInside = styled.div`
+const RegisterPageInside = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -289,8 +289,8 @@ const Register = () => {
   }, [districtId]);
 
   return (
-    <LoginPage>
-      <LoginPageInside>
+    <RegisterPage>
+      <RegisterPageInside>
         <SideLeft>
           <ImgLeft src={img1} alt="" />
         </SideLeft>
@@ -499,8 +499,8 @@ const Register = () => {
             </Form>
           </ContainerRight>
         </SideRight>
-      </LoginPageInside>
-    </LoginPage>
+      </RegisterPageInside>
+    </RegisterPage>
   );
 };
 

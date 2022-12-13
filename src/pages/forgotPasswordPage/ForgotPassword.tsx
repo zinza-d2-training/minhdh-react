@@ -10,7 +10,7 @@ type Input = {
   email: string;
 };
 
-const LoginPage = styled.div`
+const ForgotPasswordPage = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -21,7 +21,7 @@ const LoginPage = styled.div`
   background: #ffffff;
 `;
 
-const LoginPageInside = styled.div`
+const ForgotPasswordPageInside = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -181,8 +181,8 @@ const ForgotPassword = () => {
   const onSubmit = () => {};
 
   return (
-    <LoginPage>
-      <LoginPageInside>
+    <ForgotPasswordPage>
+      <ForgotPasswordPageInside>
         <SideLeft>
           <ImgLeft src={img1} alt="" />
         </SideLeft>
@@ -224,17 +224,17 @@ const ForgotPassword = () => {
               </BoxEmail>
               <DialogActions>
                 <ButtonBack>
-                  <Link to="/">Quay lại</Link>
+                  <Link to="/login">Quay lại</Link>
                 </ButtonBack>
                 <ButtonSend type="submit" disabled={!isValid}>
-                  <Link to="/">Gửi</Link>
+                  <Link to="/login">Gửi</Link>
                 </ButtonSend>
               </DialogActions>
             </Form>
           </ContainerRight>
         </SideRight>
-      </LoginPageInside>
-    </LoginPage>
+      </ForgotPasswordPageInside>
+    </ForgotPasswordPage>
   );
 };
 
