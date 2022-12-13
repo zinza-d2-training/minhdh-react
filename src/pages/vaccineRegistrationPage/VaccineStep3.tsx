@@ -4,6 +4,8 @@ import styled from '@emotion/styled';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Footer from '../../components/Footer';
 import { Link } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 const VaccineRegistrationStep3 = styled.div`
   position: relative;
@@ -282,7 +284,21 @@ const ButtonContinue = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
+const FilePdf = styled.div``;
+
 const VaccineStep3 = () => {
+  const exportPDF = () => {
+    const inputFile: HTMLElement | null = document.getElementById('pdf');
+    if (inputFile) {
+      html2canvas(inputFile).then((canvas: HTMLCanvasElement) => {
+        const imgData = canvas.toDataURL('image/png');
+        const PdfFile = new jsPDF();
+        PdfFile.addImage(imgData, 'JEPG', 5, 40, 200, 60);
+        PdfFile.save('Thông tin tiêm chủng.pdf');
+      });
+    }
+  };
+
   return (
     <VaccineRegistrationStep3>
       <Header />
@@ -375,314 +391,317 @@ const VaccineStep3 = () => {
       <Result>
         <ContainerResult>
           <FormSubmit>
-            <TextLine1>
-              <Typography
-                sx={{
-                  width: '1368px',
-                  height: '32px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '700',
-                  fontSize: '20px',
-                  lineHeight: '160%',
-                  textAlign: 'center',
-                  letterSpacing: '-0.05px',
-                  color: 'rgba(0, 0, 0, 0.87)'
-                }}>
-                Đăng ký tiêm chủng COVID-19 thành công. Mã đặt tiêm của bạn là
-                <span className="red"> 0120211103501237</span>.
-              </Typography>
-            </TextLine1>
-            <TextLine2>
-              <Typography
-                sx={{
-                  width: '1368px',
-                  height: '48px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '16px',
-                  lineHeight: '150%',
-                  textAlign: 'center',
-                  letterSpacing: '-0.04px',
-                  color: 'rgba(0, 0, 0, 0.87)'
-                }}>
-                Cảm ơn quý khách đã đăng ký tiêm chủng vắc xin COVID-19. Hiện
-                tại Bộ y tế đang tiến hành thu thập nhu cầu và thông tin để lập
-                danh sách đối tượng đăng ký tiêm vắc xin COVID-19 theo từng địa
-                bàn. Chúng tôi sẽ liên hệ với quý khách theo số điện thoại
-                <span className="blue"> 0123456789</span> khi có kế hoạch tiêm
-                trong thời gian sớm nhất.
-              </Typography>
-            </TextLine2>
-            <TextLine3>
-              <Typography
-                sx={{
-                  width: '1368px',
-                  height: '24px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '16px',
-                  lineHeight: '150%',
-                  textAlign: 'center',
-                  letterSpacing: '-0.04px',
-                  color: 'rgba(0, 0, 0, 0.87)'
-                }}>
-                Mời bạn tải ứng dụng "SỔ SỨC KHỎE ĐIỆN TỬ" tại{' '}
-                <LinkApp href="https://hssk.kcb.vn/#/sskdt">
-                  https://hssk.kcb.vn/#/sskdt
-                </LinkApp>{' '}
-                để theo dõi kết quả đăng ký tiêm và nhận chứng nhận tiêm chủng
-                COVID-19
-              </Typography>
-            </TextLine3>
-            <InfoLine1>
-              <BoxInfo>
+            <FilePdf id="pdf">
+              <TextLine1>
                 <Typography
                   sx={{
-                    width: '456px',
+                    width: '1368px',
+                    height: '32px',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '700',
+                    fontSize: '20px',
+                    lineHeight: '160%',
+                    textAlign: 'center',
+                    letterSpacing: '-0.05px',
+                    color: 'rgba(0, 0, 0, 0.87)'
+                  }}>
+                  Đăng ký tiêm chủng COVID-19 thành công. Mã đặt tiêm của bạn là
+                  <span className="red"> 0120211103501237</span>.
+                </Typography>
+              </TextLine1>
+              <TextLine2>
+                <Typography
+                  sx={{
+                    width: '1368px',
+                    height: '48px',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    fontSize: '16px',
+                    lineHeight: '150%',
+                    textAlign: 'center',
+                    letterSpacing: '-0.04px',
+                    color: 'rgba(0, 0, 0, 0.87)'
+                  }}>
+                  Cảm ơn quý khách đã đăng ký tiêm chủng vắc xin COVID-19. Hiện
+                  tại Bộ y tế đang tiến hành thu thập nhu cầu và thông tin để
+                  lập danh sách đối tượng đăng ký tiêm vắc xin COVID-19 theo
+                  từng địa bàn. Chúng tôi sẽ liên hệ với quý khách theo số điện
+                  thoại
+                  <span className="blue"> 0123456789</span> khi có kế hoạch tiêm
+                  trong thời gian sớm nhất.
+                </Typography>
+              </TextLine2>
+              <TextLine3>
+                <Typography
+                  sx={{
+                    width: '1368px',
                     height: '24px',
                     fontFamily: 'Roboto',
                     fontStyle: 'normal',
                     fontWeight: '400',
                     fontSize: '16px',
                     lineHeight: '150%',
+                    textAlign: 'center',
                     letterSpacing: '-0.04px',
                     color: 'rgba(0, 0, 0, 0.87)'
                   }}>
-                  Họ và tên
+                  Mời bạn tải ứng dụng "SỔ SỨC KHỎE ĐIỆN TỬ" tại{' '}
+                  <LinkApp href="https://hssk.kcb.vn/#/sskdt">
+                    https://hssk.kcb.vn/#/sskdt
+                  </LinkApp>{' '}
+                  để theo dõi kết quả đăng ký tiêm và nhận chứng nhận tiêm chủng
+                  COVID-19
                 </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Nguyễn Văn A
-                </Typography>
-              </BoxInfo>
-              <BoxInfo>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Ngày sinh
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  16/10/1994
-                </Typography>
-              </BoxInfo>
-              <BoxInfo>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Giới tính
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Nam
-                </Typography>
-              </BoxInfo>
-            </InfoLine1>
-            <InfoLine2>
-              <BoxInfo>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Số CMND/CCCD/Mã định danh công dân
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  030012345678
-                </Typography>
-              </BoxInfo>
-              <BoxInfo>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Số thẻ BHYT
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  1111111111111
-                </Typography>
-              </BoxInfo>
-            </InfoLine2>
-            <InfoLine3>
-              <BoxInfo>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Tỉnh/Thành phố
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Thành phố Hà Nội
-                </Typography>
-              </BoxInfo>
-              <BoxInfo>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Quận/Huyện
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Quận Long Biên
-                </Typography>
-              </BoxInfo>
-              <BoxInfo>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Xã/Phường
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '456px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Phường Giang Biên
-                </Typography>
-              </BoxInfo>
-            </InfoLine3>
+              </TextLine3>
+              <InfoLine1>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Họ và tên
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Nguyễn Văn A
+                  </Typography>
+                </BoxInfo>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Ngày sinh
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    16/10/1994
+                  </Typography>
+                </BoxInfo>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Giới tính
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Nam
+                  </Typography>
+                </BoxInfo>
+              </InfoLine1>
+              <InfoLine2>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Số CMND/CCCD/Mã định danh công dân
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    030012345678
+                  </Typography>
+                </BoxInfo>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Số thẻ BHYT
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    1111111111111
+                  </Typography>
+                </BoxInfo>
+              </InfoLine2>
+              <InfoLine3>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Tỉnh/Thành phố
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Thành phố Hà Nội
+                  </Typography>
+                </BoxInfo>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Quận/Huyện
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Quận Long Biên
+                  </Typography>
+                </BoxInfo>
+                <BoxInfo>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Xã/Phường
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: '456px',
+                      height: '24px',
+                      fontFamily: 'Roboto',
+                      fontStyle: 'normal',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      lineHeight: '150%',
+                      letterSpacing: '-0.04px',
+                      color: 'rgba(0, 0, 0, 0.87)'
+                    }}>
+                    Phường Giang Biên
+                  </Typography>
+                </BoxInfo>
+              </InfoLine3>
+            </FilePdf>
             <Submit>
               <Link to="/" style={{ textDecoration: 'none' }}>
                 <ButtonBack>
@@ -703,7 +722,7 @@ const VaccineStep3 = () => {
                   </Typography>
                 </ButtonBack>
               </Link>
-              <ButtonContinue type="submit">
+              <ButtonContinue onClick={exportPDF}>
                 <Typography
                   sx={{
                     width: '150px',
