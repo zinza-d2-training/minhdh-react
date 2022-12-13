@@ -7,6 +7,9 @@ import User from './pages/userPage/User';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAccessToken } from './hooks/useAccessToken';
 import PrivateRoute from './components/PrivateRoute';
+import VaccineStep1 from './pages/vaccineRegistrationPage/VaccineStep1';
+import VaccineStep2 from './pages/vaccineRegistrationPage/VaccineStep2';
+import VaccineStep3 from './pages/vaccineRegistrationPage/VaccineStep3';
 
 function App() {
   const token = useAccessToken();
@@ -24,6 +27,9 @@ function App() {
         <Route path="/register" element={<PrivateRoute />}>
           <Route path="/register" element={<Register />} />
         </Route>
+        <Route path="/vaccine-register-step1" element={<VaccineStep1 />} />
+        <Route path="/vaccine-register-step2" element={<VaccineStep2 />} />
+        <Route path="/vaccine-register-step3" element={<VaccineStep3 />} />
         <Route
           path="/user"
           element={

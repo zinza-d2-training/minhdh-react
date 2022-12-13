@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import Header from '../../components/Header';
-import BoxResearch from './components-home/BoxResearch';
-import AggregateParameter from './components-home/AggregateParameters';
-import ChartOne from './components-home/Chart1';
-import Footer from './components-home/Footer';
-import InjectionSite from './components-home/InjectionSite';
+import BoxResearch from './componentsHome/BoxResearch';
+import AggregateParameter from './componentsHome/AggregateParameters';
+import ChartOne from './componentsHome/Chart1';
+import Footer from '../../components/Footer';
+import InjectionSite from './componentsHome/InjectionSite';
 
 const HomePage = styled.div`
   position: relative;
