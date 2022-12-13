@@ -173,21 +173,25 @@ const HeaderHomePage = () => {
             </Typography>
           </ItemHome>
           <ItemInject>
-            <Typography
-              variant="body1"
-              sx={{
-                width: '93px',
-                height: '24px',
-                fontFamily: 'Roboto',
-                fontStyle: 'normal',
-                fontWeight: '500',
-                fontSize: '16px',
-                lineHeight: '150%',
-                letterSpacing: '-0.04px',
-                color: '#FFFFFF'
-              }}>
-              Đăng ký tiêm
-            </Typography>
+            <Link
+              to="/vaccine-register-step1"
+              style={{ textDecoration: 'none' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  width: '93px',
+                  height: '24px',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  letterSpacing: '-0.04px',
+                  color: '#FFFFFF'
+                }}>
+                Đăng ký tiêm
+              </Typography>
+            </Link>
           </ItemInject>
           <ItemResearch>
             <Typography

@@ -1,9 +1,9 @@
 import { Typography, Button } from '@mui/material';
 import styled from '@emotion/styled';
-import logo2in1 from '../../../images/logo2in1.png';
-import handle_cert1 from '../../../images/handle_cert1.png';
+import logo2in1 from '../images/logo2in1.png';
+import handle_cert1 from '../images/handle_cert1.png';
 
-const Footer = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -13,7 +13,7 @@ const Footer = styled.div`
   width: 1487px;
   height: 190px;
   left: 0px;
-  top: 1900px;
+  top: 1750px;
   background: #2d2188;
 `;
 
@@ -144,9 +144,9 @@ const Cert = styled.img`
   width: 220px;
   height: 100px;
 `;
-const FooterHomePage = () => {
+const Footer = () => {
   return (
-    <Footer>
+    <Wrapper>
       <ContainerLeft>
         <Typography
           variant="body2"
@@ -214,8 +214,8 @@ const FooterHomePage = () => {
         </ContainerButtonApp>
         <Cert src={handle_cert1} alt="" />
       </ContainerRight>
-    </Footer>
+    </Wrapper>
   );
 };
 
-export default FooterHomePage;
+export default Footer;
