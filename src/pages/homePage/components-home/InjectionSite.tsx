@@ -357,34 +357,18 @@ const InjectionSites = () => {
     return wards.filter((ward) => ward.districtId === districtId);
   }, [districtId]);
 
-  const findProvince = (IDsearch: Number) => {
-    let name;
-    provinces.find((element: Province) => {
-      if (element.id === IDsearch) {
-        name = element.name;
-      }
-    });
-    return name;
+  const findProvince = (provinceId: Number) => {
+    return provinces.find((element: Province) => element.id === provinceId)
+      ?.name;
   };
 
-  const findDistrict = (IDsearch: Number) => {
-    let name;
-    districts.find((element: District) => {
-      if (element.id === IDsearch) {
-        name = element.name;
-      }
-    });
-    return name;
+  const findDistrict = (districtId: Number) => {
+    return districts.find((element: District) => element.id === districtId)
+      ?.name;
   };
 
-  const findWard = (IDsearch: Number) => {
-    let name;
-    wards.find((element: Ward) => {
-      if (element.id === IDsearch) {
-        name = element.name;
-      }
-    });
-    return name;
+  const findWard = (wardId: Number) => {
+    return wards.find((element: Ward) => element.id === wardId)?.name;
   };
 
   const [page, setPage] = React.useState(0);

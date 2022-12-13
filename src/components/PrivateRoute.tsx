@@ -4,7 +4,7 @@ import { useAccessToken } from '../hooks/useAccessToken';
 const PrivateRoute = () => {
   const token = useAccessToken();
 
-  return token === '' || token === null ? <Outlet /> : <Navigate to="/" />;
+  return token ? <Navigate to="/" /> : <Outlet />;
 };
 
 export default PrivateRoute;

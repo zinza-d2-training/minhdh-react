@@ -6,7 +6,7 @@ export function useAccessToken() {
   const tokenUser = useAppSelector(selectToken);
   const [token, setToken] = useLocalStorage('token', '');
   useEffect(() => {
-    if (tokenUser !== '') {
+    if (tokenUser) {
       setToken(tokenUser);
     }
   }, [tokenUser, setToken]);
