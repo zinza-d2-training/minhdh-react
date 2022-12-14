@@ -76,7 +76,7 @@ const ItemInject = styled.div`
   height: 50px;
 `;
 
-const ItemResearch = styled(Button)`
+const ItemResearch = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -84,6 +84,7 @@ const ItemResearch = styled(Button)`
   padding: 0px;
   width: 78px;
   height: 50px;
+  cursor: pointer;
 `;
 
 const ItemDocs = styled.div`
@@ -104,6 +105,17 @@ const ItemLogin = styled.div`
   padding: 0px;
   width: 135px;
   height: 50px;
+  & .textLogin {
+    text-decoration: none;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 150%;
+    letter-spacing: -0.04px;
+    text-transform: uppercase;
+    color: #303f9f;
+  }
   & > a {
     text-decoration: none;
   }
@@ -120,19 +132,6 @@ const ButtonLogin = styled(Button)`
   height: 40px;
   background: #ffffff;
   border-radius: 8px 8px 8px 0px;
-  & > a {
-    text-decoration: none;
-    width: 91px;
-    height: 24px;
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 15px;
-    line-height: 150%;
-    letter-spacing: -0.04px;
-    text-transform: uppercase;
-    color: #303f9f;
-  }
 `;
 
 const Header = () => {
@@ -206,12 +205,13 @@ const Header = () => {
           <ItemResearch onClick={toggleBoxResearch}>
             <Typography
               sx={{
-                width: '71px',
-                height: '20px',
+                width: '93px',
+                height: '24px',
                 fontFamily: 'Roboto',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '12px',
+                fontSize: '16px',
+                lineHeight: '150%',
                 letterSpacing: '-0.04px',
                 color: '#FFFFFF'
               }}>
@@ -238,7 +238,9 @@ const Header = () => {
           </ItemDocs>
           <ItemLogin>
             <Link to="/login">
-              <ButtonLogin>Đăng nhập</ButtonLogin>
+              <ButtonLogin>
+                <span className="textLogin">Đăng nhập</span>
+              </ButtonLogin>
             </Link>
           </ItemLogin>
         </Menu>
