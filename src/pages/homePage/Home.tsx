@@ -5,11 +5,7 @@ import ChartOne from './componentsHome/Chart1';
 import Footer from '../../components/Footer';
 import InjectionSite from './componentsHome/InjectionSite';
 
-const HomePage = styled.div`
-  position: relative;
-  width: 100%;
-  background: #ffffff;
-`;
+const HomePage = styled.div``;
 
 const Home = () => {
   return (

@@ -11,11 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Footer from '../../components/Footer';
 import { Link, useNavigate } from 'react-router-dom';
 
-const VaccineRegistrationStep1 = styled.div`
-  position: relative;
-  width: 100%;
-  background: #ffffff;
-`;
+const VaccineRegistrationStep1 = styled.div``;
 
 const Heading = styled.div`
   display: flex;

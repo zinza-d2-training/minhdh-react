@@ -11,11 +11,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Link, useNavigate } from 'react-router-dom';
 
-const VaccineRegistrationStep2 = styled.div`
-  position: relative;
-  width: 100%;
-  background: #ffffff;
-`;
+const VaccineRegistrationStep2 = styled.div``;
 
 const Heading = styled.div`
   display: flex;
