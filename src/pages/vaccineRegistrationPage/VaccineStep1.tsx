@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Footer from '../../components/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const VaccineRegistrationStep1 = styled.div`
   position: relative;
@@ -363,7 +363,11 @@ const VaccineStep1 = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = () => {};
+  const navigate = useNavigate();
+
+  const onSubmit = () => {
+    navigate('/vaccine-register-step2');
+  };
 
   return (
     <VaccineRegistrationStep1>
@@ -448,7 +452,6 @@ const VaccineStep1 = () => {
                   Thông tin cá nhân
                 </Typography>
               </Typo1>
-
               <Typo2>
                 <Typography
                   sx={{
@@ -464,7 +467,6 @@ const VaccineStep1 = () => {
                   Phiếu đồng ý tiêm
                 </Typography>
               </Typo2>
-
               <Typo3>
                 <Typography
                   sx={{
