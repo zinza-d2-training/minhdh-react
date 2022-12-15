@@ -72,11 +72,9 @@ const Chart1 = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0px 36px;
-  position: absolute;
   width: 1447px;
   height: 594px;
-  left: 0px;
-  top: 280px;
+  margin-top: 40px;
 `;
 
 const ContainerChart = styled.div`

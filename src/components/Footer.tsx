@@ -9,11 +9,8 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   padding: 32px 16px;
-  position: absolute;
   width: 1487px;
   height: 190px;
-  left: 0px;
-  top: 1750px;
   background: #2d2188;
 `;
 

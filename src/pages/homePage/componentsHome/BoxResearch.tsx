@@ -106,71 +106,81 @@ const IconContinue = styled.div`
   border-radius: 6px;
 `;
 
+const LinkResearch = styled(Link)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const BoxResearch = () => {
   return (
     <Research>
       <ResearchItem>
         <Container>
-          <ContainerInfo>
-            <IconPeople1>
-              <PeopleAltIcon htmlColor="#5E35B1" />
-            </IconPeople1>
-            <Text>
-              <Typography
-                variant="body1"
-                sx={{
-                  width: '169px',
-                  height: '24px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '16px',
-                  lineHeight: '150%',
-                  letterSpacing: '-0.04px',
-                  color: 'rgba(0, 0, 0, 0.87)'
-                }}>
-                Tra cứu chứng nhận tiêm
-              </Typography>
-              <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
-            </Text>
-          </ContainerInfo>
-          <Link to="/vaccine-certificate" style={{ textDecoration: 'none' }}>
+          <LinkResearch
+            to="/vaccine-certificate"
+            style={{ textDecoration: 'none' }}>
+            <ContainerInfo>
+              <IconPeople1>
+                <PeopleAltIcon htmlColor="#5E35B1" />
+              </IconPeople1>
+              <Text>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    width: '169px',
+                    height: '24px',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    fontSize: '16px',
+                    lineHeight: '150%',
+                    letterSpacing: '-0.04px',
+                    color: 'rgba(0, 0, 0, 0.87)'
+                  }}>
+                  Tra cứu chứng nhận tiêm
+                </Typography>
+                <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
+              </Text>
+            </ContainerInfo>
             <IconContinue>
               <EastIcon htmlColor="#5E35B1" />
             </IconContinue>
-          </Link>
+          </LinkResearch>
         </Container>
       </ResearchItem>
       <ResearchItem>
         <Container>
-          <ContainerInfo>
-            <IconPeople2>
-              <PeopleAltIcon htmlColor="#1E88E5" />
-            </IconPeople2>
-            <Text>
-              <Typography
-                variant="body1"
-                sx={{
-                  width: '169px',
-                  height: '24px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '16px',
-                  lineHeight: '150%',
-                  letterSpacing: '-0.04px',
-                  color: 'rgba(0, 0, 0, 0.87)'
-                }}>
-                Tra cứu kết quả đăng ký
-              </Typography>
-              <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
-            </Text>
-          </ContainerInfo>
-          <Link to="/registration-result" style={{ textDecoration: 'none' }}>
+          <LinkResearch
+            to="/registration-result"
+            style={{ textDecoration: 'none' }}>
+            <ContainerInfo>
+              <IconPeople2>
+                <PeopleAltIcon htmlColor="#1E88E5" />
+              </IconPeople2>
+              <Text>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    width: '169px',
+                    height: '24px',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    fontSize: '16px',
+                    lineHeight: '150%',
+                    letterSpacing: '-0.04px',
+                    color: 'rgba(0, 0, 0, 0.87)'
+                  }}>
+                  Tra cứu kết quả đăng ký
+                </Typography>
+                <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
+              </Text>
+            </ContainerInfo>
             <IconContinue>
               <EastIcon htmlColor="#1E88E5" />
             </IconContinue>
-          </Link>
+          </LinkResearch>
         </Container>
       </ResearchItem>
     </Research>

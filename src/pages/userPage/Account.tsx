@@ -15,11 +15,8 @@ const Menu = styled.div`
   align-items: flex-start;
   padding: 0px 36px;
   gap: 16px;
-  position: absolute;
   width: 1447px;
   height: 64px;
-  left: 0px;
-  top: 80px;
 `;
 
 const ContainerMenu = styled.div`
@@ -67,11 +64,8 @@ const ItemAccount = styled.div`
 `;
 
 const Divider = styled.div`
-  position: absolute;
   width: 100%;
   height: 1px;
-  left: 0px;
-  top: 144px;
   background: #eeeeee;
 `;
 
@@ -82,11 +76,10 @@ const Result = styled.div`
   align-items: center;
   padding: 0px 36px;
   gap: 24px;
-  position: absolute;
   width: 1447px;
   height: 609px;
-  left: 0px;
-  top: 192px;
+  margin-top: 50px;
+  margin-bottom: 200px;
 `;
 
 const HeaderFormInfo = styled.div`
