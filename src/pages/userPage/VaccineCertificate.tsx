@@ -14,6 +14,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 const Menu = styled.div`
   display: flex;
@@ -118,36 +120,7 @@ const Cert = styled.div`
 
 const Title = styled.div`
   margin-top: 24px;
-`;
-
-const InfoLine1 = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 0px 0px;
-  width: 996px;
-  height: 76px;
-`;
-
-const ItemInfoLine1 = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 4px;
-  width: 249px;
-  height: 52px;
-`;
-
-const InfoLine2 = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 16px 0px 0px;
-  gap: 4px;
-  width: 996px;
-  height: 68px;
+  padding-bottom: 20px;
 `;
 
 const Conclusion = styled.div`
@@ -245,6 +218,16 @@ const TextInfoCard = styled.div`
   padding: 0px;
   gap: 4px;
   width: 228px;
+  height: 52px;
+`;
+
+const Item = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 4px;
+  width: 249px;
   height: 52px;
 `;
 
@@ -382,158 +365,170 @@ const VaccineCertificate = () => {
                 CHỨNG NHẬN TIÊM CHỦNG COVID-19
               </Typography>
             </Title>
-            <InfoLine1>
-              <ItemInfoLine1>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Họ và tên
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Nguyễn Văn A
-                </Typography>
-              </ItemInfoLine1>
-              <ItemInfoLine1>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Ngày sinh
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  16/10/1994
-                </Typography>
-              </ItemInfoLine1>
-              <ItemInfoLine1>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Số CMND/CCCD
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  030012345678
-                </Typography>
-              </ItemInfoLine1>
-              <ItemInfoLine1>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  Số thẻ BHYT
-                </Typography>
-                <Typography
-                  sx={{
-                    width: '249px',
-                    height: '24px',
-                    fontFamily: 'Roboto',
-                    fontStyle: 'normal',
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    letterSpacing: '-0.04px',
-                    color: 'rgba(0, 0, 0, 0.87)'
-                  }}>
-                  030094005102
-                </Typography>
-              </ItemInfoLine1>
-            </InfoLine1>
-            <InfoLine2>
-              <Typography
-                sx={{
-                  width: '996px',
-                  height: '24px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '16px',
-                  lineHeight: '150%',
-                  letterSpacing: '-0.04px',
-                  color: 'rgba(0, 0, 0, 0.87)'
-                }}>
-                Địa chỉ
-              </Typography>
-              <Typography
-                sx={{
-                  width: '996px',
-                  height: '24px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '700',
-                  fontSize: '16px',
-                  lineHeight: '150%',
-                  letterSpacing: '-0.04px',
-                  color: 'rgba(0, 0, 0, 0.87)'
-                }}>
-                Phường Giang Biên - Quận Long Biên - Thành phố Hà Nội
-              </Typography>
-            </InfoLine2>
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Họ và tên
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '700',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Nguyễn Văn A
+                    </Typography>
+                  </Item>
+                </Grid>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Ngày sinh
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '700',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      16/10/1994
+                    </Typography>
+                  </Item>
+                </Grid>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Số CMND/CCCD
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '700',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      030012345678
+                    </Typography>
+                  </Item>
+                </Grid>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Số thẻ BHYT
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '249px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '700',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      030094005102
+                    </Typography>
+                  </Item>
+                </Grid>
+                <Grid item xs={12}>
+                  <Item>
+                    <Typography
+                      sx={{
+                        width: '996px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Địa chỉ
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '996px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '700',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: '-0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Phường Giang Biên - Quận Long Biên - Thành phố Hà Nội
+                    </Typography>
+                  </Item>
+                </Grid>
+              </Grid>
+            </Box>
             <Conclusion>
               <Typography
                 sx={{

@@ -488,7 +488,7 @@ const InjectionSites = () => {
           <Table sx={{ minWidth: 650 }} aria-label="custom pagination table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>STT</StyledTableCell>
+                <StyledTableCell align="center">STT</StyledTableCell>
                 <StyledTableCell align="center">Tên điểm tiêm</StyledTableCell>
                 <StyledTableCell align="center">
                   Số nhà, tên đường
