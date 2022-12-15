@@ -7,12 +7,7 @@ import { Link } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
-const VaccineRegistrationStep3 = styled.div`
-  position: relative;
-  width: 100%;
-  height: 1806px;
-  background: #ffffff;
-`;
+const VaccineRegistrationStep3 = styled.div``;
 
 const Heading = styled.div`
   display: flex;

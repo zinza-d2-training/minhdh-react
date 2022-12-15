@@ -9,14 +9,9 @@ import Checkbox from '@mui/material/Checkbox';
 import * as React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const VaccineRegistrationStep2 = styled.div`
-  position: relative;
-  width: 100%;
-  height: 1806px;
-  background: #ffffff;
-`;
+const VaccineRegistrationStep2 = styled.div``;
 
 const Heading = styled.div`
   display: flex;
@@ -306,12 +301,15 @@ const ButtonContinue = styled(Button)`
 
 const VaccineStep2 = () => {
   const [checked, setChecked] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleChangeCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    navigate('/vaccine-register-step3');
+  };
 
   return (
     <VaccineRegistrationStep2>

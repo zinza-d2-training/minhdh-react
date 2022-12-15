@@ -9,13 +9,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Footer from '../../components/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const VaccineRegistrationStep1 = styled.div`
-  position: relative;
-  width: 100%;
-  background: #ffffff;
-`;
+const VaccineRegistrationStep1 = styled.div``;
 
 const Heading = styled.div`
   display: flex;
@@ -363,7 +359,11 @@ const VaccineStep1 = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = () => {};
+  const navigate = useNavigate();
+
+  const onSubmit = () => {
+    navigate('/vaccine-register-step2');
+  };
 
   return (
     <VaccineRegistrationStep1>
@@ -448,7 +448,6 @@ const VaccineStep1 = () => {
                   Thông tin cá nhân
                 </Typography>
               </Typo1>
-
               <Typo2>
                 <Typography
                   sx={{
@@ -464,7 +463,6 @@ const VaccineStep1 = () => {
                   Phiếu đồng ý tiêm
                 </Typography>
               </Typo2>
-
               <Typo3>
                 <Typography
                   sx={{
@@ -510,6 +508,7 @@ const VaccineStep1 = () => {
                 </Label>
                 <TextField
                   {...register('group')}
+                  size="small"
                   helperText={errors.group?.message && errors.group.message}
                   type="text"
                   id="group"
@@ -524,6 +523,7 @@ const VaccineStep1 = () => {
                 <Label htmlFor="numBHYT">Số thẻ BHYT</Label>
                 <TextField
                   {...register('numBHYT')}
+                  size="small"
                   helperText={errors.numBHYT?.message && errors.numBHYT.message}
                   type="text"
                   id="numBHYT"
@@ -540,6 +540,7 @@ const VaccineStep1 = () => {
                 <Label htmlFor="job">Nghề nghiệp</Label>
                 <TextField
                   {...register('job')}
+                  size="small"
                   helperText={errors.job?.message && errors.job.message}
                   type="text"
                   id="job"
@@ -554,6 +555,7 @@ const VaccineStep1 = () => {
                 <Label htmlFor="workUnit">Đơn vị công tác</Label>
                 <TextField
                   {...register('workUnit')}
+                  size="small"
                   helperText={
                     errors.workUnit?.message && errors.workUnit.message
                   }
@@ -570,6 +572,7 @@ const VaccineStep1 = () => {
                 <Label htmlFor="address">Địa chỉ hiện tại</Label>
                 <TextField
                   {...register('address')}
+                  size="small"
                   helperText={errors.address?.message && errors.address.message}
                   type="text"
                   id="address"
@@ -615,7 +618,7 @@ const VaccineStep1 = () => {
                           value={value}
                           className="inputDate"
                           renderInput={(params: any) => (
-                            <TextField {...params} />
+                            <TextField size="small" {...params} />
                           )}
                         />
                       </DateInjection>
@@ -627,6 +630,7 @@ const VaccineStep1 = () => {
                 <Label htmlFor="sessionInjection">Buổi tiêm mong muốn</Label>
                 <TextField
                   {...register('sessionInjection')}
+                  size="small"
                   helperText={
                     errors.sessionInjection?.message &&
                     errors.sessionInjection.message

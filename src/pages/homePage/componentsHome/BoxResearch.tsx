@@ -2,6 +2,7 @@ import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import EastIcon from '@mui/icons-material/East';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import { Link } from 'react-router-dom';
 
 const Research = styled.div`
   z-index: 10;
@@ -133,9 +134,11 @@ const BoxResearch = () => {
               <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
             </Text>
           </ContainerInfo>
-          <IconContinue>
-            <EastIcon htmlColor="#5E35B1" />
-          </IconContinue>
+          <Link to="/vaccine-certificate" style={{ textDecoration: 'none' }}>
+            <IconContinue>
+              <EastIcon htmlColor="#5E35B1" />
+            </IconContinue>
+          </Link>
         </Container>
       </ResearchItem>
       <ResearchItem>
@@ -163,9 +166,11 @@ const BoxResearch = () => {
               <BodySmall>Cập nhật nhanh và chính xác nhất</BodySmall>
             </Text>
           </ContainerInfo>
-          <IconContinue>
-            <EastIcon htmlColor="#1E88E5" />
-          </IconContinue>
+          <Link to="/registration-result" style={{ textDecoration: 'none' }}>
+            <IconContinue>
+              <EastIcon htmlColor="#1E88E5" />
+            </IconContinue>
+          </Link>
         </Container>
       </ResearchItem>
     </Research>
