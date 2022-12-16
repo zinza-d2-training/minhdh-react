@@ -4,6 +4,7 @@ import AggregateParameter from './componentsHome/AggregateParameters';
 import ChartOne from './componentsHome/Chart1';
 import Footer from '../../components/Footer';
 import InjectionSite from './componentsHome/InjectionSite';
+import * as React from 'react';
 
 const HomePage = styled.div``;
 

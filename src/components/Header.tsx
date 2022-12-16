@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import logo from '../images/Logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link } from 'react-router-dom';
-import BoxResearch from '../pages/homePage/componentsHome/BoxResearch';
+import BoxResearch from './BoxResearch';
 import * as React from 'react';
 
 const HeaderApp = styled.div`
@@ -141,23 +141,25 @@ const Header = () => {
   return (
     <HeaderApp>
       <ContainerHeader>
-        <Brand>
-          <Logo src={logo} alt="" />
-          <Typography
-            variant="h6"
-            sx={{
-              width: '420px',
-              height: '32px',
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontWeight: '700',
-              fontSize: '19px',
-              lineHeight: '160%',
-              color: '#FFFFFF'
-            }}>
-            CỔNG THÔNG TIN TIÊM CHỦNG COVID-19
-          </Typography>
-        </Brand>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <Brand>
+            <Logo src={logo} alt="" />
+            <Typography
+              variant="h6"
+              sx={{
+                width: '420px',
+                height: '32px',
+                fontFamily: 'Roboto',
+                fontStyle: 'normal',
+                fontWeight: '700',
+                fontSize: '19px',
+                lineHeight: '160%',
+                color: '#FFFFFF'
+              }}>
+              CỔNG THÔNG TIN TIÊM CHỦNG COVID-19
+            </Typography>
+          </Brand>
+        </Link>
         <Menu>
           <ItemHome>
             <Link to="/" style={{ textDecoration: 'none' }}>

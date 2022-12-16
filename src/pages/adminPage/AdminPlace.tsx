@@ -48,7 +48,7 @@ const ContainerMenu = styled.div`
   height: 64px;
 `;
 
-const ItemCert = styled.div`
+const ItemLocation = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,7 +60,7 @@ const ItemCert = styled.div`
   box-shadow: inset 0px -2px 0px rgba(0, 0, 0, 0.87);
 `;
 
-const ItemResult = styled.div`
+const ItemRegister = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,7 +71,7 @@ const ItemResult = styled.div`
   background: #ffffff;
 `;
 
-const ItemAccount = styled.div`
+const ItemDocument = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -94,7 +94,7 @@ const ContainerTable = styled.div`
   flex-direction: column;
   align-items: flex-start;
   padding: 12px 12px 0px;
-  width: 1520px;
+  width: 1519px;
   height: 570px;
   border-top: 1px solid rgba(38, 56, 150, 0.14);
   margin-top: 50px;
@@ -373,13 +373,14 @@ const columns: GridColDef[] = [
     field: 'leader',
     headerName: 'Người đứng đầu cơ sở tiêm chủng',
     type: 'string',
-    minWidth: 350,
+    minWidth: 400,
     headerAlign: 'center',
     align: 'center'
   },
   {
     field: 'numberOfInjectionTables',
     headerName: 'Số bàn tiêm',
+    minWidth: 150,
     type: 'number',
     headerAlign: 'center',
     align: 'center'
@@ -469,7 +470,7 @@ const AdminPlace = () => {
       <Menu>
         <ContainerMenu>
           <Link to="/admin-place" style={{ textDecoration: 'none' }}>
-            <ItemCert>
+            <ItemLocation>
               <Typography
                 sx={{
                   width: '73px',
@@ -484,10 +485,10 @@ const AdminPlace = () => {
                 }}>
                 Điểm tiêm
               </Typography>
-            </ItemCert>
+            </ItemLocation>
           </Link>
           <Link to="/admin-register" style={{ textDecoration: 'none' }}>
-            <ItemResult>
+            <ItemRegister>
               <Typography
                 sx={{
                   width: '57px',
@@ -502,10 +503,10 @@ const AdminPlace = () => {
                 }}>
                 Đăng ký
               </Typography>
-            </ItemResult>
+            </ItemRegister>
           </Link>
           <Link to="/admin-document" style={{ textDecoration: 'none' }}>
-            <ItemAccount>
+            <ItemDocument>
               <Typography
                 sx={{
                   width: '51px',
@@ -520,7 +521,7 @@ const AdminPlace = () => {
                 }}>
                 Tài liệu
               </Typography>
-            </ItemAccount>
+            </ItemDocument>
           </Link>
         </ContainerMenu>
       </Menu>
@@ -569,7 +570,6 @@ const AdminPlace = () => {
           />
         </Data>
       </ContainerTable>
-
       <Dialog
         fullWidth
         open={open}
