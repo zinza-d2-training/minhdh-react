@@ -10,11 +10,8 @@ const AggregateParameters = styled.div`
   justify-content: center;
   align-items: center;
   padding: 16px 36px;
-  position: absolute;
   width: 1447px;
   height: 76px;
-  left: 0px;
-  top: 104px;
   background: #f7fbfe;
 `;
 

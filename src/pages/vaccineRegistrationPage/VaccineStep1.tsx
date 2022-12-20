@@ -18,12 +18,10 @@ const Heading = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 0px 36px;
-  position: absolute;
   width: 1447px;
   height: 64px;
-  left: 0px;
-  top: 114px;
   background: #f5f5f5;
+  margin-top: 30px;
 `;
 
 const ProgressBar = styled.div`
@@ -32,11 +30,9 @@ const ProgressBar = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0px 36px;
-  position: absolute;
   width: 1447px;
   height: 40px;
-  left: 0px;
-  top: 224px;
+  margin-top: 60px;
 `;
 
 const ContainerBar = styled.div`
@@ -152,11 +148,10 @@ const Result = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0px 36px;
-  position: absolute;
   width: 1440px;
   height: 531px;
-  left: 0px;
-  top: 344px;
+  margin-top: 50px;
+  margin-bottom: 200px;
 `;
 
 const ContainerResult = styled.div`

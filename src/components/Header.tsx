@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import logo from '../images/Logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link } from 'react-router-dom';
-import BoxResearch from '../pages/homePage/componentsHome/BoxResearch';
+import BoxResearch from './BoxResearch';
 import * as React from 'react';
 
 const HeaderApp = styled.div`
@@ -11,11 +11,8 @@ const HeaderApp = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 15px 0px;
-  position: absolute;
   width: 100%;
   height: 50px;
-  left: 0px;
-  top: 0px;
   background: linear-gradient(90deg, #ed1b23 0%, #2e3091 52.08%, #253494 100%);
 `;
 
@@ -144,23 +141,25 @@ const Header = () => {
   return (
     <HeaderApp>
       <ContainerHeader>
-        <Brand>
-          <Logo src={logo} alt="" />
-          <Typography
-            variant="h6"
-            sx={{
-              width: '420px',
-              height: '32px',
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontWeight: '700',
-              fontSize: '19px',
-              lineHeight: '160%',
-              color: '#FFFFFF'
-            }}>
-            CỔNG THÔNG TIN TIÊM CHỦNG COVID-19
-          </Typography>
-        </Brand>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <Brand>
+            <Logo src={logo} alt="" />
+            <Typography
+              variant="h6"
+              sx={{
+                width: '420px',
+                height: '32px',
+                fontFamily: 'Roboto',
+                fontStyle: 'normal',
+                fontWeight: '700',
+                fontSize: '19px',
+                lineHeight: '160%',
+                color: '#FFFFFF'
+              }}>
+              CỔNG THÔNG TIN TIÊM CHỦNG COVID-19
+            </Typography>
+          </Brand>
+        </Link>
         <Menu>
           <ItemHome>
             <Link to="/" style={{ textDecoration: 'none' }}>
@@ -220,21 +219,23 @@ const Header = () => {
             <KeyboardArrowDownIcon htmlColor="white" />
           </ItemResearch>
           <ItemDocs>
-            <Typography
-              variant="body1"
-              sx={{
-                width: '71px',
-                height: '24px',
-                fontFamily: 'Roboto',
-                fontStyle: 'normal',
-                fontWeight: '500',
-                fontSize: '16px',
-                lineHeight: '150%',
-                letterSpacing: '-0.04px',
-                color: '#FFFFFF'
-              }}>
-              Tài liệu
-            </Typography>
+            <Link to="/admin-place" style={{ textDecoration: 'none' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  width: '71px',
+                  height: '24px',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  letterSpacing: '-0.04px',
+                  color: '#FFFFFF'
+                }}>
+                Tài liệu
+              </Typography>
+            </Link>
           </ItemDocs>
           <ItemLogin>
             <Link to="/login">

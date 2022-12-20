@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 import {
   Typography,
   Button,
@@ -36,11 +35,10 @@ const Injection = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0px 36px;
-  position: absolute;
   width: 1447px;
   height: 580px;
-  left: 0px;
-  top: 1100px;
+  margin-top: 200px;
+  margin-bottom: 70px;
 `;
 
 const ContainerInjectionSite = styled.div`
@@ -548,8 +546,8 @@ const InjectionSites = () => {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 20, 50, 100]}
-                  colSpan={3}
+                  rowsPerPageOptions={[5, 10]}
+                  colSpan={8}
                   count={injectionSitesRow.length}
                   rowsPerPage={rowsPerPage}
                   page={page}

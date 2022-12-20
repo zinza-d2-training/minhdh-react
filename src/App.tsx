@@ -13,6 +13,9 @@ import VaccineStep3 from './pages/vaccineRegistrationPage/VaccineStep3';
 import VaccineCertificate from './pages/userPage/VaccineCertificate';
 import RegistrationResult from './pages/userPage/RegistrationResult';
 import Account from './pages/userPage/Account';
+import AdminPlace from './pages/adminPage/AdminPlace';
+import AdminDocuments from './pages/adminPage/AdminDocuments';
+import AdminRegister from './pages/adminPage/AdminRegister';
 
 function App() {
   const token = useAccessToken();
@@ -36,6 +39,9 @@ function App() {
         <Route path="/vaccine-certificate" element={<VaccineCertificate />} />
         <Route path="/registration-result" element={<RegistrationResult />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/admin-place" element={<AdminPlace />} />
+        <Route path="/admin-document" element={<AdminDocuments />} />
+        <Route path="/admin-register" element={<AdminRegister />} />
         <Route
           path="/user"
           element={
