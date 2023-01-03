@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { saveLocalStorage } from '../../utils/localStorage';
-import { fetchLogin, User } from './userApi';
+import { User } from './userApi';
+import api from '../../utils/axios/instance';
 export interface UserState {
   info: User | null;
   token: string | null;
@@ -14,11 +15,25 @@ const initialState: UserState = {
   isFetching: false,
   error: false
 };
+
+export interface InputUser {
+  email: string;
+  password: string;
+}
+
+export interface ReturnToken {
+  token: string;
+}
+
 export const loginAsync = createAsyncThunk(
   'user/fetchLogin',
-  async (payload: User) => {
-    const response = await fetchLogin(payload);
-    return response.data;
+  async (payload: InputUser): Promise<ReturnToken> => {
+    try {
+      const res = await api.post<ReturnToken>('auth/login', payload);
+      return res.data;
+    } catch (error: any) {
+      throw new Error(error);
+    }
   }
 );
 
