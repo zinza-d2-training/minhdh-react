@@ -1,17 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { saveLocalStorage } from '../../utils/localStorage';
-import { User } from './userApi';
 import api from '../../utils/axios/instance';
 export interface UserState {
-  info: User | null;
-  token: string | null;
+  token: string;
   isFetching: boolean;
   error: boolean;
 }
 const initialState: UserState = {
-  info: null,
-  token: null,
+  token: '',
   isFetching: false,
   error: false
 };
@@ -29,8 +26,8 @@ export const loginAsync = createAsyncThunk(
   'user/fetchLogin',
   async (payload: InputUser): Promise<ReturnToken> => {
     try {
-      const res = await api.post<ReturnToken>('auth/login', payload);
-      return res.data;
+      const response = await api.post<ReturnToken>('/auth/login', payload);
+      return response.data;
     } catch (error: any) {
       throw new Error(error);
     }
@@ -59,7 +56,6 @@ export const UserSlice = createSlice({
       });
   }
 });
-export const selectUser = (state: RootState) => state.user.info;
 export const selectToken = (state: RootState) => state.user.token;
 export const selectError = (state: RootState) => state.user.error;
 export const selectIsFetching = (state: RootState) => state.user.isFetching;

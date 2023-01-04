@@ -5,6 +5,14 @@ import * as Yup from 'yup';
 import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store';
+import {
+  forgotPasswordAsync,
+  resetDefault,
+  selectState
+} from '../../features/user/forgotPasswordSlice';
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 type Input = {
   email: string;
@@ -162,6 +170,8 @@ const ButtonSend = styled(Button)`
 `;
 
 const ForgotPassword = () => {
+  const dispatch = useAppDispatch();
+  const stateForgot = useAppSelector(selectState);
   const formSchema = Yup.object().shape({
     email: Yup.string()
       .required('Email không được bỏ trống')
@@ -175,10 +185,27 @@ const ForgotPassword = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isValid }
   } = useForm<Input>(validationOpt);
 
-  const onSubmit = () => {};
+  useEffect(() => {
+    dispatch(resetDefault());
+  }, [dispatch]);
+  useEffect(() => {
+    if (stateForgot.status === 'succeeded') {
+      setValue('email', '');
+    }
+  }, [stateForgot.status, setValue]);
+
+  useQuery({
+    queryKey: ['forgotPassword'],
+    queryFn: async () => onSubmit
+  });
+
+  const onSubmit = async (dataInput: Input) => {
+    dispatch(forgotPasswordAsync(dataInput));
+  };
 
   return (
     <ForgotPasswordPage>

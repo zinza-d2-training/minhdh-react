@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { loginAsync, selectError } from '../../features/user/userSlice';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 type Inputs = {
   email: string;
@@ -200,8 +200,6 @@ const Label = styled.label`
 `;
 
 const Login = () => {
-  const queryClient = useQueryClient();
-
   const formSchema = Yup.object().shape({
     email: Yup.string()
       .required('Email không được bỏ trống')
@@ -225,13 +223,15 @@ const Login = () => {
 
   const loginFailed = useAppSelector(selectError);
   const dispatch = useAppDispatch();
-  const mutation = useMutation({
-    mutationFn: (dataInput: Inputs) => {
-      return dispatch(loginAsync(dataInput));
-    }
+
+  useQuery({
+    queryKey: ['userLogin'],
+    queryFn: async () => onSubmit
   });
 
-  const onSubmit = (dataInput: Inputs) => {};
+  const onSubmit = async (dataInput: Inputs) => {
+    dispatch(loginAsync(dataInput));
+  };
 
   return (
     <LoginPage>

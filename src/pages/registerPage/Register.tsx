@@ -13,10 +13,13 @@ import {
 import styled from '@emotion/styled';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InputLabel from '@mui/material/InputLabel';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import api from '../../utils/axios/instance';
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 const RegisterPage = styled.div`
   display: flex;
@@ -175,7 +178,7 @@ const Label = styled.label`
 `;
 
 type Inputs = {
-  cmnd: number;
+  identity_card_number: string;
   email: string;
   password: string;
   name: string;
@@ -183,7 +186,7 @@ type Inputs = {
   gender: string;
   provinceId: number;
   districtId: number;
-  wardId: number;
+  ward_id: number;
 };
 
 interface Province {
@@ -203,48 +206,9 @@ interface Ward {
   districtId: number;
 }
 
-const provinces: Province[] = [
-  { id: 1, name: 'Hà Nội' },
-  { id: 2, name: 'TP Hồ Chí Minh' }
-];
-
-const districts: District[] = [
-  { id: 1, name: 'Quận 1 Hà Nội', provinceId: 1 },
-  { id: 2, name: 'Quận 2 Hà Nội', provinceId: 1 },
-  { id: 3, name: 'Quận 1 TP Hồ Chí Minh', provinceId: 2 },
-  { id: 4, name: 'Quận 2 TP Hồ Chí Minh', provinceId: 2 }
-];
-
-const wards: Ward[] = [
-  { id: 1, name: 'Phường 1 Quận 1 Hà Nội', districtId: 1 },
-  { id: 2, name: 'Phường 2 Quận 1 Hà Nội', districtId: 1 },
-  { id: 3, name: 'Phường 1 Quận 2 Hà Nội', districtId: 2 },
-  { id: 4, name: 'Phường 2 Quận 2 Hà Nội', districtId: 2 },
-  {
-    id: 5,
-    name: 'Phường 1 Quận 1 TP Hồ Chí Minh',
-    districtId: 3
-  },
-  {
-    id: 6,
-    name: 'Phường 1 Quận 2 TP Hồ Chí Minh',
-    districtId: 4
-  },
-  {
-    id: 7,
-    name: 'Phường 2 Quận 1 TP Hồ Chí Minh',
-    districtId: 3
-  },
-  {
-    id: 8,
-    name: 'Phường 2 Quận 2 TP Hồ Chí Minh',
-    districtId: 4
-  }
-];
-
 const Register = () => {
   const formSchema = Yup.object().shape({
-    cmnd: Yup.number()
+    identity_card_number: Yup.string()
       .required('Số CMND/CCCD không được bỏ trống')
       .min(12, 'Số CMND/CCCD không hợp lệ'),
     email: Yup.string()
@@ -260,7 +224,7 @@ const Register = () => {
     gender: Yup.string().required('Giới tính không được bỏ trống'),
     provinceId: Yup.number().required('Tỉnh/Thành phố không được bỏ trống'),
     districtId: Yup.number().required('Quận/Huyện không được bỏ trống'),
-    wardId: Yup.number().required('Phường/Xã không được bỏ trống')
+    ward_id: Yup.number().required('Phường/Xã không được bỏ trống')
   });
 
   const validationOpt = {
@@ -275,18 +239,94 @@ const Register = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmit = () => {};
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [wards, setWards] = useState<Ward[]>([]);
 
   const provinceId = watch('provinceId');
   const districtId = watch('districtId');
 
-  const filterDistricts: District[] = useMemo(() => {
-    return districts.filter((district) => district.provinceId === provinceId);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getProvinces = async () => {
+      const result = await findProvinces();
+      setProvinces(result);
+    };
+    getProvinces();
+  }, []);
+
+  useEffect(() => {
+    if (provinceId) {
+      const getDistricts = async () => {
+        const result = await findDistricts(provinceId);
+        setDistricts(result);
+      };
+      getDistricts();
+    }
   }, [provinceId]);
 
-  const filterWards: Ward[] = useMemo(() => {
-    return wards.filter((ward) => ward.districtId === districtId);
+  useEffect(() => {
+    if (districtId) {
+      const getWards = async () => {
+        const result = await findWards(districtId);
+        setWards(result);
+      };
+      getWards();
+    }
   }, [districtId]);
+
+  const findProvinces = async () => {
+    try {
+      const res = await api.get<Province[]>(`/administrative-unit/provinces`);
+      return res.data;
+    } catch (err) {
+      throw new Error();
+    }
+  };
+
+  const findDistricts = async (id: number) => {
+    try {
+      const res = await api.get<District[]>(
+        `/administrative-unit/districts/${id}`
+      );
+      return res.data;
+    } catch (err) {
+      throw new Error();
+    }
+  };
+
+  const findWards = async (id: number) => {
+    try {
+      const res = await api.get<Ward[]>(`/administrative-unit/wards/${id}`);
+      return res.data;
+    } catch (err) {
+      throw new Error();
+    }
+  };
+
+  useQuery({
+    queryKey: ['getProvinces'],
+    queryFn: async () => findProvinces
+  });
+
+  useQuery({
+    queryKey: ['getDistricts'],
+    queryFn: async () => findDistricts
+  });
+
+  useQuery({
+    queryKey: ['getWards'],
+    queryFn: async () => findWards
+  });
+
+  const onSubmit = async (dataInputs: Inputs) => {
+    const { provinceId, districtId, ...data } = dataInputs;
+    const newUser = await api.post('/auth/signup', data);
+    if (newUser) {
+      navigate('/login');
+    }
+  };
 
   return (
     <RegisterPage>
@@ -303,14 +343,17 @@ const Register = () => {
             </Header>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <InputComponent>
-                <Label htmlFor="cmnd">
+                <Label htmlFor="identity_card_number">
                   Số CMND/CCCD <span> (*)</span>
                 </Label>
                 <TextField
-                  {...register('cmnd')}
-                  helperText={errors.cmnd?.message && errors.cmnd.message}
+                  {...register('identity_card_number')}
+                  helperText={
+                    errors.identity_card_number?.message &&
+                    errors.identity_card_number.message
+                  }
                   type="text"
-                  id="cmnd"
+                  id="identity_card_number"
                   placeholder="Số CMND/CCCD"
                   sx={{
                     width: '100%'
@@ -450,7 +493,7 @@ const Register = () => {
                         onChange={(event) => {
                           field.onChange(event.target.value);
                         }}>
-                        {filterDistricts.map((district) => (
+                        {districts.map((district) => (
                           <MenuItem key={district.id} value={district.id}>
                             {district.name}
                           </MenuItem>
@@ -466,7 +509,7 @@ const Register = () => {
                   Xã/Phường <span> (*)</span>
                 </Label>
                 <Controller
-                  {...register('wardId')}
+                  {...register('ward_id')}
                   control={control}
                   render={({ field, fieldState }) => (
                     <FormControl fullWidth>
@@ -477,7 +520,7 @@ const Register = () => {
                         onChange={(event) => {
                           field.onChange(event.target.value);
                         }}>
-                        {filterWards.map((ward) => (
+                        {wards.map((ward) => (
                           <MenuItem key={ward.id} value={ward.id}>
                             {ward.name}
                           </MenuItem>

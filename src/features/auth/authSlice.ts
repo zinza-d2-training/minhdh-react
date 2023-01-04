@@ -59,12 +59,9 @@ const initialState: AuthState = {
 
 export const fetchUserLogin = createAsyncThunk(
   'user/verify',
-  async (
-    token: string,
-    { rejectWithValue }
-  ): Promise<{ user: User; isAdmin: boolean }> => {
+  async (token: string): Promise<{ user: User; isAdmin: boolean }> => {
     try {
-      const response = await api.get(`auth/user`, {
+      const response = await api.get(`auth/token`, {
         params: {
           token: token
         }

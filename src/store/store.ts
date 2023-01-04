@@ -1,10 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { authReducer } from '../features/auth';
+import { forgotPasswordReducer } from '../features/user';
 import userReducer from '../features/user/userSlice';
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    auth: authReducer
+    auth: authReducer,
+    forgotPassword: forgotPasswordReducer
   }
 });
 
