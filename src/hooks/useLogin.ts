@@ -1,19 +1,30 @@
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchUserLogin, selectIsLogin } from '../features/auth/authSlice';
+import { useAppDispatch } from './../store/hooks';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { updateUser } from '../features/auth/authSlice';
 import { useAccessToken } from './useAccessToken';
-export function useLogin() {
-  const token = useAccessToken();
-  const isLogin = useAppSelector(selectIsLogin);
-  const [refreshToken, setRefreshToken] = useState<string>('');
-  useEffect(() => {
-    setRefreshToken(token);
-  }, [setRefreshToken, token]);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    if (refreshToken) {
-      dispatch(fetchUserLogin(refreshToken));
+import api from '../utils/axios/instance';
+import { QueryKey } from './QueryKey';
+
+const fetchUserLogin = async (token: string) => {
+  const response = await api.get(`auth/token`, {
+    params: {
+      token: token
     }
-  }, [refreshToken, dispatch]);
-  return isLogin;
+  });
+  return response.data;
+};
+
+export function useLogin() {
+  const dispatch = useAppDispatch();
+  const token = useAccessToken();
+  const { data } = useQuery({
+    queryKey: [QueryKey.fetchUserLogin],
+    queryFn: () => fetchUserLogin(token)
+  });
+  useEffect(() => {
+    if (data) {
+      dispatch(updateUser(data));
+    }
+  }, [data, dispatch]);
 }

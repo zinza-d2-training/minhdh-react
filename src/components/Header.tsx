@@ -7,7 +7,6 @@ import BoxResearch from './BoxResearch';
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { logout, selectIsAdmin, selectUser } from '../features/auth/authSlice';
-import { useLogin } from '../hooks/useLogin';
 import { Logout } from '@mui/icons-material';
 
 const HeaderApp = styled.div`
@@ -219,10 +218,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const currentUser = useAppSelector(selectUser);
-  const isLogin = useLogin();
   const isAdmin = useAppSelector(selectIsAdmin);
-  console.log(isAdmin);
-
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
@@ -329,7 +325,7 @@ const Header = () => {
               </Typography>
             </Link>
           </ItemDocs>
-          {isLogin ? (
+          {currentUser ? (
             <ItemUser>
               <Link to="/account">
                 <ButtonUser>
@@ -346,7 +342,7 @@ const Header = () => {
               </Link>
             </ItemLogin>
           )}
-          {isLogin && (
+          {currentUser && (
             <ItemLogout>
               <ButtonLogout onClick={handleLogout} endIcon={<Logout />}>
                 <span className="text-logout">Đăng xuất</span>

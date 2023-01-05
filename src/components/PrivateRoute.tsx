@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useLogin } from '../hooks/useLogin';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 
 const PrivateRoute = () => {
-  const isLogin = useLogin();
+  const isLogin = useCurrentUser();
 
   return isLogin ? <Navigate to="/" /> : <Outlet />;
 };

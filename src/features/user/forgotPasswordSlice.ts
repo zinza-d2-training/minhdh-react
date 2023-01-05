@@ -35,6 +35,10 @@ export const ForgotPasswordSlice = createSlice({
       state.loading = false;
       state.status = 'idle';
       state.message = '';
+    },
+    success: (state, action) => {
+      state.message = action.payload as string;
+      state.status = 'succeeded';
     }
   },
   extraReducers: (builder) => {
@@ -56,7 +60,6 @@ export const ForgotPasswordSlice = createSlice({
   }
 });
 
-export const { resetDefault } = ForgotPasswordSlice.actions;
-export const selectLoading = (state: RootState) => state.forgotPassword.loading;
+export const { resetDefault, success } = ForgotPasswordSlice.actions;
 export const selectState = (state: RootState) => state.forgotPassword;
 export default ForgotPasswordSlice.reducer;

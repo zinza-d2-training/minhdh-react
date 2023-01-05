@@ -1,9 +1,8 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { selectIsLogin } from '../features/auth/authSlice';
-import { useAppSelector } from '../store/hooks';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 
 const PrivateRouteForUser = () => {
-  const isLogin: boolean = useAppSelector(selectIsLogin);
+  const isLogin = useCurrentUser();
   const location = useLocation();
   return !isLogin ? (
     <Navigate to="/login" state={{ from: location }} replace />

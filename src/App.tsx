@@ -18,9 +18,11 @@ import AdminPlace from './pages/adminPage/AdminPlace';
 import AdminDocuments from './pages/adminPage/AdminDocuments';
 import AdminRegister from './pages/adminPage/AdminRegister';
 import { useLogin } from './hooks/useLogin';
+import { useCurrentUser } from './hooks/useCurrentUser';
 
 function App() {
-  const isLogin = useLogin();
+  useLogin();
+  const isLogin = useCurrentUser();
 
   return (
     <div className="App">

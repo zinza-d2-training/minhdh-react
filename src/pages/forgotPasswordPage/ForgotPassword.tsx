@@ -7,12 +7,13 @@ import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import {
-  forgotPasswordAsync,
   resetDefault,
-  selectState
+  selectState,
+  success
 } from '../../features/user/forgotPasswordSlice';
 import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../utils/axios/instance';
 
 type Input = {
   email: string;
@@ -169,6 +170,11 @@ const ButtonSend = styled(Button)`
   }
 `;
 
+const forgotPassword = async (payload: Input) => {
+  const res = await api.post('/forgot-password', payload);
+  return res.data.message;
+};
+
 const ForgotPassword = () => {
   const dispatch = useAppDispatch();
   const stateForgot = useAppSelector(selectState);
@@ -186,6 +192,7 @@ const ForgotPassword = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isValid }
   } = useForm<Input>(validationOpt);
 
@@ -198,13 +205,22 @@ const ForgotPassword = () => {
     }
   }, [stateForgot.status, setValue]);
 
-  useQuery({
-    queryKey: ['forgotPassword'],
-    queryFn: async () => onSubmit
+  const email = watch('email');
+  const formEmail = {
+    email: email
+  };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (formEmail: Input) => {
+      return forgotPassword(formEmail);
+    }
   });
 
-  const onSubmit = async (dataInput: Input) => {
-    dispatch(forgotPasswordAsync(dataInput));
+  const onSubmit = () => {
+    mutate(formEmail);
+    if (data) {
+      dispatch(success(data));
+    }
   };
 
   return (

@@ -7,50 +7,23 @@ export interface User {
   name: string;
   email: string;
   password: string;
-  identifyCard: string;
+  identity_card_number: string;
+  isAdmin: number;
   birthday: Date;
   gender: number;
-  wardId: number;
-  type: number;
-  tokenResetPassword: string;
-  createdAt: Date;
-  updatedAt: Date;
-  ward?: Ward;
+  ward_id: number;
+  reset_token: string;
 }
 
-export interface Ward {
-  id: number;
-  districtId: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  district?: District;
-}
-
-export interface District {
-  id: number;
-  provinceId: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  province?: Province;
-}
-
-export interface Province {
-  id: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
 export interface AuthState {
-  user: Partial<User>;
+  user: Partial<User> | null;
   isAdmin: boolean;
   isLogin: boolean;
   isFetching: boolean;
   error: boolean;
 }
 const initialState: AuthState = {
-  user: {},
+  user: null,
   isAdmin: false,
   isLogin: false,
   isFetching: false,
@@ -79,12 +52,13 @@ export const AuthSlice = createSlice({
   reducers: {
     logout: (state) => {
       removeStoreItem('token');
-      state.user = {};
+      state.user = null;
       state.isAdmin = false;
       state.isLogin = false;
     },
     updateUser: (state, action) => {
-      state.user = action.payload.data;
+      state.user = action.payload.user;
+      state.isAdmin = action.payload.isAdmin;
     }
   },
   extraReducers: (builder) => {
@@ -111,6 +85,5 @@ export const AuthSlice = createSlice({
 
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectIsAdmin = (state: RootState) => state.auth.isAdmin;
-export const selectIsLogin = (state: RootState) => state.auth.isLogin;
 export const { logout, updateUser } = AuthSlice.actions;
 export default AuthSlice.reducer;

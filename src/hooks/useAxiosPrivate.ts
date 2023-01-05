@@ -4,7 +4,7 @@ import api from '../utils/axios/instance';
 import { useAccessToken } from './useAccessToken';
 
 const useAxios = () => {
-  const token = useAccessToken();
+  const token: string = useAccessToken();
   useEffect(() => {
     const requestIntercept = api.interceptors.request.use(
       (config: AxiosRequestConfig) => {

@@ -6,8 +6,9 @@ import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { loginAsync, selectError } from '../../features/user/userSlice';
-import { useQuery } from '@tanstack/react-query';
+import { login, selectError } from '../../features/user/userSlice';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../utils/axios/instance';
 
 type Inputs = {
   email: string;
@@ -199,6 +200,15 @@ const Label = styled.label`
   color: rgba(0, 0, 0, 0.87);
 `;
 
+interface ReturnToken {
+  token: string;
+}
+
+export const loginForm = async (data: Inputs): Promise<ReturnToken> => {
+  const response = await api.post<ReturnToken>('/auth/login', data);
+  return response.data;
+};
+
 const Login = () => {
   const formSchema = Yup.object().shape({
     email: Yup.string()
@@ -218,19 +228,31 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
+  const email = watch('email');
+  const password = watch('password');
+
   const loginFailed = useAppSelector(selectError);
   const dispatch = useAppDispatch();
+  const dataForm = {
+    email: email,
+    password: password
+  };
 
-  useQuery({
-    queryKey: ['userLogin'],
-    queryFn: async () => onSubmit
+  const { mutate, data } = useMutation({
+    mutationFn: (data: Inputs) => {
+      return loginForm(data);
+    }
   });
 
-  const onSubmit = async (dataInput: Inputs) => {
-    dispatch(loginAsync(dataInput));
+  const onSubmit = () => {
+    mutate(dataForm);
+    if (data) {
+      dispatch(login(data));
+    }
   };
 
   return (
