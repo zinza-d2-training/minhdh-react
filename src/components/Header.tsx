@@ -221,6 +221,8 @@ const Header = () => {
   const currentUser = useAppSelector(selectUser);
   const isLogin = useLogin();
   const isAdmin = useAppSelector(selectIsAdmin);
+  console.log(isAdmin);
+
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
@@ -308,7 +310,7 @@ const Header = () => {
           </ItemResearch>
           <ItemDocs>
             <Link
-              to={isAdmin ? '/admin-place' : '/document'}
+              to={isAdmin ? '/admin-place' : '/admin-document'}
               style={{ textDecoration: 'none' }}>
               <Typography
                 variant="body1"
