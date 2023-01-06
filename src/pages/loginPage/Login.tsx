@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { login, selectError } from '../../features/user/userSlice';
 import { useMutation } from '@tanstack/react-query';
 import api from '../../utils/axios/instance';
+import { useEffect } from 'react';
 
 type Inputs = {
   email: string;
@@ -248,12 +249,17 @@ const Login = () => {
     }
   });
 
+  console.log(data);
+
   const onSubmit = () => {
     mutate(dataForm);
+  };
+
+  useEffect(() => {
     if (data) {
       dispatch(login(data));
     }
-  };
+  }, [data, dispatch]);
 
   return (
     <LoginPage>

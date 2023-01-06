@@ -6,7 +6,6 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  password: string;
   identity_card_number: string;
   isAdmin: number;
   birthday: Date;
@@ -16,7 +15,7 @@ export interface User {
 }
 
 export interface AuthState {
-  user: Partial<User> | null;
+  user: User | null;
   isAdmin: boolean;
   isLogin: boolean;
   isFetching: boolean;

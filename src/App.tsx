@@ -3,8 +3,7 @@ import Login from './pages/loginPage/Login';
 import ForgotPassword from './pages/forgotPasswordPage/ForgotPassword';
 import Register from './pages/registerPage/Register';
 import Home from './pages/homePage/Home';
-import User from './pages/userPage/Account';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import PrivateRouteForUser from './components/PrivateRouteForUser';
 import PrivateRouteForAdmin from './components/PrivateRouteForAdmin';
@@ -18,11 +17,9 @@ import AdminPlace from './pages/adminPage/AdminPlace';
 import AdminDocuments from './pages/adminPage/AdminDocuments';
 import AdminRegister from './pages/adminPage/AdminRegister';
 import { useLogin } from './hooks/useLogin';
-import { useCurrentUser } from './hooks/useCurrentUser';
 
 function App() {
   useLogin();
-  const isLogin = useCurrentUser();
 
   return (
     <div className="App">
@@ -62,10 +59,6 @@ function App() {
         </Route>
         <Route path="/admin-document" element={<AdminDocuments />} />
         <Route path="/admin-register" element={<AdminRegister />} />
-        <Route
-          path="/user"
-          element={isLogin ? <User /> : <Navigate to="/login" />}
-        />
       </Routes>
     </div>
   );
