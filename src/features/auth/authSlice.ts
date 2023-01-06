@@ -16,14 +16,14 @@ export interface User {
 
 export interface AuthState {
   user: User | null;
-  isAdmin: boolean;
+  isAdmin: number;
   isLogin: boolean;
   isFetching: boolean;
   error: boolean;
 }
 const initialState: AuthState = {
   user: null,
-  isAdmin: false,
+  isAdmin: 0,
   isLogin: false,
   isFetching: false,
   error: false
@@ -31,7 +31,7 @@ const initialState: AuthState = {
 
 export const fetchUserLogin = createAsyncThunk(
   'user/verify',
-  async (token: string): Promise<{ user: User; isAdmin: boolean }> => {
+  async (token: string): Promise<{ user: User; isAdmin: number }> => {
     try {
       const response = await api.get(`auth/token`, {
         params: {
@@ -52,11 +52,11 @@ export const AuthSlice = createSlice({
     logout: (state) => {
       removeStoreItem('token');
       state.user = null;
-      state.isAdmin = false;
+      state.isAdmin = 0;
     },
     updateUser: (state, action) => {
       state.user = action.payload.user;
-      state.isAdmin = action.payload.isAdmin;
+      state.isAdmin = action.payload.user.isAdmin;
     }
   },
   extraReducers: (builder) => {
@@ -76,7 +76,7 @@ export const AuthSlice = createSlice({
         state.isFetching = false;
         state.error = true;
         state.isLogin = false;
-        state.isAdmin = false;
+        state.isAdmin = 0;
       });
   }
 });

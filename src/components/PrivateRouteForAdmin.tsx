@@ -9,7 +9,7 @@ const PrivateRouteForAdmin = () => {
   const isAdmin = useAppSelector(selectIsAdmin);
   const isLogin = useCurrentUser();
   const location = useLocation();
-  return isAdmin ? (
+  return isAdmin === 1 ? (
     <Outlet />
   ) : isLogin ? (
     <UnAuthorized />

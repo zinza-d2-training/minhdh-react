@@ -249,8 +249,6 @@ const Login = () => {
     }
   });
 
-  console.log(data);
-
   const onSubmit = () => {
     mutate(dataForm);
   };
