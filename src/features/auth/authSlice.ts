@@ -54,7 +54,6 @@ export const AuthSlice = createSlice({
       removeStoreItem('token');
       state.user = null;
       state.isAdmin = false;
-      state.isLogin = false;
     },
     updateUser: (state, action) => {
       state.user = action.payload.user;
