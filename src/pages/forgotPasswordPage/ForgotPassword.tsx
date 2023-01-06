@@ -5,6 +5,15 @@ import * as Yup from 'yup';
 import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store';
+import {
+  resetDefault,
+  selectState,
+  success
+} from '../../features/user/forgotPasswordSlice';
+import { useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../utils/axios/instance';
 
 type Input = {
   email: string;
@@ -161,7 +170,14 @@ const ButtonSend = styled(Button)`
   }
 `;
 
+const forgotPassword = async (payload: Input) => {
+  const res = await api.post('/forgot-password', payload);
+  return res.data.message;
+};
+
 const ForgotPassword = () => {
+  const dispatch = useAppDispatch();
+  const stateForgot = useAppSelector(selectState);
   const formSchema = Yup.object().shape({
     email: Yup.string()
       .required('Email không được bỏ trống')
@@ -175,10 +191,37 @@ const ForgotPassword = () => {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isValid }
   } = useForm<Input>(validationOpt);
 
-  const onSubmit = () => {};
+  useEffect(() => {
+    dispatch(resetDefault());
+  }, [dispatch]);
+  useEffect(() => {
+    if (stateForgot.status === 'succeeded') {
+      setValue('email', '');
+    }
+  }, [stateForgot.status, setValue]);
+
+  const email = watch('email');
+  const formEmail = {
+    email: email
+  };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (formEmail: Input) => {
+      return forgotPassword(formEmail);
+    }
+  });
+
+  const onSubmit = () => {
+    mutate(formEmail);
+    if (data) {
+      dispatch(success(data));
+    }
+  };
 
   return (
     <ForgotPasswordPage>

@@ -4,9 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
-import { useAppSelector } from '../../store';
-import { selectError } from '../../features/user/userSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { login, selectError } from '../../features/user/userSlice';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../utils/axios/instance';
+import { useEffect } from 'react';
 
 type Inputs = {
   email: string;
@@ -198,6 +201,15 @@ const Label = styled.label`
   color: rgba(0, 0, 0, 0.87);
 `;
 
+interface ReturnToken {
+  token: string;
+}
+
+export const loginForm = async (data: Inputs): Promise<ReturnToken> => {
+  const response = await api.post<ReturnToken>('/auth/login', data);
+  return response.data;
+};
+
 const Login = () => {
   const formSchema = Yup.object().shape({
     email: Yup.string()
@@ -217,12 +229,38 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const loginFailed = useAppSelector(selectError);
+  const email = watch('email');
+  const password = watch('password');
 
-  const onSubmit = () => {};
+  const loginFailed = useAppSelector(selectError);
+  const dispatch = useAppDispatch();
+  const dataForm: Inputs = {
+    email: email,
+    password: password
+  };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (data: Inputs) => {
+      return loginForm(data);
+    }
+  });
+
+  const onSubmit = () => {
+    mutate(dataForm);
+  };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (data) {
+      dispatch(login(data));
+      navigate('/');
+    }
+  }, [data, dispatch, navigate]);
 
   return (
     <LoginPage>

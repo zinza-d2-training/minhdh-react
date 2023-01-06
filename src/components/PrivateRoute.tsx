@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAccessToken } from '../hooks/useAccessToken';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 
 const PrivateRoute = () => {
-  const token = useAccessToken();
+  const isLogin = useCurrentUser();
 
-  return token ? <Navigate to="/" /> : <Outlet />;
+  return isLogin ? <Navigate to="/" /> : <Outlet />;
 };
 
 export default PrivateRoute;

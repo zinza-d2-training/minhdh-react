@@ -2,9 +2,12 @@ import { Typography, Button } from '@mui/material';
 import styled from '@emotion/styled';
 import logo from '../images/Logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BoxResearch from './BoxResearch';
 import * as React from 'react';
+import { useAppDispatch, useAppSelector } from '../store';
+import { logout, selectIsAdmin, selectUser } from '../features/auth/authSlice';
+import { Logout } from '@mui/icons-material';
 
 const HeaderApp = styled.div`
   display: flex;
@@ -118,6 +121,80 @@ const ItemLogin = styled.div`
   }
 `;
 
+const ItemUser = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  width: 145px;
+  height: 50px;
+  & .text-user {
+    text-decoration: none;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 150%;
+    letter-spacing: -0.04px;
+    text-transform: uppercase;
+    color: #303f9f;
+  }
+  & > a {
+    text-decoration: none;
+  }
+`;
+
+const ItemLogout = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  width: 145px;
+  height: 50px;
+  & .text-logout {
+    text-decoration: none;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 150%;
+    letter-spacing: -0.04px;
+    text-transform: uppercase;
+    color: #303f9f;
+  }
+  & > a {
+    text-decoration: none;
+  }
+`;
+
+const ButtonUser = styled(Button)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 4px;
+  width: 145px;
+  height: 40px;
+  background: #ffffff;
+  border-radius: 8px 8px 8px 0px;
+`;
+
+const ButtonLogout = styled(Button)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 4px;
+  width: 130px;
+  height: 40px;
+  background: #ffffff;
+  border-radius: 8px 8px 8px 0px;
+`;
+
 const ButtonLogin = styled(Button)`
   display: flex;
   flex-direction: row;
@@ -136,6 +213,15 @@ const Header = () => {
 
   const toggleBoxResearch = () => {
     setResearch(!research);
+  };
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const currentUser = useAppSelector(selectUser);
+  const isAdmin = useAppSelector(selectIsAdmin);
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
   };
 
   return (
@@ -219,7 +305,9 @@ const Header = () => {
             <KeyboardArrowDownIcon htmlColor="white" />
           </ItemResearch>
           <ItemDocs>
-            <Link to="/admin-place" style={{ textDecoration: 'none' }}>
+            <Link
+              to={isAdmin ? '/admin-place' : '/admin-document'}
+              style={{ textDecoration: 'none' }}>
               <Typography
                 variant="body1"
                 sx={{
@@ -237,13 +325,30 @@ const Header = () => {
               </Typography>
             </Link>
           </ItemDocs>
-          <ItemLogin>
-            <Link to="/login">
-              <ButtonLogin>
-                <span className="textLogin">Đăng nhập</span>
-              </ButtonLogin>
-            </Link>
-          </ItemLogin>
+          {currentUser ? (
+            <ItemUser>
+              <Link to="/account">
+                <ButtonUser>
+                  <span className="text-user">{currentUser?.name}</span>
+                </ButtonUser>
+              </Link>
+            </ItemUser>
+          ) : (
+            <ItemLogin>
+              <Link to="/login">
+                <ButtonLogin>
+                  <span className="textLogin">Đăng nhập</span>
+                </ButtonLogin>
+              </Link>
+            </ItemLogin>
+          )}
+          {currentUser && (
+            <ItemLogout>
+              <ButtonLogout onClick={handleLogout} endIcon={<Logout />}>
+                <span className="text-logout">Đăng xuất</span>
+              </ButtonLogout>
+            </ItemLogout>
+          )}
         </Menu>
       </ContainerHeader>
       {research && <BoxResearch />}
