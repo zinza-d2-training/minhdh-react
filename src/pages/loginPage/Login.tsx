@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Typography, Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { login, selectError } from '../../features/user/userSlice';
 import { useMutation } from '@tanstack/react-query';
@@ -253,11 +253,14 @@ const Login = () => {
     mutate(dataForm);
   };
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (data) {
       dispatch(login(data));
+      navigate('/');
     }
-  }, [data, dispatch]);
+  }, [data, dispatch, navigate]);
 
   return (
     <LoginPage>
