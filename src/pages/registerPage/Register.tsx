@@ -19,7 +19,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import api from '../../utils/axios/instance';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { QueryKey } from '../../hooks/QueryKey';
 
 const RegisterPage = styled.div`
   display: flex;
@@ -206,6 +207,12 @@ interface Ward {
   districtId: number;
 }
 
+export const loginForm = async (dataInputs: Inputs) => {
+  const { provinceId, districtId, ...others } = dataInputs;
+  const newUser = await api.post('/auth/signup', others);
+  return newUser.data;
+};
+
 const Register = () => {
   const formSchema = Yup.object().shape({
     identity_card_number: Yup.string()
@@ -297,36 +304,60 @@ const Register = () => {
   };
 
   const findWards = async (id: number) => {
-    try {
-      const res = await api.get<Ward[]>(`/administrative-unit/wards/${id}`);
-      return res.data;
-    } catch (err) {
-      throw new Error();
-    }
+    const res = await api.get<Ward[]>(`/administrative-unit/wards/${id}`);
+    return res.data;
   };
 
   useQuery({
-    queryKey: ['getProvinces'],
+    queryKey: [QueryKey.getProvinces],
     queryFn: async () => findProvinces
   });
 
   useQuery({
-    queryKey: ['getDistricts'],
+    queryKey: [QueryKey.getDistricts],
     queryFn: async () => findDistricts
   });
 
   useQuery({
-    queryKey: ['getWards'],
+    queryKey: [QueryKey.getWards],
     queryFn: async () => findWards
   });
 
-  const onSubmit = async (dataInputs: Inputs) => {
-    const { provinceId, districtId, ...data } = dataInputs;
-    const newUser = await api.post('/auth/signup', data);
-    if (newUser) {
-      navigate('/login');
+  const { mutate, data } = useMutation({
+    mutationFn: (dataInputs: Inputs) => {
+      return loginForm(dataInputs);
     }
+  });
+
+  const email = watch('email');
+  const password = watch('password');
+  const name = watch('name');
+  const birthday = watch('birthday');
+  const gender = watch('gender');
+  const ward_id = watch('ward_id');
+  const identity_card_number = watch('identity_card_number');
+
+  const dataForm: Inputs = {
+    email: email,
+    password: password,
+    name: name,
+    birthday: birthday,
+    gender: gender,
+    identity_card_number: identity_card_number,
+    ward_id: ward_id,
+    provinceId: provinceId,
+    districtId: districtId
   };
+
+  const onSubmit = async () => {
+    mutate(dataForm);
+  };
+
+  useEffect(() => {
+    if (data) {
+      navigate('/ogin');
+    }
+  }, [data, navigate]);
 
   return (
     <RegisterPage>

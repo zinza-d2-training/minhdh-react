@@ -1,7 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { removeStoreItem } from '../../utils/localStorage';
-import api from '../../utils/axios/instance';
 export interface User {
   id: number;
   name: string;
@@ -29,22 +28,6 @@ const initialState: AuthState = {
   error: false
 };
 
-export const fetchUserLogin = createAsyncThunk(
-  'user/verify',
-  async (token: string): Promise<{ user: User; isAdmin: number }> => {
-    try {
-      const response = await api.get(`auth/token`, {
-        params: {
-          token: token
-        }
-      });
-      return response.data;
-    } catch (error: any) {
-      throw new Error();
-    }
-  }
-);
-
 export const AuthSlice = createSlice({
   name: 'auth',
   initialState,
@@ -58,26 +41,6 @@ export const AuthSlice = createSlice({
       state.user = action.payload.user;
       state.isAdmin = action.payload.user.isAdmin;
     }
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchUserLogin.pending, (state) => {
-        state.isFetching = true;
-        state.error = false;
-      })
-      .addCase(fetchUserLogin.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.isAdmin = action.payload.isAdmin;
-        state.isLogin = true;
-      })
-      .addCase(fetchUserLogin.rejected, (state) => {
-        removeStoreItem('user');
-        removeStoreItem('token');
-        state.isFetching = false;
-        state.error = true;
-        state.isLogin = false;
-        state.isAdmin = 0;
-      });
   }
 });
 

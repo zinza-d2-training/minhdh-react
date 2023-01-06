@@ -6,7 +6,7 @@ import { useAccessToken } from './useAccessToken';
 import api from '../utils/axios/instance';
 import { QueryKey } from './QueryKey';
 
-const fetchUserLogin = async (token: string) => {
+const fetchLoggedUser = async (token: string) => {
   const response = await api.get(`auth/token`, {
     params: {
       token: token
@@ -20,7 +20,7 @@ export function useLogin() {
   const token = useAccessToken();
   const { data } = useQuery({
     queryKey: [QueryKey.fetchUserLogin],
-    queryFn: () => fetchUserLogin(token)
+    queryFn: () => fetchLoggedUser(token)
   });
   useEffect(() => {
     if (data) {

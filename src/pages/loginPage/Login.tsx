@@ -238,7 +238,7 @@ const Login = () => {
 
   const loginFailed = useAppSelector(selectError);
   const dispatch = useAppDispatch();
-  const dataForm = {
+  const dataForm: Inputs = {
     email: email,
     password: password
   };
