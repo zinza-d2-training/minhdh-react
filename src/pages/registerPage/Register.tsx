@@ -355,7 +355,7 @@ const Register = () => {
 
   useEffect(() => {
     if (data) {
-      navigate('/ogin');
+      navigate('/login');
     }
   }, [data, navigate]);
 
