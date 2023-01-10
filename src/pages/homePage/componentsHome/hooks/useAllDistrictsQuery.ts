@@ -1,6 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { QueryKey } from '../../../../hooks/QueryKey';
-import { findAllDistricts } from '../InjectionSite';
+import api from '../../../../utils/axios/instance';
+import { District } from '../InjectionSite';
+
+export const findAllDistricts = async () => {
+  const res = await api.get<District[]>('/administrative-unit/districts');
+  return res.data;
+};
 
 export const useAllDistrictsQuery = () => {
   return useQuery({

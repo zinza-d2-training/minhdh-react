@@ -30,11 +30,18 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useMutation } from '@tanstack/react-query';
 import api from '../../../utils/axios/instance';
-import { useVaccinationSitesQuery } from './hooks/useVaccinationSitesQuery';
-import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
-import { useAllWardsQuery } from './hooks/useAllWardsQuery';
-import { useDistrictsQuery } from './hooks/useDistrictsQuery';
-import { useWardsQuery } from './hooks/useWardsQuery';
+import {
+  findAllVaccinationSites,
+  useVaccinationSitesQuery
+} from './hooks/useVaccinationSitesQuery';
+import {
+  findAllDistricts,
+  useAllDistrictsQuery
+} from './hooks/useAllDistrictsQuery';
+import { findAllWards, useAllWardsQuery } from './hooks/useAllWardsQuery';
+import { findDistricts, useDistrictsQuery } from './hooks/useDistrictsQuery';
+import { findWards, useWardsQuery } from './hooks/useWardsQuery';
+import { findProvinces } from './hooks/useProvincesQuery';
 
 const Injection = styled.div`
   display: flex;
@@ -117,7 +124,7 @@ const ButtonSubmit = styled(Button)`
   }
 `;
 
-interface VaccinationSites {
+export interface VaccinationSites {
   id: number;
   name: string;
   address: string;
@@ -132,18 +139,18 @@ type Inputs = {
   ward_id?: number;
 };
 
-interface Province {
+export interface Province {
   id: number;
   name: string;
 }
 
-interface District {
+export interface District {
   id: number;
   name: string;
   province_id: number;
 }
 
-interface Ward {
+export interface Ward {
   id: number;
   name: string;
   district_id: number;
@@ -262,36 +269,6 @@ export const findVaccinationSites = async (dataInputs: Inputs) => {
       params: dataInputs
     }
   );
-  return res.data;
-};
-
-export const findAllVaccinationSites = async () => {
-  const res = await api.get<VaccinationSites[]>('/vaccination-sites');
-  return res.data;
-};
-
-export const findProvinces = async () => {
-  const res = await api.get<Province[]>('/administrative-unit/provinces');
-  return res.data;
-};
-
-export const findDistricts = async (id: number) => {
-  const res = await api.get<District[]>(`/administrative-unit/districts/${id}`);
-  return res.data;
-};
-
-export const findAllDistricts = async () => {
-  const res = await api.get<District[]>('/administrative-unit/districts');
-  return res.data;
-};
-
-export const findWards = async (id: number) => {
-  const res = await api.get<Ward[]>(`/administrative-unit/wards/${id}`);
-  return res.data;
-};
-
-export const findAllWards = async () => {
-  const res = await api.get<Ward[]>('/administrative-unit/wards');
   return res.data;
 };
 
