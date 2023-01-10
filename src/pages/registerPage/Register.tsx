@@ -207,7 +207,7 @@ interface Ward {
   districtId: number;
 }
 
-export const loginForm = async (dataInputs: Inputs) => {
+export const registerForm = async (dataInputs: Inputs) => {
   const { provinceId, districtId, ...others } = dataInputs;
   const newUser = await api.post('/auth/signup', others);
   return newUser.data;
@@ -284,23 +284,15 @@ const Register = () => {
   }, [districtId]);
 
   const findProvinces = async () => {
-    try {
-      const res = await api.get<Province[]>(`/administrative-unit/provinces`);
-      return res.data;
-    } catch (err) {
-      throw new Error();
-    }
+    const res = await api.get<Province[]>(`/administrative-unit/provinces`);
+    return res.data;
   };
 
   const findDistricts = async (id: number) => {
-    try {
-      const res = await api.get<District[]>(
-        `/administrative-unit/districts/${id}`
-      );
-      return res.data;
-    } catch (err) {
-      throw new Error();
-    }
+    const res = await api.get<District[]>(
+      `/administrative-unit/districts/${id}`
+    );
+    return res.data;
   };
 
   const findWards = async (id: number) => {
@@ -325,7 +317,7 @@ const Register = () => {
 
   const { mutate, data } = useMutation({
     mutationFn: (dataInputs: Inputs) => {
-      return loginForm(dataInputs);
+      return registerForm(dataInputs);
     }
   });
 
