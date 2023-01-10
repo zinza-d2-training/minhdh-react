@@ -252,7 +252,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 }
 
 export const findVaccinationSites = async (dataInputs: Inputs) => {
-  const res = await api.post<VaccinationSites[]>(
+  const res = await api.get<VaccinationSites[]>(
     '/vaccination-sites/condition',
     {
       params: dataInputs
