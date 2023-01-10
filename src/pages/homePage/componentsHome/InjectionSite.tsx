@@ -29,9 +29,12 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useMutation } from '@tanstack/react-query';
-import { QueryKey } from '../../../hooks/QueryKey';
 import api from '../../../utils/axios/instance';
-import { useQueryData } from '../../../hooks/useQueryData';
+import { useVaccinationSitesQuery } from './hooks/useVaccinationSitesQuery';
+import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
+import { useAllWardsQuery } from './hooks/useAllWardsQuery';
+import { useDistrictsQuery } from './hooks/useDistrictsQuery';
+import { useWardsQuery } from './hooks/useWardsQuery';
 
 const Injection = styled.div`
   display: flex;
@@ -392,17 +395,17 @@ const InjectionSites = () => {
     getAllVaccinationSites();
   }, []);
 
-  useQueryData(QueryKey.getProvinces, findProvinces);
+  useVaccinationSitesQuery();
 
-  useQueryData(QueryKey.getDistricts, findDistricts);
+  useDistrictsQuery();
 
-  useQueryData(QueryKey.getWards, findWards);
+  useWardsQuery();
 
-  useQueryData(QueryKey.getAllDistricts, findAllDistricts);
+  useAllDistrictsQuery();
 
-  useQueryData(QueryKey.getAllWards, findAllWards);
+  useAllWardsQuery();
 
-  useQueryData(QueryKey.getAllVaccinationSites, findAllVaccinationSites);
+  useVaccinationSitesQuery();
 
   const { mutate, data } = useMutation({
     mutationFn: (dataInputs: Inputs) => {
