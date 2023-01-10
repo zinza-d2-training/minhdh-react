@@ -28,6 +28,20 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../../utils/axios/instance';
+import {
+  findAllVaccinationSites,
+  useVaccinationSitesQuery
+} from './hooks/useVaccinationSitesQuery';
+import {
+  findAllDistricts,
+  useAllDistrictsQuery
+} from './hooks/useAllDistrictsQuery';
+import { findAllWards, useAllWardsQuery } from './hooks/useAllWardsQuery';
+import { findDistricts, useDistrictsQuery } from './hooks/useDistrictsQuery';
+import { findWards, useWardsQuery } from './hooks/useWardsQuery';
+import { findProvinces } from './hooks/useProvincesQuery';
 
 const Injection = styled.div`
   display: flex;
@@ -110,118 +124,37 @@ const ButtonSubmit = styled(Button)`
   }
 `;
 
-interface InjectionLocal {
+export interface VaccinationSites {
   id: number;
   name: string;
-  location: string;
-  provinceId: number;
-  districtId: number;
-  wardId: number;
+  address: string;
+  ward_id: number;
   leader: string;
-  numberOfInjectionTables: number;
+  number_table: number;
 }
 
 type Inputs = {
-  provinceId: number;
-  districtId: number;
-  wardId: number;
+  province_id?: number;
+  district_id?: number;
+  ward_id?: number;
 };
 
-interface Province {
+export interface Province {
   id: number;
   name: string;
 }
 
-interface District {
+export interface District {
   id: number;
   name: string;
-  provinceId: number;
+  province_id: number;
 }
 
-interface Ward {
+export interface Ward {
   id: number;
   name: string;
-  districtId: number;
+  district_id: number;
 }
-
-const provinces: Province[] = [{ id: 1, name: 'Thành phố Hà Nội' }];
-
-const districts: District[] = [
-  { id: 1, name: 'Quận Ba Đình', provinceId: 1 },
-  { id: 2, name: 'Quận Đống Đa ', provinceId: 1 }
-];
-
-const wards: Ward[] = [
-  { id: 1, name: 'Phường Phúc Xá ', districtId: 1 },
-  { id: 2, name: 'Phường Trúc Bạch ', districtId: 1 },
-  { id: 3, name: 'Phường Cát Linh ', districtId: 2 },
-  { id: 4, name: 'Phường Láng Thượng ', districtId: 2 },
-  { id: 5, name: 'Phường Ô Chợ Dừa', districtId: 2 },
-  { id: 6, name: 'Phường Quốc Tử Giám', districtId: 2 }
-];
-
-const injectionSitesRow: InjectionLocal[] = [
-  {
-    id: 1,
-    name: 'Bệnh viện Đa khoa Medlatec',
-    location: '42-44 Nghĩa Dũng',
-    provinceId: 1,
-    districtId: 1,
-    wardId: 1,
-    leader: 'Nguyễn Thị Kim Liên',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 2,
-    name: 'Bệnh viện Đa khoa Hồng Ngọc',
-    location: '55 Yên Ninh',
-    provinceId: 1,
-    districtId: 1,
-    wardId: 2,
-    leader: 'Cao Độc Lập',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 3,
-    name: 'Trạm y tế Phường Cát Linh',
-    location: '22 Cát Linh',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 3,
-    leader: 'Nguyễn Thị Hồng Hoan',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 4,
-    name: 'Bệnh viện Nhi Trung Ương',
-    location: '18/879 La Thành',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 4,
-    leader: 'Lê Kiến Ngãi',
-    numberOfInjectionTables: 10
-  },
-  {
-    id: 5,
-    name: 'Trạm y tế Phường Ô Chợ Dừa',
-    location: '1 Hoàng Cầu',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 5,
-    leader: 'Nguyễn Thanh Hà',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 6,
-    name: 'Trạm y tế Phường Quốc Tử Giám',
-    location: '14 Ngõ Thông Phong',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 6,
-    leader: 'Vũ Thị Hồng Mai',
-    numberOfInjectionTables: 1
-  }
-];
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -329,11 +262,21 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
+export const findVaccinationSites = async (dataInputs: Inputs) => {
+  const res = await api.get<VaccinationSites[]>(
+    '/vaccination-sites/condition',
+    {
+      params: dataInputs
+    }
+  );
+  return res.data;
+};
+
 const InjectionSites = () => {
   const formSchema = Yup.object().shape({
-    provinceId: Yup.number(),
-    districtId: Yup.number(),
-    wardId: Yup.number()
+    province_id: Yup.number(),
+    district_id: Yup.number(),
+    ward_id: Yup.number()
   });
 
   const validationOpt = {
@@ -343,31 +286,126 @@ const InjectionSites = () => {
   const { register, handleSubmit, watch, control } =
     useForm<Inputs>(validationOpt);
 
-  const onSubmit = () => {};
-  const provinceId = watch('provinceId');
-  const districtId = watch('districtId');
+  const province_id = watch('province_id');
+  const district_id = watch('district_id');
+  const ward_id = watch('ward_id');
 
-  const filterDistricts: District[] = React.useMemo(() => {
-    return districts.filter((district) => district.provinceId === provinceId);
-  }, [provinceId]);
+  const findNameWard = (id: Number) => {
+    return allWards.find((element: Ward) => element.id === id)?.name;
+  };
 
-  const filterWards: Ward[] = React.useMemo(() => {
-    return wards.filter((ward) => ward.districtId === districtId);
-  }, [districtId]);
-
-  const findProvince = (provinceId: Number) => {
-    return provinces.find((element: Province) => element.id === provinceId)
+  const findNameDistrict = (id: Number) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    return allDistricts.find((element: District) => element.id === ward?.id)
       ?.name;
   };
 
-  const findDistrict = (districtId: Number) => {
-    return districts.find((element: District) => element.id === districtId)
-      ?.name;
+  const findNameProvince = (id: Number) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    const district = allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    );
+    return provinces.find(
+      (element: Province) => element.id === district?.province_id
+    )?.name;
   };
 
-  const findWard = (wardId: Number) => {
-    return wards.find((element: Ward) => element.id === wardId)?.name;
+  const [provinces, setProvinces] = React.useState<Province[]>([]);
+  const [districts, setDistricts] = React.useState<District[]>([]);
+  const [wards, setWards] = React.useState<Ward[]>([]);
+  const [injectionSitesRow, setInjectionSitesRow] = React.useState<
+    VaccinationSites[]
+  >([]);
+
+  const [allDistricts, setAllDistricts] = React.useState<District[]>([]);
+  const [allWards, setAllWards] = React.useState<Ward[]>([]);
+
+  React.useEffect(() => {
+    const getProvinces = async () => {
+      const result = await findProvinces();
+      setProvinces(result);
+    };
+    getProvinces();
+  }, []);
+
+  React.useEffect(() => {
+    if (province_id) {
+      const getDistricts = async () => {
+        const result = await findDistricts(province_id);
+        setDistricts(result);
+      };
+      getDistricts();
+    }
+  }, [province_id]);
+
+  React.useEffect(() => {
+    if (district_id) {
+      const getWards = async () => {
+        const result = await findWards(district_id);
+        setWards(result);
+      };
+      getWards();
+    }
+  }, [district_id]);
+
+  React.useEffect(() => {
+    const getAllDistricts = async () => {
+      const result = await findAllDistricts();
+      setAllDistricts(result);
+    };
+    getAllDistricts();
+  }, []);
+
+  React.useEffect(() => {
+    const getAllWards = async () => {
+      const result = await findAllWards();
+      setAllWards(result);
+    };
+    getAllWards();
+  }, []);
+
+  React.useEffect(() => {
+    const getAllVaccinationSites = async () => {
+      const result = await findAllVaccinationSites();
+      setInjectionSitesRow(result);
+    };
+    getAllVaccinationSites();
+  }, []);
+
+  useVaccinationSitesQuery();
+
+  useDistrictsQuery();
+
+  useWardsQuery();
+
+  useAllDistrictsQuery();
+
+  useAllWardsQuery();
+
+  useVaccinationSitesQuery();
+
+  const { mutate, data } = useMutation({
+    mutationFn: (dataInputs: Inputs) => {
+      return findVaccinationSites(dataInputs);
+    }
+  });
+
+  const dataForm: Inputs = {
+    province_id: province_id,
+    district_id: district_id,
+    ward_id: ward_id
   };
+
+  const onSubmit = async (event: any) => {
+    event.preventDefault();
+    mutate(dataForm);
+  };
+
+  React.useEffect(() => {
+    if (data) {
+      setInjectionSitesRow(data);
+    }
+  }, [data]);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -410,7 +448,7 @@ const InjectionSites = () => {
         <FormFilter onSubmit={handleSubmit(onSubmit)}>
           <InputComponent>
             <Controller
-              {...register('provinceId')}
+              {...register('province_id')}
               control={control}
               render={({ field }) => (
                 <FormControl fullWidth>
@@ -433,7 +471,7 @@ const InjectionSites = () => {
           </InputComponent>
           <InputComponent>
             <Controller
-              {...register('districtId')}
+              {...register('district_id')}
               control={control}
               render={({ field }) => (
                 <FormControl fullWidth>
@@ -444,7 +482,7 @@ const InjectionSites = () => {
                     onChange={(event) => {
                       field.onChange(event.target.value);
                     }}>
-                    {filterDistricts.map((district) => (
+                    {districts.map((district) => (
                       <MenuItem key={district.id} value={district.id}>
                         {district.name}
                       </MenuItem>
@@ -456,7 +494,7 @@ const InjectionSites = () => {
           </InputComponent>
           <InputComponent>
             <Controller
-              {...register('wardId')}
+              {...register('ward_id')}
               control={control}
               render={({ field }) => (
                 <FormControl fullWidth>
@@ -467,7 +505,7 @@ const InjectionSites = () => {
                     onChange={(event) => {
                       field.onChange(event.target.value);
                     }}>
-                    {filterWards.map((ward) => (
+                    {wards.map((ward) => (
                       <MenuItem key={ward.id} value={ward.id}>
                         {ward.name}
                       </MenuItem>
@@ -518,22 +556,22 @@ const InjectionSites = () => {
                     {element.name}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {element.location}
+                    {element.address}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {findWard(element.wardId)}
+                    {findNameWard(element.ward_id)}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {findDistrict(element.districtId)}
+                    {findNameDistrict(element.ward_id)}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {findProvince(element.provinceId)}
+                    {findNameProvince(element.ward_id)}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {element.leader}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {element.numberOfInjectionTables}
+                    {element.number_table}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
