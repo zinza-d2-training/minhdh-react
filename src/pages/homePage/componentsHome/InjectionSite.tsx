@@ -28,9 +28,10 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { QueryKey } from '../../../hooks/QueryKey';
 import api from '../../../utils/axios/instance';
+import { useQueryData } from '../../../hooks/useQueryData';
 
 const Injection = styled.div`
   display: flex;
@@ -391,35 +392,17 @@ const InjectionSites = () => {
     getAllVaccinationSites();
   }, []);
 
-  useQuery({
-    queryKey: [QueryKey.getProvinces],
-    queryFn: async () => findProvinces
-  });
+  useQueryData(QueryKey.getProvinces, findProvinces);
 
-  useQuery({
-    queryKey: [QueryKey.getDistricts],
-    queryFn: async () => findDistricts
-  });
+  useQueryData(QueryKey.getDistricts, findDistricts);
 
-  useQuery({
-    queryKey: [QueryKey.getWards],
-    queryFn: async () => findWards
-  });
+  useQueryData(QueryKey.getWards, findWards);
 
-  useQuery({
-    queryKey: [QueryKey.getAllDistricts],
-    queryFn: async () => findAllDistricts
-  });
+  useQueryData(QueryKey.getAllDistricts, findAllDistricts);
 
-  useQuery({
-    queryKey: [QueryKey.getAllWards],
-    queryFn: async () => findAllWards
-  });
+  useQueryData(QueryKey.getAllWards, findAllWards);
 
-  useQuery({
-    queryKey: [QueryKey.getAllVaccinationSites],
-    queryFn: async () => findAllVaccinationSites
-  });
+  useQueryData(QueryKey.getAllVaccinationSites, findAllVaccinationSites);
 
   const { mutate, data } = useMutation({
     mutationFn: (dataInputs: Inputs) => {
