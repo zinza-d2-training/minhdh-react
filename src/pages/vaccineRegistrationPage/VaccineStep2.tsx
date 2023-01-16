@@ -9,8 +9,12 @@ import Checkbox from '@mui/material/Checkbox';
 import * as React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer';
+import api from '../../utils/axios/instance';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
+import { useMutation } from '@tanstack/react-query';
+import { LoadingButton } from '@mui/lab';
 
 const VaccineRegistrationStep2 = styled.div``;
 
@@ -282,7 +286,7 @@ const ButtonBack = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
-const ButtonContinue = styled(Button)`
+const ButtonContinue = styled(LoadingButton)`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -295,17 +299,58 @@ const ButtonContinue = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
+interface Inputs {
+  numBHYT: number;
+  group_id: number;
+  job: string;
+  work_unit: string;
+  address: string;
+  date_injection: Date;
+  session_injection: string;
+  user_id?: number;
+}
+
+export const vaccineRegistration = async (dataInputs: Inputs) => {
+  const newData = await api.post('/vaccine-registration', dataInputs);
+  return newData.data;
+};
+
 const VaccineStep2 = () => {
   const [checked, setChecked] = React.useState(false);
   const navigate = useNavigate();
+  const location: any = useLocation();
+  const dataInput = location.state.data;
+  const [loading, setLoading] = React.useState(false);
+  const currentUser = useCurrentUser();
 
   const handleChangeCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
 
-  const onSubmit = () => {
-    navigate('/vaccine-register-step3');
+  const newRegistration: Inputs = { ...dataInput, user_id: currentUser?.id };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (dataInputs: Inputs) => {
+      return vaccineRegistration(dataInputs);
+    }
+  });
+
+  const onSubmit = (event: any) => {
+    event.preventDefault();
+    mutate(newRegistration);
+    setLoading(true);
   };
+
+  React.useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        navigate('/vaccine-register-step3', {
+          state: { data: newRegistration.numBHYT }
+        });
+      }, 3000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, navigate]);
 
   return (
     <VaccineRegistrationStep2>
@@ -538,7 +583,12 @@ const VaccineStep2 = () => {
                   </Typography>
                 </ButtonBack>
               </Link>
-              <ButtonContinue type="submit" disabled={!checked}>
+              <ButtonContinue
+                type="submit"
+                disabled={!checked}
+                loading={loading}
+                variant="contained"
+                loadingPosition="end">
                 <Typography
                   sx={{
                     width: '90px',

@@ -26,6 +26,12 @@ import {
   useGridSelector
 } from '@mui/x-data-grid';
 import { TransitionProps } from '@mui/material/transitions';
+import {
+  findAllVaccinationSites,
+  useVaccinationSitesQuery
+} from './hooks/useVaccinationSitesQuery';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../utils/axios/instance';
 
 const Menu = styled.div`
   display: flex;
@@ -172,7 +178,7 @@ const TextTitle = styled.div`
   height: 64px;
 `;
 
-const FormDialog = styled.div``;
+const FormDialog = styled.form``;
 
 const DialogContent = styled.div`
   display: flex;
@@ -268,84 +274,19 @@ const ButtonClose = styled(Button)`
 
 type Inputs = {
   name: string;
-  location: string;
+  address: string;
   leader: string;
-  numberOfInjectionTables: number;
+  number_table: number;
 };
 
-interface InjectionLocal {
+interface VaccinationSites {
   id: number;
   name: string;
-  location: string;
-  provinceId: number;
-  districtId: number;
-  wardId: number;
+  address: string;
+  ward_id: number;
   leader: string;
-  numberOfInjectionTables: number;
+  number_table: number;
 }
-
-const injectionSitesRow: InjectionLocal[] = [
-  {
-    id: 1,
-    name: 'Bệnh viện Đa khoa Medlatec',
-    location: '42-44 Nghĩa Dũng',
-    provinceId: 1,
-    districtId: 1,
-    wardId: 1,
-    leader: 'Nguyễn Thị Kim Liên',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 2,
-    name: 'Bệnh viện Đa khoa Hồng Ngọc',
-    location: '55 Yên Ninh',
-    provinceId: 1,
-    districtId: 1,
-    wardId: 2,
-    leader: 'Cao Độc Lập',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 3,
-    name: 'Trạm y tế Phường Cát Linh',
-    location: '22 Cát Linh',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 3,
-    leader: 'Nguyễn Thị Hồng Hoan',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 4,
-    name: 'Bệnh viện Nhi Trung Ương',
-    location: '18/879 La Thành',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 4,
-    leader: 'Lê Kiến Ngãi',
-    numberOfInjectionTables: 10
-  },
-  {
-    id: 5,
-    name: 'Trạm y tế Phường Ô Chợ Dừa',
-    location: '1 Hoàng Cầu',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 5,
-    leader: 'Nguyễn Thanh Hà',
-    numberOfInjectionTables: 1
-  },
-  {
-    id: 6,
-    name: 'Trạm y tế Phường Quốc Tử Giám',
-    location: '14 Ngõ Thông Phong',
-    provinceId: 1,
-    districtId: 2,
-    wardId: 6,
-    leader: 'Vũ Thị Hồng Mai',
-    numberOfInjectionTables: 1
-  }
-];
 
 const columns: GridColDef[] = [
   {
@@ -363,7 +304,7 @@ const columns: GridColDef[] = [
     align: 'center'
   },
   {
-    field: 'location',
+    field: 'address',
     headerName: 'Địa chỉ',
     minWidth: 400,
     headerAlign: 'center',
@@ -378,7 +319,7 @@ const columns: GridColDef[] = [
     align: 'center'
   },
   {
-    field: 'numberOfInjectionTables',
+    field: 'number_table',
     headerName: 'Số bàn tiêm',
     minWidth: 150,
     type: 'number',
@@ -417,11 +358,11 @@ const Transition = React.forwardRef(function Transition(
 const AdminPlace = () => {
   const formSchema = Yup.object().shape({
     name: Yup.string().required('Tên điểm tiêm không được bỏ trống'),
-    location: Yup.string().required('Địa điểm không được bỏ trống'),
+    address: Yup.string().required('Địa điểm không được bỏ trống'),
     leader: Yup.string().required(
       'Người đứng đầu cơ sở tiêm không được bỏ trống'
     ),
-    numberOfInjectionTables: Yup.number()
+    number_table: Yup.number()
       .required('Số bàn tiêm không được bỏ trống')
       .min(1, 'Bàn tiêm phải lớn hơn 0')
   });
@@ -434,28 +375,69 @@ const AdminPlace = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const onSubmitUpdate = () => {};
+  useVaccinationSitesQuery();
 
-  const [rowSelected, setRowSelected] = React.useState<InjectionLocal>();
+  const [injectionSitesRow, setInjectionSitesRow] = React.useState<
+    VaccinationSites[]
+  >([]);
+
+  const updateVaccinationSites = async (dataUpdate: Inputs) => {
+    const res = await api.post(
+      `/vaccination-sites/${rowSelected?.id}`,
+      dataUpdate
+    );
+    return res.data;
+  };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (dataUpdate: Inputs) => {
+      return updateVaccinationSites(dataUpdate);
+    }
+  });
+
+  const name = watch('name');
+  const address = watch('address');
+  const leader = watch('leader');
+  const number_table = watch('number_table');
+
+  const formUpdate: Inputs = {
+    name: name,
+    address: address,
+    leader: leader,
+    number_table: Number(number_table)
+  };
+
+  const onSubmitUpdate = async () => {
+    mutate(formUpdate);
+    setOpen(false);
+  };
+
+  React.useEffect(() => {
+    const getAllVaccinationSites = async () => {
+      const result = await findAllVaccinationSites();
+      setInjectionSitesRow(result);
+    };
+    getAllVaccinationSites();
+  }, [data]);
+
+  const [rowSelected, setRowSelected] = React.useState<VaccinationSites>();
   const [open, setOpen] = React.useState<boolean>(false);
   const filterData = () => {};
 
   React.useEffect(() => {
     if (rowSelected) {
       setValue('name', rowSelected?.name as string);
-      setValue('location', rowSelected?.location as string);
+      setValue('address', rowSelected?.address as string);
       setValue('leader', rowSelected?.leader as string);
-      setValue(
-        'numberOfInjectionTables',
-        rowSelected?.numberOfInjectionTables as number
-      );
+      setValue('number_table', rowSelected?.number_table as number);
     }
   }, [rowSelected, setValue]);
 
-  const handleClickOpen = (param: InjectionLocal) => {
+  const handleClickOpen = (param: VaccinationSites) => {
     setRowSelected(param);
     setOpen(true);
   };
@@ -543,7 +525,7 @@ const AdminPlace = () => {
             <TextField
               size="small"
               type="text"
-              id="location"
+              id="address"
               placeholder="Địa chỉ"
               sx={{
                 width: '100%'
@@ -558,7 +540,9 @@ const AdminPlace = () => {
         <Data>
           <DataGrid
             disableColumnMenu
-            onRowClick={(param) => handleClickOpen(param.row as InjectionLocal)}
+            onRowClick={(param) =>
+              handleClickOpen(param.row as VaccinationSites)
+            }
             autoPageSize
             autoHeight
             rows={injectionSitesRow}
@@ -618,15 +602,13 @@ const AdminPlace = () => {
                 />
               </InputComponent>
               <InputComponent>
-                <Label htmlFor="location">Địa chỉ</Label>
+                <Label htmlFor="address">Địa chỉ</Label>
                 <TextField
-                  {...register('location')}
+                  {...register('address')}
                   size="small"
-                  helperText={
-                    errors.location?.message && errors.location.message
-                  }
+                  helperText={errors.address?.message && errors.address.message}
                   type="text"
-                  id="location"
+                  id="address"
                   placeholder="Địa chỉ"
                   sx={{
                     width: '100%'
@@ -650,16 +632,15 @@ const AdminPlace = () => {
                 />
               </InputComponent>
               <InputComponent>
-                <Label htmlFor="numberOfInjectionTables">Số bàn tiêm</Label>
+                <Label htmlFor="number_table">Số bàn tiêm</Label>
                 <TextField
-                  {...register('numberOfInjectionTables')}
+                  {...register('number_table')}
                   size="small"
                   helperText={
-                    errors.numberOfInjectionTables?.message &&
-                    errors.numberOfInjectionTables.message
+                    errors.number_table?.message && errors.number_table.message
                   }
                   type="text"
-                  id="numberOfInjectionTables"
+                  id="number_table"
                   placeholder="Số bàn tiêm"
                   sx={{
                     width: '100%'

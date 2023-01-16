@@ -5,17 +5,13 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Link } from 'react-router-dom';
 
 const Research = styled.div`
-  z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 16px 0px;
-  position: absolute;
   width: 361px;
   height: 150px;
-  left: 948px;
-  top: 69px;
   background: #ffffff;
   box-shadow: 0px 10px 70px rgba(0, 0, 0, 0.15);
   border-radius: 12px;

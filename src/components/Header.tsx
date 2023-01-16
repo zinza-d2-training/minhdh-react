@@ -1,4 +1,4 @@
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Menu } from '@mui/material';
 import styled from '@emotion/styled';
 import logo from '../images/Logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -6,8 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import BoxResearch from './BoxResearch';
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
-import { logout, selectIsAdmin, selectUser } from '../features/auth/authSlice';
+import { logout, selectIsAdmin } from '../features/auth/authSlice';
 import { Logout } from '@mui/icons-material';
+import { useLogin } from '../hooks/useLogin';
+import { useCurrentUser } from '../hooks/useCurrentUser';
+import { LoadingButton } from '@mui/lab';
 
 const HeaderApp = styled.div`
   display: flex;
@@ -45,7 +48,7 @@ const Logo = styled.img`
   height: 50px;
 `;
 
-const Menu = styled.div`
+const MenuItemHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -76,15 +79,16 @@ const ItemInject = styled.div`
   height: 50px;
 `;
 
-const ItemResearch = styled.div`
+const ItemResearch = styled(Button)`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 0px;
-  width: 78px;
   height: 50px;
   cursor: pointer;
+  text-transform: none;
+  margin-right: 10px;
 `;
 
 const ItemDocs = styled.div`
@@ -182,7 +186,7 @@ const ButtonUser = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
-const ButtonLogout = styled(Button)`
+const ButtonLogout = styled(LoadingButton)`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -191,7 +195,7 @@ const ButtonLogout = styled(Button)`
   gap: 4px;
   width: 130px;
   height: 40px;
-  background: #ffffff;
+  background: red;
   border-radius: 8px 8px 8px 0px;
 `;
 
@@ -209,19 +213,27 @@ const ButtonLogin = styled(Button)`
 `;
 
 const Header = () => {
-  const [research, setResearch] = React.useState(false);
-
-  const toggleBoxResearch = () => {
-    setResearch(!research);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const [loading, setLoading] = React.useState(false);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
+  useLogin();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const currentUser = useAppSelector(selectUser);
+  const currentUser = useCurrentUser();
   const isAdmin = useAppSelector(selectIsAdmin);
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/');
+    setTimeout(() => {
+      setLoading(true);
+      navigate('/');
+    }, 3000);
   };
 
   return (
@@ -246,7 +258,7 @@ const Header = () => {
             </Typography>
           </Brand>
         </Link>
-        <Menu>
+        <MenuItemHeader>
           <ItemHome>
             <Link to="/" style={{ textDecoration: 'none' }}>
               <Typography
@@ -287,10 +299,10 @@ const Header = () => {
               </Typography>
             </Link>
           </ItemInject>
-          <ItemResearch onClick={toggleBoxResearch}>
+          <ItemResearch onClick={handleClick}>
             <Typography
               sx={{
-                width: '93px',
+                minWidth: '50px',
                 height: '24px',
                 fontFamily: 'Roboto',
                 fontStyle: 'normal',
@@ -304,9 +316,20 @@ const Header = () => {
             </Typography>
             <KeyboardArrowDownIcon htmlColor="white" />
           </ItemResearch>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{ disablePadding: true }}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: -150
+            }}>
+            <BoxResearch />
+          </Menu>
           <ItemDocs>
             <Link
-              to={isAdmin ? '/admin-place' : '/admin-document'}
+              to={isAdmin === 1 ? '/admin-place' : '/admin-document'}
               style={{ textDecoration: 'none' }}>
               <Typography
                 variant="body1"
@@ -325,7 +348,7 @@ const Header = () => {
               </Typography>
             </Link>
           </ItemDocs>
-          {currentUser ? (
+          {currentUser !== null ? (
             <ItemUser>
               <Link to="/account">
                 <ButtonUser>
@@ -342,16 +365,20 @@ const Header = () => {
               </Link>
             </ItemLogin>
           )}
-          {currentUser && (
+          {currentUser !== null && (
             <ItemLogout>
-              <ButtonLogout onClick={handleLogout} endIcon={<Logout />}>
+              <ButtonLogout
+                onClick={handleLogout}
+                loading={loading}
+                variant="contained"
+                loadingPosition="start"
+                endIcon={<Logout />}>
                 <span className="text-logout">Đăng xuất</span>
               </ButtonLogout>
             </ItemLogout>
           )}
-        </Menu>
+        </MenuItemHeader>
       </ContainerHeader>
-      {research && <BoxResearch />}
     </HeaderApp>
   );
 };

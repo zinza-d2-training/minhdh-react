@@ -133,11 +133,11 @@ export interface VaccinationSites {
   number_table: number;
 }
 
-type Inputs = {
-  province_id?: number;
-  district_id?: number;
-  ward_id?: number;
-};
+interface Inputs {
+  province_id: number | null | undefined;
+  district_id: number | null | undefined;
+  ward_id: number | null | undefined;
+}
 
 export interface Province {
   id: number;
@@ -296,8 +296,9 @@ const InjectionSites = () => {
 
   const findNameDistrict = (id: Number) => {
     const ward = allWards.find((element: Ward) => element.id === id);
-    return allDistricts.find((element: District) => element.id === ward?.id)
-      ?.name;
+    return allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    )?.name;
   };
 
   const findNameProvince = (id: Number) => {
@@ -390,15 +391,12 @@ const InjectionSites = () => {
     }
   });
 
-  const dataForm: Inputs = {
-    province_id: province_id,
-    district_id: district_id,
-    ward_id: ward_id
-  };
-
-  const onSubmit = async (event: any) => {
-    event.preventDefault();
-    mutate(dataForm);
+  const onSubmit = async () => {
+    mutate({
+      province_id,
+      district_id,
+      ward_id
+    });
   };
 
   React.useEffect(() => {
