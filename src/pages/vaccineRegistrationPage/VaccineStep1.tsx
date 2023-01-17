@@ -18,8 +18,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Footer from '../../components/Footer';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { findGroup, useGroupsQuery } from './hooks/useGroupQuery';
+import { useGroupsQuery } from './hooks/useGroupQuery';
 
 const VaccineRegistrationStep1 = styled.div``;
 
@@ -374,17 +373,7 @@ const VaccineStep1 = () => {
 
   const navigate = useNavigate();
 
-  const [groups, setGroups] = useState<Group[]>([]);
-
-  useGroupsQuery();
-
-  useEffect(() => {
-    const getGroups = async () => {
-      const result = await findGroup();
-      setGroups(result);
-    };
-    getGroups();
-  }, []);
+  const groups: Group[] = useGroupsQuery() || [];
 
   const onSubmit = async (data: Inputs) => {
     navigate('/vaccine-register-step2', {

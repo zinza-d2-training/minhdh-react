@@ -26,12 +26,10 @@ import {
   useGridSelector
 } from '@mui/x-data-grid';
 import { TransitionProps } from '@mui/material/transitions';
-import {
-  findAllVaccinationSites,
-  useVaccinationSitesQuery
-} from './hooks/useVaccinationSitesQuery';
-import { useMutation } from '@tanstack/react-query';
+import { useVaccinationSitesQuery } from './hooks/useVaccinationSitesQuery';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../utils/axios/instance';
+import { QueryKey } from '../../hooks/QueryKey';
 
 const Menu = styled.div`
   display: flex;
@@ -379,11 +377,8 @@ const AdminPlace = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  useVaccinationSitesQuery();
-
-  const [injectionSitesRow, setInjectionSitesRow] = React.useState<
-    VaccinationSites[]
-  >([]);
+  const injectionSitesRow: VaccinationSites[] =
+    useVaccinationSitesQuery() || [];
 
   const updateVaccinationSites = async (dataUpdate: Inputs) => {
     const res = await api.post(
@@ -393,9 +388,14 @@ const AdminPlace = () => {
     return res.data;
   };
 
-  const { mutate, data } = useMutation({
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
     mutationFn: (dataUpdate: Inputs) => {
       return updateVaccinationSites(dataUpdate);
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData([QueryKey.getAllVaccinationSites], data);
     }
   });
 
@@ -415,14 +415,6 @@ const AdminPlace = () => {
     mutate(formUpdate);
     setOpen(false);
   };
-
-  React.useEffect(() => {
-    const getAllVaccinationSites = async () => {
-      const result = await findAllVaccinationSites();
-      setInjectionSitesRow(result);
-    };
-    getAllVaccinationSites();
-  }, [data]);
 
   const [rowSelected, setRowSelected] = React.useState<VaccinationSites>();
   const [open, setOpen] = React.useState<boolean>(false);

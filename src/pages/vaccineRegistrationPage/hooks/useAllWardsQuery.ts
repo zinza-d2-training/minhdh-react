@@ -9,8 +9,9 @@ export const findAllWards = async () => {
 };
 
 export const useAllWardsQuery = () => {
-  return useQuery({
+  const { data } = useQuery({
     queryKey: [QueryKey.getAllWards],
-    queryFn: async () => findAllWards
+    queryFn: findAllWards
   });
+  return data;
 };

@@ -9,8 +9,9 @@ export const findAllVaccinationSites = async () => {
 };
 
 export const useVaccinationSitesQuery = () => {
-  return useQuery({
+  const { data } = useQuery({
     queryKey: [QueryKey.getAllVaccinationSites],
-    queryFn: async () => findAllVaccinationSites
+    queryFn: findAllVaccinationSites
   });
+  return data;
 };

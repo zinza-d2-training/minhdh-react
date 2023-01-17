@@ -28,20 +28,15 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../../utils/axios/instance';
-import {
-  findAllVaccinationSites,
-  useVaccinationSitesQuery
-} from './hooks/useVaccinationSitesQuery';
-import {
-  findAllDistricts,
-  useAllDistrictsQuery
-} from './hooks/useAllDistrictsQuery';
-import { findAllWards, useAllWardsQuery } from './hooks/useAllWardsQuery';
-import { findDistricts, useDistrictsQuery } from './hooks/useDistrictsQuery';
-import { findWards, useWardsQuery } from './hooks/useWardsQuery';
-import { findProvinces } from './hooks/useProvincesQuery';
+import { useVaccinationSitesQuery } from './hooks/useVaccinationSitesQuery';
+import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
+import { useAllWardsQuery } from './hooks/useAllWardsQuery';
+import { useDistrictsQuery } from './hooks/useDistrictsQuery';
+import { useWardsQuery } from './hooks/useWardsQuery';
+import { useProvincesQuery } from './hooks/useProvincesQuery';
+import { QueryKey } from '../../../hooks/QueryKey';
 
 const Injection = styled.div`
   display: flex;
@@ -311,83 +306,27 @@ const InjectionSites = () => {
     )?.name;
   };
 
-  const [provinces, setProvinces] = React.useState<Province[]>([]);
-  const [districts, setDistricts] = React.useState<District[]>([]);
-  const [wards, setWards] = React.useState<Ward[]>([]);
-  const [injectionSitesRow, setInjectionSitesRow] = React.useState<
-    VaccinationSites[]
-  >([]);
+  const provinces: Province[] = useProvincesQuery() || [];
 
-  const [allDistricts, setAllDistricts] = React.useState<District[]>([]);
-  const [allWards, setAllWards] = React.useState<Ward[]>([]);
+  const injectionSitesRow: VaccinationSites[] =
+    useVaccinationSitesQuery() || [];
 
-  React.useEffect(() => {
-    const getProvinces = async () => {
-      const result = await findProvinces();
-      setProvinces(result);
-    };
-    getProvinces();
-  }, []);
+  const districts: District[] = useDistrictsQuery(province_id) || [];
 
-  React.useEffect(() => {
-    if (province_id) {
-      const getDistricts = async () => {
-        const result = await findDistricts(province_id);
-        setDistricts(result);
-      };
-      getDistricts();
-    }
-  }, [province_id]);
+  const wards: Ward[] = useWardsQuery(district_id) || [];
 
-  React.useEffect(() => {
-    if (district_id) {
-      const getWards = async () => {
-        const result = await findWards(district_id);
-        setWards(result);
-      };
-      getWards();
-    }
-  }, [district_id]);
+  const allDistricts: District[] = useAllDistrictsQuery() || [];
 
-  React.useEffect(() => {
-    const getAllDistricts = async () => {
-      const result = await findAllDistricts();
-      setAllDistricts(result);
-    };
-    getAllDistricts();
-  }, []);
+  const allWards: Ward[] = useAllWardsQuery() || [];
 
-  React.useEffect(() => {
-    const getAllWards = async () => {
-      const result = await findAllWards();
-      setAllWards(result);
-    };
-    getAllWards();
-  }, []);
+  const queryClient = useQueryClient();
 
-  React.useEffect(() => {
-    const getAllVaccinationSites = async () => {
-      const result = await findAllVaccinationSites();
-      setInjectionSitesRow(result);
-    };
-    getAllVaccinationSites();
-  }, []);
-
-  useVaccinationSitesQuery();
-
-  useDistrictsQuery();
-
-  useWardsQuery();
-
-  useAllDistrictsQuery();
-
-  useAllWardsQuery();
-
-  useVaccinationSitesQuery();
-
-  const { mutate, data } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (dataInputs: Inputs) => {
       return findVaccinationSites(dataInputs);
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData([QueryKey.getAllVaccinationSites], data);
     }
   });
 
@@ -398,12 +337,6 @@ const InjectionSites = () => {
       ward_id
     });
   };
-
-  React.useEffect(() => {
-    if (data) {
-      setInjectionSitesRow(data);
-    }
-  }, [data]);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);

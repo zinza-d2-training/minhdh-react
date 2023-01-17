@@ -12,16 +12,9 @@ import {
   District,
   Province
 } from '../homePage/componentsHome/InjectionSite';
-import { useEffect, useState } from 'react';
-import {
-  findAllProvinces,
-  useAllProvincesQuery
-} from './hooks/useAllProvincesQuery';
-import {
-  findAllDistricts,
-  useAllDistrictsQuery
-} from './hooks/useAllDistrictsQuery';
-import { findAllWards, useAllWardsQuery } from './hooks/useAllWardsQuery';
+import { useAllProvincesQuery } from './hooks/useAllProvincesQuery';
+import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
+import { useAllWardsQuery } from './hooks/useAllWardsQuery';
 
 const VaccineRegistrationStep3 = styled.div``;
 
@@ -306,9 +299,6 @@ const VaccineStep3 = () => {
   };
 
   const currentUser = useCurrentUser();
-  const [allProvinces, setAllProvinces] = useState<Province[]>([]);
-  const [allDistricts, setAllDistricts] = useState<District[]>([]);
-  const [allWards, setAllWards] = useState<Ward[]>([]);
   const location: any = useLocation();
   const numBHYT = location.state.data;
 
@@ -333,35 +323,11 @@ const VaccineStep3 = () => {
     )?.name;
   };
 
-  useEffect(() => {
-    const getAllProvinces = async () => {
-      const result = await findAllProvinces();
-      setAllProvinces(result);
-    };
-    getAllProvinces();
-  }, []);
+  const allProvinces: Province[] = useAllProvincesQuery() || [];
 
-  useEffect(() => {
-    const getAllDistricts = async () => {
-      const result = await findAllDistricts();
-      setAllDistricts(result);
-    };
-    getAllDistricts();
-  }, []);
+  const allDistricts: District[] = useAllDistrictsQuery() || [];
 
-  useEffect(() => {
-    const getAllWards = async () => {
-      const result = await findAllWards();
-      setAllWards(result);
-    };
-    getAllWards();
-  }, []);
-
-  useAllProvincesQuery();
-
-  useAllDistrictsQuery();
-
-  useAllWardsQuery();
+  const allWards: Ward[] = useAllWardsQuery() || [];
 
   return (
     <VaccineRegistrationStep3>
