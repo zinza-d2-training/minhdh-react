@@ -262,6 +262,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                 inputProps={{
                   readOnly: !props.editInfo
                 }}
+                disabled={!props.editInfo}
                 size="small"
                 helperText={
                   errors.identity_card_number?.message &&
@@ -289,6 +290,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                 inputProps={{
                   readOnly: !props.editInfo
                 }}
+                disabled={!props.editInfo}
                 size="small"
                 helperText={errors.name?.message && errors.name.message}
                 type="text"
@@ -328,6 +330,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
             <InputComponent>
               <Label htmlFor="gender">Giới tính</Label>
               <TextField
+                disabled={!props.editInfo}
                 {...register('gender')}
                 inputProps={{
                   readOnly: !props.editInfo
