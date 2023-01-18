@@ -3,13 +3,15 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Typography, Button, TextField } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import styled from '@emotion/styled';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { login, selectError } from '../../features/user/userSlice';
 import { useMutation } from '@tanstack/react-query';
 import api from '../../utils/axios/instance';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useLogin } from '../../hooks/useLogin';
 
 type Inputs = {
   email: string;
@@ -127,7 +129,7 @@ const ButtonForgotPassword = styled(Button)`
   margin-left: 236px;
 `;
 
-const ButtonLogin = styled(Button)`
+const ButtonLogin = styled(LoadingButton)`
   width: 376px;
   height: 50px;
   background: #66bb6a;
@@ -251,14 +253,21 @@ const Login = () => {
 
   const onSubmit = () => {
     mutate(dataForm);
+    setLoading(true);
   };
 
   const navigate = useNavigate();
 
+  useLogin();
+
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (data) {
       dispatch(login(data));
-      navigate('/');
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
     }
   }, [data, dispatch, navigate]);
 
@@ -328,7 +337,12 @@ const Login = () => {
                   Tài khoản hoặc mật khẩu không chính xác
                 </Typography>
               )}
-              <ButtonLogin type="submit" disabled={!isValid}>
+              <ButtonLogin
+                type="submit"
+                disabled={!isValid}
+                loading={loading}
+                variant="contained"
+                loadingPosition="end">
                 <span>Đăng nhập</span>
               </ButtonLogin>
             </Form>

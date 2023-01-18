@@ -7,5 +7,8 @@ export enum QueryKey {
   getWards = 'getWards',
   getAllDistricts = 'getAllDistricts',
   getAllWards = 'getAllWards',
-  getAllVaccinationSites = 'getAllVaccinationSites'
+  getAllVaccinationSites = 'getAllVaccinationSites',
+  getVaccinationSites = 'getVaccinationSites',
+  getGroups = 'getGroups',
+  getAllRegistration = 'getAllRegistration'
 }

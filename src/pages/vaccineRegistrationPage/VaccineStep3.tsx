@@ -3,9 +3,20 @@ import Header from '../../components/Header';
 import styled from '@emotion/styled';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Footer from '../../components/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
+import {
+  Ward,
+  District,
+  Province
+} from '../homePage/componentsHome/InjectionSite';
+import { useAllProvincesQuery } from './hooks/useAllProvincesQuery';
+import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
+import { useAllWardsQuery } from './hooks/useAllWardsQuery';
+import moment from 'moment/moment';
+import * as React from 'react';
 
 const VaccineRegistrationStep3 = styled.div``;
 
@@ -289,6 +300,47 @@ const VaccineStep3 = () => {
     }
   };
 
+  const currentUser = useCurrentUser();
+  const location: any = useLocation();
+  const numBHYT = location.state.data;
+
+  const findNameWard = (id: any) => {
+    return allWards.find((element: Ward) => element.id === id)?.name;
+  };
+
+  const findNameDistrict = (id: any) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    return allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    )?.name;
+  };
+
+  const findNameProvince = (id: any) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    const district = allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    );
+    return allProvinces.find(
+      (element: Province) => element.id === district?.province_id
+    )?.name;
+  };
+
+  const allProvincesQuery = useAllProvincesQuery();
+  const allDistrictsQuery = useAllDistrictsQuery();
+  const allWardsQuery = useAllWardsQuery();
+
+  const allProvinces = React.useMemo(() => {
+    return allProvincesQuery.data ?? [];
+  }, [allProvincesQuery.data]);
+
+  const allDistricts = React.useMemo(() => {
+    return allDistrictsQuery.data ?? [];
+  }, [allDistrictsQuery.data]);
+
+  const allWards = React.useMemo(() => {
+    return allWardsQuery.data ?? [];
+  }, [allWardsQuery.data]);
+
   return (
     <VaccineRegistrationStep3>
       <Header />
@@ -473,7 +525,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    Nguyễn Văn A
+                    {currentUser?.name}
                   </Typography>
                 </BoxInfo>
                 <BoxInfo>
@@ -503,7 +555,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    16/10/1994
+                    {moment(currentUser?.birthday).format('L')}
                   </Typography>
                 </BoxInfo>
                 <BoxInfo>
@@ -533,7 +585,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    Nam
+                    {currentUser?.gender}
                   </Typography>
                 </BoxInfo>
               </InfoLine1>
@@ -565,7 +617,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    030012345678
+                    {currentUser?.identity_card_number}
                   </Typography>
                 </BoxInfo>
                 <BoxInfo>
@@ -595,7 +647,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    1111111111111
+                    {numBHYT}
                   </Typography>
                 </BoxInfo>
               </InfoLine2>
@@ -627,7 +679,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    Thành phố Hà Nội
+                    {findNameProvince(currentUser?.ward_id)}
                   </Typography>
                 </BoxInfo>
                 <BoxInfo>
@@ -657,7 +709,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    Quận Long Biên
+                    {findNameDistrict(currentUser?.ward_id)}
                   </Typography>
                 </BoxInfo>
                 <BoxInfo>
@@ -687,7 +739,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    Phường Giang Biên
+                    {findNameWard(currentUser?.ward_id)}
                   </Typography>
                 </BoxInfo>
               </InfoLine3>

@@ -1,4 +1,12 @@
-import { Button, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography
+} from '@mui/material';
 import Header from '../../components/Header';
 import styled from '@emotion/styled';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -10,6 +18,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Footer from '../../components/Footer';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGroupsQuery } from './hooks/useGroupQuery';
+import * as React from 'react';
 
 const VaccineRegistrationStep1 = styled.div``;
 
@@ -263,6 +273,9 @@ const InputComponent = styled.div`
     font-size: 16px;
     border-radius: 4px;
   }
+  & .labelGroup {
+    color: grey;
+  }
 `;
 
 const Label = styled.label`
@@ -320,27 +333,32 @@ const ButtonContinue = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
-interface Inputs {
+export interface Inputs {
   numBHYT: number;
-  group: string;
+  group_id: number;
   job: string;
-  workUnit: string;
+  work_unit: string;
   address: string;
-  dateOfInjection: Date;
-  sessionInjection: string;
+  date_injection: Date;
+  session_injection: string;
+}
+
+export interface Group {
+  id: number;
+  name: string;
 }
 
 const VaccineStep1 = () => {
   const formSchema = Yup.object().shape({
     numBHYT: Yup.number().required('Số thẻ BHYT không được bỏ trống'),
-    group: Yup.string().required('Nhóm ưu tiên không được bỏ trống'),
+    group_id: Yup.number().required('Nhóm ưu tiên không được bỏ trống'),
     job: Yup.string().required('Nghề nghiệp không được bỏ trống'),
-    workUnit: Yup.string().required('Đơn vị công tác không được bỏ trống'),
+    work_unit: Yup.string().required('Đơn vị công tác không được bỏ trống'),
     address: Yup.string().required('Địa chỉ hiện tại không được bỏ trống'),
-    dateOfInjection: Yup.date().required(
+    date_injection: Yup.date().required(
       'Ngày tiêm dự kiến không được bỏ trống'
     ),
-    sessionInjection: Yup.string().required('Buổi tiêm không được bỏ trống')
+    session_injection: Yup.string().required('Buổi tiêm không được bỏ trống')
   });
 
   const validationOpt = {
@@ -356,8 +374,16 @@ const VaccineStep1 = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = () => {
-    navigate('/vaccine-register-step2');
+  const groupsQuery = useGroupsQuery();
+
+  const groups = React.useMemo(() => {
+    return groupsQuery.data ?? [];
+  }, [groupsQuery.data]);
+
+  const onSubmit = async (data: Inputs) => {
+    navigate('/vaccine-register-step2', {
+      state: { data }
+    });
   };
 
   return (
@@ -501,17 +527,28 @@ const VaccineStep1 = () => {
                 <Label htmlFor="group">
                   Nhóm ưu tiên <span> (*)</span>
                 </Label>
-                <TextField
-                  {...register('group')}
-                  size="small"
-                  helperText={errors.group?.message && errors.group.message}
-                  type="text"
-                  id="group"
-                  placeholder="Nhóm ưu tiên"
-                  sx={{
-                    width: '100%'
-                  }}
-                  required
+                <Controller
+                  {...register('group_id')}
+                  control={control}
+                  render={({ field }) => (
+                    <FormControl size="small" fullWidth>
+                      <InputLabel className="labelGroup">
+                        Nhóm ưu tiên
+                      </InputLabel>
+                      <Select
+                        id="group"
+                        {...field}
+                        onChange={(event) => {
+                          field.onChange(event.target.value);
+                        }}>
+                        {groups.map((group) => (
+                          <MenuItem key={group.id} value={group.id}>
+                            {group.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
                 />
               </InputComponent>
               <InputComponent>
@@ -547,15 +584,15 @@ const VaccineStep1 = () => {
                 />
               </InputComponent>
               <InputComponent>
-                <Label htmlFor="workUnit">Đơn vị công tác</Label>
+                <Label htmlFor="work_unit">Đơn vị công tác</Label>
                 <TextField
-                  {...register('workUnit')}
+                  {...register('work_unit')}
                   size="small"
                   helperText={
-                    errors.workUnit?.message && errors.workUnit.message
+                    errors.work_unit?.message && errors.work_unit.message
                   }
                   type="text"
-                  id="workUnit"
+                  id="work_unit"
                   placeholder="Đơn vị công tác"
                   sx={{
                     width: '100%'
@@ -597,13 +634,13 @@ const VaccineStep1 = () => {
             </InfoInjection>
             <BoxInputLine3>
               <InputComponent>
-                <Label htmlFor="dateOfInjection">
+                <Label htmlFor="date_injection">
                   Ngày muốn được tiêm (dự kiến)
                 </Label>
                 <Controller
                   control={control}
-                  {...register('dateOfInjection')}
-                  name="dateOfInjection"
+                  {...register('date_injection')}
+                  name="date_injection"
                   render={({ field: { value, ...fieldProps } }) => (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateInjection>
@@ -622,16 +659,16 @@ const VaccineStep1 = () => {
                 />
               </InputComponent>
               <InputComponent>
-                <Label htmlFor="sessionInjection">Buổi tiêm mong muốn</Label>
+                <Label htmlFor="session_injection">Buổi tiêm mong muốn</Label>
                 <TextField
-                  {...register('sessionInjection')}
+                  {...register('session_injection')}
                   size="small"
                   helperText={
-                    errors.sessionInjection?.message &&
-                    errors.sessionInjection.message
+                    errors.session_injection?.message &&
+                    errors.session_injection.message
                   }
                   type="text"
-                  id="sessionInjection"
+                  id="session_injection"
                   placeholder="Buổi tiêm mong muốn"
                   sx={{
                     width: '100%'
