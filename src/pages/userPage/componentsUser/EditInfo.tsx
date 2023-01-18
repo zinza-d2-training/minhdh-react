@@ -354,7 +354,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                 {...register('province_id')}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <FormControl fullWidth>
+                  <FormControl size="small" fullWidth>
                     <InputLabel>
                       {findNameProvince(currentUser?.ward_id)}
                     </InputLabel>
@@ -385,7 +385,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                 {...register('district_id')}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <FormControl fullWidth>
+                  <FormControl size="small" fullWidth>
                     <InputLabel>
                       {findNameDistrict(currentUser?.ward_id)}
                     </InputLabel>
@@ -416,7 +416,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                 {...register('ward_id')}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <FormControl fullWidth>
+                  <FormControl size="small" fullWidth>
                     <InputLabel>
                       {findNameWard(currentUser?.ward_id)}
                     </InputLabel>
