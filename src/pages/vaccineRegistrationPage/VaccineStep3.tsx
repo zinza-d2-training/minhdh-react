@@ -16,6 +16,7 @@ import { useAllProvincesQuery } from './hooks/useAllProvincesQuery';
 import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
 import { useAllWardsQuery } from './hooks/useAllWardsQuery';
 import moment from 'moment/moment';
+import * as React from 'react';
 
 const VaccineRegistrationStep3 = styled.div``;
 
@@ -324,11 +325,21 @@ const VaccineStep3 = () => {
     )?.name;
   };
 
-  const allProvinces: Province[] = useAllProvincesQuery().data || [];
+  const allProvincesQuery = useAllProvincesQuery();
+  const allDistrictsQuery = useAllDistrictsQuery();
+  const allWardsQuery = useAllWardsQuery();
 
-  const allDistricts: District[] = useAllDistrictsQuery().data || [];
+  const allProvinces = React.useMemo(() => {
+    return allProvincesQuery.data ?? [];
+  }, [allProvincesQuery.data]);
 
-  const allWards: Ward[] = useAllWardsQuery().data || [];
+  const allDistricts = React.useMemo(() => {
+    return allDistrictsQuery.data ?? [];
+  }, [allDistrictsQuery.data]);
+
+  const allWards = React.useMemo(() => {
+    return allWardsQuery.data ?? [];
+  }, [allWardsQuery.data]);
 
   return (
     <VaccineRegistrationStep3>

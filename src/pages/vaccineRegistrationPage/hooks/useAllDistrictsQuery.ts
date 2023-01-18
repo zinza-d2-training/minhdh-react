@@ -11,7 +11,6 @@ export const findAllDistricts = async () => {
 export const useAllDistrictsQuery = () => {
   return useQuery({
     queryKey: [QueryKey.getAllDistricts],
-    queryFn: findAllDistricts,
-    enabled: false
+    queryFn: findAllDistricts
   });
 };

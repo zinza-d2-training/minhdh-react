@@ -11,7 +11,6 @@ export const findGroup = async () => {
 export const useGroupsQuery = () => {
   return useQuery({
     queryKey: [QueryKey.getGroups],
-    queryFn: findGroup,
-    enabled: false
+    queryFn: findGroup
   });
 };

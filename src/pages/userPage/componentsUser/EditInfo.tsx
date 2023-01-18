@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -15,6 +15,13 @@ import {
   MenuItem
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useCurrentUser } from '../../../hooks/useCurrentUser';
+import { useDistrictsQuery } from '../../homePage/componentsHome/hooks/useDistrictsQuery';
+import { useProvincesQuery } from '../../homePage/componentsHome/hooks/useProvincesQuery';
+import { useWardsQuery } from '../../homePage/componentsHome/hooks/useWardsQuery';
+import { useAllDistrictsQuery } from '../../vaccineRegistrationPage/hooks/useAllDistrictsQuery';
+import { useAllWardsQuery } from '../../vaccineRegistrationPage/hooks/useAllWardsQuery';
+import InputLabel from '@mui/material/InputLabel';
 
 const FormEditInfo = styled.form``;
 
@@ -133,13 +140,13 @@ const ButtonSave = styled(Button)`
 `;
 
 interface InputsInfo {
-  cmnd: number;
+  identity_card_number: string;
   name: string;
   birthday: Date;
   gender: string;
-  provinceId: number;
-  districtId: number;
-  wardId: number;
+  province_id: number;
+  district_id: number;
+  ward_id: number;
 }
 
 interface Province {
@@ -150,30 +157,14 @@ interface Province {
 interface District {
   id: number;
   name: string;
-  provinceId: number;
+  province_id: number;
 }
 
 interface Ward {
   id: number;
   name: string;
-  districtId: number;
+  district_id: number;
 }
-
-const provinces: Province[] = [{ id: 1, name: 'Thành phố Hà Nội' }];
-
-const districts: District[] = [
-  { id: 1, name: 'Quận Ba Đình', provinceId: 1 },
-  { id: 2, name: 'Quận Đống Đa ', provinceId: 1 }
-];
-
-const wards: Ward[] = [
-  { id: 1, name: 'Phường Phúc Xá ', districtId: 1 },
-  { id: 2, name: 'Phường Trúc Bạch ', districtId: 1 },
-  { id: 3, name: 'Phường Cát Linh ', districtId: 2 },
-  { id: 4, name: 'Phường Láng Thượng ', districtId: 2 },
-  { id: 5, name: 'Phường Ô Chợ Dừa', districtId: 2 },
-  { id: 6, name: 'Phường Quốc Tử Giám', districtId: 2 }
-];
 
 interface MyProps {
   editInfo?: boolean;
@@ -181,15 +172,15 @@ interface MyProps {
 
 const EditInfo: React.FC<MyProps> = (props) => {
   const schemaInfo = Yup.object().shape({
-    cmnd: Yup.number()
+    identity_card_number: Yup.string()
       .required('Số CMND/CCCD không được bỏ trống')
       .min(12, 'Số CMND/CCCD không hợp lệ'),
     name: Yup.string().required('Họ và tên không được bỏ trống'),
     birthday: Yup.date().required('Ngày sinh không được bỏ trống'),
     gender: Yup.string().required('Giới tính không được bỏ trống'),
-    provinceId: Yup.number().required('Tỉnh/Thành phố không được bỏ trống'),
-    districtId: Yup.number().required('Quận/Huyện không được bỏ trống'),
-    wardId: Yup.number().required('Phường/Xã không được bỏ trống')
+    province_id: Yup.number().required('Tỉnh/Thành phố không được bỏ trống'),
+    district_id: Yup.number().required('Quận/Huyện không được bỏ trống'),
+    ward_id: Yup.number().required('Phường/Xã không được bỏ trống')
   });
 
   const validationOpt = {
@@ -204,18 +195,58 @@ const EditInfo: React.FC<MyProps> = (props) => {
     formState: { errors, isValid }
   } = useForm<InputsInfo>(validationOpt);
 
-  const provinceId = watch('provinceId');
-  const districtId = watch('districtId');
+  const province_id = watch('province_id');
+  const district_id = watch('district_id');
+  const currentUser = useCurrentUser();
 
   const onSubmit = () => {};
 
-  const filterDistricts: District[] = useMemo(() => {
-    return districts.filter((district) => district.provinceId === provinceId);
-  }, [provinceId]);
+  const findNameWard = (id: any) => {
+    return allWards.find((element: Ward) => element.id === id)?.name;
+  };
 
-  const filterWards: Ward[] = useMemo(() => {
-    return wards.filter((ward) => ward.districtId === districtId);
-  }, [districtId]);
+  const findNameDistrict = (id: any) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    return allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    )?.name;
+  };
+
+  const findNameProvince = (id: any) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    const district = allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    );
+    return provinces.find(
+      (element: Province) => element.id === district?.province_id
+    )?.name;
+  };
+
+  const provincesQuery = useProvincesQuery();
+  const allDistrictsQuery = useAllDistrictsQuery();
+  const allWardsQuery = useAllWardsQuery();
+  const districtsQuery = useDistrictsQuery(province_id);
+  const wardsQuery = useWardsQuery(district_id);
+
+  const provinces = React.useMemo(() => {
+    return provincesQuery.data ?? [];
+  }, [provincesQuery.data]);
+
+  const districts = React.useMemo(() => {
+    return districtsQuery.data ?? [];
+  }, [districtsQuery.data]);
+
+  const wards = React.useMemo(() => {
+    return wardsQuery.data ?? [];
+  }, [wardsQuery.data]);
+
+  const allDistricts = React.useMemo(() => {
+    return allDistrictsQuery.data ?? [];
+  }, [allDistrictsQuery.data]);
+
+  const allWards = React.useMemo(() => {
+    return allWardsQuery.data ?? [];
+  }, [allWardsQuery.data]);
 
   return (
     <FormEditInfo onSubmit={handleSubmit(onSubmit)}>
@@ -223,20 +254,26 @@ const EditInfo: React.FC<MyProps> = (props) => {
         <ContentSection1>
           <RowInputs>
             <InputComponent>
-              <Label htmlFor="cmnd">Số CMND/CCCD/Mã định danh</Label>
+              <Label htmlFor="identity_card_number">
+                Số CMND/CCCD/Mã định danh
+              </Label>
               <TextField
-                {...register('cmnd')}
+                {...register('identity_card_number')}
                 inputProps={{
                   readOnly: !props.editInfo
                 }}
                 size="small"
-                helperText={errors.cmnd?.message && errors.cmnd.message}
+                helperText={
+                  errors.identity_card_number?.message &&
+                  errors.identity_card_number.message
+                }
                 type="text"
-                id="cmnd"
+                id="identity_card_number"
                 sx={{
                   width: '100%'
                 }}
                 required
+                defaultValue={currentUser?.identity_card_number}
               />
             </InputComponent>
           </RowInputs>
@@ -260,6 +297,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                   width: '100%'
                 }}
                 required
+                defaultValue={currentUser?.name}
               />
             </InputComponent>
             <InputComponent>
@@ -276,7 +314,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                         readOnly={!props.editInfo}
                         disableFuture
                         label="Ngày sinh"
-                        value={value}
+                        value={value || currentUser?.birthday}
                         className="inputBirthday"
                         renderInput={(params) => (
                           <TextField {...params} size="small" />
@@ -302,6 +340,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                   width: '100%'
                 }}
                 required
+                defaultValue={currentUser?.gender}
               />
             </InputComponent>
           </RowInputs>
@@ -309,10 +348,13 @@ const EditInfo: React.FC<MyProps> = (props) => {
             <InputComponent>
               <Label htmlFor="province">Tỉnh/Thành phố</Label>
               <Controller
-                {...register('provinceId')}
+                {...register('province_id')}
                 control={control}
                 render={({ field, fieldState }) => (
                   <FormControl fullWidth>
+                    <InputLabel>
+                      {findNameProvince(currentUser?.ward_id)}
+                    </InputLabel>
                     <Select
                       inputProps={{
                         readOnly: !props.editInfo
@@ -337,10 +379,13 @@ const EditInfo: React.FC<MyProps> = (props) => {
             <InputComponent>
               <Label>Quận/Huyện</Label>
               <Controller
-                {...register('districtId')}
+                {...register('district_id')}
                 control={control}
                 render={({ field, fieldState }) => (
                   <FormControl fullWidth>
+                    <InputLabel>
+                      {findNameDistrict(currentUser?.ward_id)}
+                    </InputLabel>
                     <Select
                       inputProps={{
                         readOnly: !props.editInfo
@@ -351,7 +396,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                       onChange={(event) => {
                         field.onChange(event.target.value);
                       }}>
-                      {filterDistricts.map((district) => (
+                      {districts.map((district) => (
                         <MenuItem key={district.id} value={district.id}>
                           {district.name}
                         </MenuItem>
@@ -365,10 +410,13 @@ const EditInfo: React.FC<MyProps> = (props) => {
             <InputComponent>
               <Label htmlFor="ward">Xã/Phường</Label>
               <Controller
-                {...register('wardId')}
+                {...register('ward_id')}
                 control={control}
                 render={({ field, fieldState }) => (
                   <FormControl fullWidth>
+                    <InputLabel>
+                      {findNameWard(currentUser?.ward_id)}
+                    </InputLabel>
                     <Select
                       inputProps={{
                         readOnly: !props.editInfo
@@ -379,7 +427,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                       onChange={(event) => {
                         field.onChange(event.target.value);
                       }}>
-                      {filterWards.map((ward) => (
+                      {wards.map((ward) => (
                         <MenuItem key={ward.id} value={ward.id}>
                           {ward.name}
                         </MenuItem>

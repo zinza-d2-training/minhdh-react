@@ -28,8 +28,6 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { useMutation } from '@tanstack/react-query';
-import api from '../../../utils/axios/instance';
 import { useVaccinationSitesQuery } from './hooks/useVaccinationSitesQuery';
 import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
 import { useAllWardsQuery } from './hooks/useAllWardsQuery';
@@ -256,16 +254,6 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-export const findVaccinationSites = async (dataInputs: Inputs) => {
-  const res = await api.get<VaccinationSites[]>(
-    '/vaccination-sites/condition',
-    {
-      params: dataInputs
-    }
-  );
-  return res.data;
-};
-
 const InjectionSites = () => {
   const formSchema = Yup.object().shape({
     province_id: Yup.number(),
@@ -311,30 +299,39 @@ const InjectionSites = () => {
     ward_id
   };
 
-  const provinces: Province[] = useProvincesQuery().data || [];
+  const vaccinationSitesQuery = useVaccinationSitesQuery(formSearch);
+  const provincesQuery = useProvincesQuery();
+  const districtsQuery = useDistrictsQuery(province_id);
+  const wardsQuery = useWardsQuery(district_id);
+  const allDistrictsQuery = useAllDistrictsQuery();
+  const allWardsQuery = useAllWardsQuery();
 
-  const injectionSitesRow: VaccinationSites[] =
-    useVaccinationSitesQuery(formSearch).data || [];
+  const injectionSitesRow = React.useMemo(() => {
+    return vaccinationSitesQuery.data ?? [];
+  }, [vaccinationSitesQuery.data]);
 
-  const districts: District[] = useDistrictsQuery(province_id).data || [];
+  const provinces = React.useMemo(() => {
+    return provincesQuery.data ?? [];
+  }, [provincesQuery.data]);
 
-  const wards: Ward[] = useWardsQuery(district_id).data || [];
+  const districts = React.useMemo(() => {
+    return districtsQuery.data ?? [];
+  }, [districtsQuery.data]);
 
-  const allDistricts: District[] = useAllDistrictsQuery().data || [];
+  const wards = React.useMemo(() => {
+    return wardsQuery.data ?? [];
+  }, [wardsQuery.data]);
 
-  const allWards: Ward[] = useAllWardsQuery().data || [];
+  const allDistricts = React.useMemo(() => {
+    return allDistrictsQuery.data ?? [];
+  }, [allDistrictsQuery.data]);
 
-  const { mutate } = useMutation({
-    mutationFn: (dataInputs: Inputs) => {
-      return findVaccinationSites(dataInputs);
-    }
-  });
-
-  const refetchData: any = useVaccinationSitesQuery(formSearch).refetch();
+  const allWards = React.useMemo(() => {
+    return allWardsQuery.data ?? [];
+  }, [allWardsQuery.data]);
 
   const onSubmit = async () => {
-    mutate(formSearch);
-    refetchData();
+    vaccinationSitesQuery.refetch();
   };
 
   const [page, setPage] = React.useState(0);

@@ -19,6 +19,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Footer from '../../components/Footer';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGroupsQuery } from './hooks/useGroupQuery';
+import * as React from 'react';
 
 const VaccineRegistrationStep1 = styled.div``;
 
@@ -373,7 +374,11 @@ const VaccineStep1 = () => {
 
   const navigate = useNavigate();
 
-  const groups: Group[] = useGroupsQuery().data || [];
+  const groupsQuery = useGroupsQuery();
+
+  const groups = React.useMemo(() => {
+    return groupsQuery.data ?? [];
+  }, [groupsQuery.data]);
 
   const onSubmit = async (data: Inputs) => {
     navigate('/vaccine-register-step2', {

@@ -376,8 +376,10 @@ const AdminPlace = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const injectionSitesRow: VaccinationSites[] =
-    useVaccinationSitesQuery().data || [];
+  const vaccinationSitesQuery = useVaccinationSitesQuery();
+  const injectionSitesRow = React.useMemo(() => {
+    return vaccinationSitesQuery.data ?? [];
+  }, [vaccinationSitesQuery.data]);
 
   const updateVaccinationSites = async (dataUpdate: Inputs) => {
     const res = await api.post(
@@ -405,12 +407,10 @@ const AdminPlace = () => {
     number_table: Number(number_table)
   };
 
-  const refetchData: any = useVaccinationSitesQuery().refetch();
-
   const onSubmitUpdate = async () => {
     mutate(formUpdate);
     setOpen(false);
-    refetchData();
+    vaccinationSitesQuery.refetch();
   };
 
   const [rowSelected, setRowSelected] = React.useState<VaccinationSites>();

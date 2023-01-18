@@ -17,7 +17,6 @@ export const useVaccinationSitesQuery = (dataInputs: Inputs) => {
   return useQuery({
     queryKey: [QueryKey.getAllVaccinationSites, dataInputs],
     queryFn: async () => findVaccinationSites(dataInputs),
-    enabled: false,
-    refetchOnWindowFocus: false
+    enabled: false
   });
 };
