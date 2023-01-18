@@ -9,9 +9,9 @@ export const findWards = async (id: number | null | undefined) => {
 };
 
 export const useWardsQuery = (id: number | null | undefined) => {
-  const { data } = useQuery({
+  return useQuery({
     queryKey: [QueryKey.getWards, id],
-    queryFn: async () => findWards(id)
+    queryFn: async () => findWards(id),
+    enabled: !!id
   });
-  return data;
 };

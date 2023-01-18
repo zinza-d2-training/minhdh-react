@@ -373,7 +373,7 @@ const VaccineStep1 = () => {
 
   const navigate = useNavigate();
 
-  const groups: Group[] = useGroupsQuery() || [];
+  const groups: Group[] = useGroupsQuery().data || [];
 
   const onSubmit = async (data: Inputs) => {
     navigate('/vaccine-register-step2', {

@@ -9,9 +9,9 @@ export const findAllProvinces = async () => {
 };
 
 export const useAllProvincesQuery = () => {
-  const { data } = useQuery({
+  return useQuery({
     queryKey: [QueryKey.getProvinces],
-    queryFn: findAllProvinces
+    queryFn: findAllProvinces,
+    enabled: false
   });
-  return data;
 };

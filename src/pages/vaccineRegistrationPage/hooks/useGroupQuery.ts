@@ -9,9 +9,9 @@ export const findGroup = async () => {
 };
 
 export const useGroupsQuery = () => {
-  const { data } = useQuery({
+  return useQuery({
     queryKey: [QueryKey.getGroups],
-    queryFn: findGroup
+    queryFn: findGroup,
+    enabled: false
   });
-  return data;
 };

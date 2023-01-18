@@ -9,9 +9,8 @@ export const findAllDistricts = async () => {
 };
 
 export const useAllDistrictsQuery = () => {
-  const { data } = useQuery({
+  return useQuery({
     queryKey: [QueryKey.getAllDistricts],
     queryFn: findAllDistricts
   });
-  return data;
 };

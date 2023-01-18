@@ -15,6 +15,7 @@ import {
 import { useAllProvincesQuery } from './hooks/useAllProvincesQuery';
 import { useAllDistrictsQuery } from './hooks/useAllDistrictsQuery';
 import { useAllWardsQuery } from './hooks/useAllWardsQuery';
+import moment from 'moment/moment';
 
 const VaccineRegistrationStep3 = styled.div``;
 
@@ -323,11 +324,11 @@ const VaccineStep3 = () => {
     )?.name;
   };
 
-  const allProvinces: Province[] = useAllProvincesQuery() || [];
+  const allProvinces: Province[] = useAllProvincesQuery().data || [];
 
-  const allDistricts: District[] = useAllDistrictsQuery() || [];
+  const allDistricts: District[] = useAllDistrictsQuery().data || [];
 
-  const allWards: Ward[] = useAllWardsQuery() || [];
+  const allWards: Ward[] = useAllWardsQuery().data || [];
 
   return (
     <VaccineRegistrationStep3>
@@ -543,7 +544,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    {currentUser?.birthday + ''}
+                    {moment(currentUser?.birthday).format('L')}
                   </Typography>
                 </BoxInfo>
                 <BoxInfo>
