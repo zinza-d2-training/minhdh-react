@@ -34,6 +34,7 @@ import { useAllWardsQuery } from './hooks/useAllWardsQuery';
 import { useDistrictsQuery } from './hooks/useDistrictsQuery';
 import { useWardsQuery } from './hooks/useWardsQuery';
 import { useProvincesQuery } from './hooks/useProvincesQuery';
+import { useAllVaccinationSitesQuery } from './hooks/useAllVaccinationSitesQuery';
 
 const Injection = styled.div`
   display: flex;
@@ -298,6 +299,7 @@ const InjectionSites = () => {
     district_id,
     ward_id
   };
+  console.log(formSearch.province_id);
 
   const vaccinationSitesQuery = useVaccinationSitesQuery(formSearch);
   const provincesQuery = useProvincesQuery();
@@ -305,10 +307,16 @@ const InjectionSites = () => {
   const wardsQuery = useWardsQuery(district_id);
   const allDistrictsQuery = useAllDistrictsQuery();
   const allWardsQuery = useAllWardsQuery();
+  const allVaccinationSitesQuery = useAllVaccinationSitesQuery();
 
   const injectionSitesRow = React.useMemo(() => {
-    return vaccinationSitesQuery.data ?? [];
-  }, [vaccinationSitesQuery.data]);
+    if (formSearch.province_id !== undefined) {
+      return vaccinationSitesQuery.data ?? [];
+    }
+    return allVaccinationSitesQuery.data ?? [];
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allVaccinationSitesQuery.data, vaccinationSitesQuery.data]);
 
   const provinces = React.useMemo(() => {
     return provincesQuery.data ?? [];

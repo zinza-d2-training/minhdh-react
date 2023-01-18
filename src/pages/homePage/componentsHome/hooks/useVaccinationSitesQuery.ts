@@ -15,7 +15,7 @@ export const findVaccinationSites = async (dataInputs: Inputs) => {
 
 export const useVaccinationSitesQuery = (dataInputs: Inputs) => {
   return useQuery({
-    queryKey: [QueryKey.getAllVaccinationSites, dataInputs],
+    queryKey: [QueryKey.getVaccinationSites, dataInputs],
     queryFn: async () => findVaccinationSites(dataInputs),
     enabled: false
   });
