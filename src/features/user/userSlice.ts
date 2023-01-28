@@ -30,11 +30,14 @@ export const UserSlice = createSlice({
       state.error = false;
       state.token = action.payload.token;
       state.isFetching = false;
+    },
+    removeTokenUser: (state) => {
+      state.token = '';
     }
   }
 });
 export const selectToken = (state: RootState) => state.user.token;
 export const selectError = (state: RootState) => state.user.error;
 export const selectIsFetching = (state: RootState) => state.user.isFetching;
-export const { login } = UserSlice.actions;
+export const { login, removeTokenUser } = UserSlice.actions;
 export default UserSlice.reducer;

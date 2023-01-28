@@ -299,7 +299,6 @@ const InjectionSites = () => {
     district_id,
     ward_id
   };
-  console.log(formSearch.province_id);
 
   const vaccinationSitesQuery = useVaccinationSitesQuery(formSearch);
   const provincesQuery = useProvincesQuery();

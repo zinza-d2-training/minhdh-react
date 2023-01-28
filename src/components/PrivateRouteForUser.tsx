@@ -4,7 +4,7 @@ import { useCurrentUser } from '../hooks/useCurrentUser';
 const PrivateRouteForUser = () => {
   const isLogin = useCurrentUser();
   const location = useLocation();
-  return !isLogin ? (
+  return isLogin === null ? (
     <Navigate to="/login" state={{ from: location }} replace />
   ) : (
     <Outlet />

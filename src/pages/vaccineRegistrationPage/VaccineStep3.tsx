@@ -302,7 +302,8 @@ const VaccineStep3 = () => {
 
   const currentUser = useCurrentUser();
   const location: any = useLocation();
-  const numBHYT = location.state.data;
+  const numBHYT = location.state.numBHYT;
+  const registration_code = location.state.registration_code;
 
   const findNameWard = (id: any) => {
     return allWards.find((element: Ward) => element.id === id)?.name;
@@ -449,7 +450,7 @@ const VaccineStep3 = () => {
                     color: 'rgba(0, 0, 0, 0.87)'
                   }}>
                   Đăng ký tiêm chủng COVID-19 thành công. Mã đặt tiêm của bạn là
-                  <span className="red"> 0120211103501237</span>.
+                  <span className="red"> {registration_code}</span>.
                 </Typography>
               </TextLine1>
               <TextLine2>
@@ -555,7 +556,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    {moment(currentUser?.birthday).format('L')}
+                    {moment(currentUser?.birthday).format('DD/MM/YYYY')}
                   </Typography>
                 </BoxInfo>
                 <BoxInfo>
@@ -647,7 +648,7 @@ const VaccineStep3 = () => {
                       letterSpacing: '-0.04px',
                       color: 'rgba(0, 0, 0, 0.87)'
                     }}>
-                    {numBHYT}
+                    {numBHYT ? numBHYT : 'Chưa có'}
                   </Typography>
                 </BoxInfo>
               </InfoLine2>

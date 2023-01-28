@@ -9,6 +9,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
+import { useMemo } from 'react';
+import { useRegistrationQuery } from './hooks/useRegistrationQuery';
+import moment from 'moment';
+import { VaccineRegistration } from './VaccineCertificate';
+import * as React from 'react';
+import { Status } from '../../hooks/statusRegistration';
 
 const Menu = styled.div`
   display: flex;
@@ -129,6 +136,21 @@ const StyledTableCell = styled(TableCell)(() => ({
 }));
 
 const RegistrationResult = () => {
+  const currentUser = useCurrentUser();
+  const registrationQuery = useRegistrationQuery(currentUser?.id);
+  const registrations = useMemo(() => {
+    return registrationQuery.data ?? [];
+  }, [registrationQuery.data]);
+  const [filterRegistration, setFilterRegistration] = React.useState<
+    VaccineRegistration[]
+  >([]);
+
+  React.useEffect(() => {
+    const result = registrations.filter(
+      (item) => item.status === Status.SUCCESS
+    );
+    setFilterRegistration(result);
+  }, [registrations]);
   return (
     <div>
       <Header />
@@ -207,31 +229,41 @@ const RegistrationResult = () => {
                   <StyledTableCell align="center">Trạng thái</StyledTableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                <TableRow>
-                  <StyledTableCell align="center">1</StyledTableCell>
-                  <StyledTableCell align="center">Nguyễn Văn A</StyledTableCell>
-                  <StyledTableCell align="center">01/01/2011</StyledTableCell>
-                  <StyledTableCell align="center">Nam</StyledTableCell>
-                  <StyledTableCell align="center">909032932132</StyledTableCell>
-                  <StyledTableCell align="center">
-                    <TextSuccess>
-                      <Typography
-                        sx={{
-                          fontSize: '14px',
-                          fontFamily: 'Roboto',
-                          fontStyle: 'normal',
-                          fontWeight: '400',
-                          lineHeight: '143%',
-                          letterSpacing: '-0.04px',
-                          color: 'rgba(0, 0, 0, 0.87)'
-                        }}>
-                        Đăng ký thành công
-                      </Typography>
-                    </TextSuccess>
-                  </StyledTableCell>
-                </TableRow>
-              </TableBody>
+              {filterRegistration.length > 0 && (
+                <TableBody>
+                  <TableRow>
+                    <StyledTableCell align="center">1</StyledTableCell>
+                    <StyledTableCell align="center">
+                      {currentUser?.name}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {moment(currentUser?.birthday).format('DD/MM/YYYY')}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {currentUser?.gender}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {currentUser?.identity_card_number}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      <TextSuccess>
+                        <Typography
+                          sx={{
+                            fontSize: '14px',
+                            fontFamily: 'Roboto',
+                            fontStyle: 'normal',
+                            fontWeight: '400',
+                            lineHeight: '143%',
+                            letterSpacing: '-0.04px',
+                            color: 'rgba(0, 0, 0, 0.87)'
+                          }}>
+                          Đăng ký thành công
+                        </Typography>
+                      </TextSuccess>
+                    </StyledTableCell>
+                  </TableRow>
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
         </ContainerResult>

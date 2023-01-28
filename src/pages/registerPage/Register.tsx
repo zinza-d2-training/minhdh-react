@@ -13,14 +13,16 @@ import {
 import styled from '@emotion/styled';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InputLabel from '@mui/material/InputLabel';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import api from '../../utils/axios/instance';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { QueryKey } from '../../hooks/QueryKey';
+import { useMutation } from '@tanstack/react-query';
+import { useDistrictsQuery } from '../homePage/componentsHome/hooks/useDistrictsQuery';
+import { useProvincesQuery } from '../homePage/componentsHome/hooks/useProvincesQuery';
+import { useWardsQuery } from '../homePage/componentsHome/hooks/useWardsQuery';
 
 const RegisterPage = styled.div`
   display: flex;
@@ -185,30 +187,13 @@ type Inputs = {
   name: string;
   birthday: Date;
   gender: string;
-  provinceId: number;
-  districtId: number;
+  province_id: number;
+  district_id: number;
   ward_id: number;
 };
 
-interface Province {
-  id: number;
-  name: string;
-}
-
-interface District {
-  id: number;
-  name: string;
-  provinceId: number;
-}
-
-interface Ward {
-  id: number;
-  name: string;
-  districtId: number;
-}
-
 export const registerForm = async (dataInputs: Inputs) => {
-  const { provinceId, districtId, ...others } = dataInputs;
+  const { province_id, district_id, ...others } = dataInputs;
   const newUser = await api.post('/auth/signup', others);
   return newUser.data;
 };
@@ -229,8 +214,8 @@ const Register = () => {
     name: Yup.string().required('Họ và tên không được bỏ trống'),
     birthday: Yup.date().required('Ngày sinh không được bỏ trống'),
     gender: Yup.string().required('Giới tính không được bỏ trống'),
-    provinceId: Yup.number().required('Tỉnh/Thành phố không được bỏ trống'),
-    districtId: Yup.number().required('Quận/Huyện không được bỏ trống'),
+    province_id: Yup.number().required('Tỉnh/Thành phố không được bỏ trống'),
+    district_id: Yup.number().required('Quận/Huyện không được bỏ trống'),
     ward_id: Yup.number().required('Phường/Xã không được bỏ trống')
   });
 
@@ -246,74 +231,26 @@ const Register = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [wards, setWards] = useState<Ward[]>([]);
-
-  const provinceId = watch('provinceId');
-  const districtId = watch('districtId');
+  const province_id = watch('province_id');
+  const district_id = watch('district_id');
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getProvinces = async () => {
-      const result = await findProvinces();
-      setProvinces(result);
-    };
-    getProvinces();
-  }, []);
+  const provincesQuery = useProvincesQuery();
+  const districtsQuery = useDistrictsQuery(province_id);
+  const wardsQuery = useWardsQuery(district_id);
 
-  useEffect(() => {
-    if (provinceId) {
-      const getDistricts = async () => {
-        const result = await findDistricts(provinceId);
-        setDistricts(result);
-      };
-      getDistricts();
-    }
-  }, [provinceId]);
+  const provinces = useMemo(() => {
+    return provincesQuery.data ?? [];
+  }, [provincesQuery.data]);
 
-  useEffect(() => {
-    if (districtId) {
-      const getWards = async () => {
-        const result = await findWards(districtId);
-        setWards(result);
-      };
-      getWards();
-    }
-  }, [districtId]);
+  const districts = useMemo(() => {
+    return districtsQuery.data ?? [];
+  }, [districtsQuery.data]);
 
-  const findProvinces = async () => {
-    const res = await api.get<Province[]>(`/administrative-unit/provinces`);
-    return res.data;
-  };
-
-  const findDistricts = async (id: number) => {
-    const res = await api.get<District[]>(
-      `/administrative-unit/districts/${id}`
-    );
-    return res.data;
-  };
-
-  const findWards = async (id: number) => {
-    const res = await api.get<Ward[]>(`/administrative-unit/wards/${id}`);
-    return res.data;
-  };
-
-  useQuery({
-    queryKey: [QueryKey.getProvinces],
-    queryFn: async () => findProvinces
-  });
-
-  useQuery({
-    queryKey: [QueryKey.getDistricts],
-    queryFn: async () => findDistricts
-  });
-
-  useQuery({
-    queryKey: [QueryKey.getWards],
-    queryFn: async () => findWards
-  });
+  const wards = useMemo(() => {
+    return wardsQuery.data ?? [];
+  }, [wardsQuery.data]);
 
   const { mutate, data } = useMutation({
     mutationFn: (dataInputs: Inputs) => {
@@ -336,9 +273,9 @@ const Register = () => {
     birthday: birthday,
     gender: gender,
     identity_card_number: identity_card_number,
-    ward_id: ward_id,
-    provinceId: provinceId,
-    districtId: districtId
+    province_id: province_id,
+    district_id: district_id,
+    ward_id: ward_id
   };
 
   const onSubmit = async () => {
@@ -446,6 +383,7 @@ const Register = () => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateBirthday>
                         <DatePicker
+                          disableFuture
                           {...fieldProps}
                           label="Ngày sinh"
                           value={value}
@@ -478,7 +416,7 @@ const Register = () => {
                   Tỉnh/Thành phố <span> (*)</span>
                 </Label>
                 <Controller
-                  {...register('provinceId')}
+                  {...register('province_id')}
                   control={control}
                   render={({ field, fieldState }) => (
                     <FormControl fullWidth>
@@ -505,7 +443,7 @@ const Register = () => {
                   Quận/Huyện <span> (*)</span>
                 </Label>
                 <Controller
-                  {...register('districtId')}
+                  {...register('district_id')}
                   control={control}
                   render={({ field, fieldState }) => (
                     <FormControl fullWidth>

@@ -9,12 +9,12 @@ const PrivateRouteForAdmin = () => {
   const isAdmin = useAppSelector(selectIsAdmin);
   const isLogin = useCurrentUser();
   const location = useLocation();
-  return isAdmin === 1 ? (
-    <Outlet />
-  ) : isLogin ? (
+  return isLogin === null ? (
+    <Navigate to="/login" state={{ from: location }} replace />
+  ) : isAdmin !== 1 ? (
     <UnAuthorized />
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Outlet />
   );
 };
 
