@@ -29,7 +29,6 @@ import { TransitionProps } from '@mui/material/transitions';
 import { useVaccinationSitesQuery } from './hooks/useVaccinationSitesQuery';
 import { useMutation } from '@tanstack/react-query';
 import api from '../../utils/axios/instance';
-import { useFilterSitesQuery } from './hooks/useFilterSitesQuery';
 
 const Menu = styled.div`
   display: flex;
@@ -385,25 +384,37 @@ const AdminPlace = () => {
   const [filterNameSite, setFilterNameSite] = React.useState('');
   const [filterAddressSite, setFilterAddressSite] = React.useState('');
 
-  const formSearch: InputsSearch = {
-    name: filterNameSite,
-    address: filterAddressSite
-  };
-
   const vaccinationSitesQuery = useVaccinationSitesQuery();
-  const filterSitesQuery = useFilterSitesQuery(formSearch);
+  const [dataRows, setDataRows] = React.useState<VaccinationSites[]>([]);
 
   const onFilter = async () => {
-    filterSitesQuery.refetch();
+    if (filterNameSite && !filterAddressSite) {
+      const result = allSites.filter((item) => item.name === filterNameSite);
+      setDataRows(result);
+    } else if (filterAddressSite && !filterNameSite) {
+      const result = allSites.filter(
+        (item) => item.address === filterAddressSite
+      );
+      setDataRows(result);
+    } else if (filterNameSite && filterAddressSite) {
+      const result = allSites.filter((item) => {
+        return (
+          item.address === filterAddressSite && item.name === filterNameSite
+        );
+      });
+      setDataRows(result);
+    } else {
+      setDataRows(allSites);
+    }
   };
 
-  const injectionSitesRow = React.useMemo(() => {
-    if (formSearch.name || formSearch.address) {
-      return filterSitesQuery.data ?? [];
-    }
+  const allSites = React.useMemo(() => {
     return vaccinationSitesQuery.data ?? [];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterSitesQuery.data, vaccinationSitesQuery.data]);
+  }, [vaccinationSitesQuery.data]);
+
+  React.useEffect(() => {
+    setDataRows(allSites);
+  }, [allSites]);
 
   const updateVaccinationSites = async (dataUpdate: Inputs) => {
     const res = await api.post(
@@ -567,7 +578,7 @@ const AdminPlace = () => {
             }
             autoPageSize
             autoHeight
-            rows={injectionSitesRow}
+            rows={dataRows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
