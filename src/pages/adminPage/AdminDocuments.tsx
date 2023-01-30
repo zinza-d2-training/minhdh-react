@@ -22,7 +22,6 @@ import {
   useGridSelector
 } from '@mui/x-data-grid';
 import { useAllDocumentsQuery } from './hooks/useAllDocumentsQuery';
-import { useFilterDocumentsQuery } from './hooks/useFilterDocumentQuery';
 import moment from 'moment';
 import { TransitionProps } from '@mui/material/transitions';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -381,21 +380,24 @@ const AdminDocuments = () => {
   } = useForm<Inputs>(validationOpt);
   const [filterName, setFilterName] = React.useState('');
 
-  const formSearch: InputsSearch = {
-    name: filterName
-  };
   const allDocumentsQuery = useAllDocumentsQuery();
-  const filterDocumentsQuery = useFilterDocumentsQuery(formSearch);
+  const [dataRows, setDataRows] = React.useState<Document[]>([]);
 
-  const documents = React.useMemo(() => {
-    if (formSearch.name) {
-      return filterDocumentsQuery.data ?? [];
-    }
+  const allDocuments = React.useMemo(() => {
     return allDocumentsQuery.data ?? [];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allDocumentsQuery.data, filterDocumentsQuery.data]);
+  }, [allDocumentsQuery.data]);
+
+  React.useEffect(() => {
+    setDataRows(allDocuments);
+  }, [allDocuments]);
+
   const onFilter = async () => {
-    filterDocumentsQuery.refetch();
+    if (filterName) {
+      const result = allDocuments.filter((item) => item.name === filterName);
+      setDataRows(result);
+    } else {
+      setDataRows(allDocuments);
+    }
   };
 
   const updateDocument = async (dataUpdate: Inputs) => {
@@ -539,7 +541,7 @@ const AdminDocuments = () => {
             disableColumnMenu
             autoPageSize
             autoHeight
-            rows={documents}
+            rows={dataRows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}

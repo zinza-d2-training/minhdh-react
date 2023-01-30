@@ -4,7 +4,7 @@ import api from '../../../utils/axios/instance';
 import { Document } from './../AdminDocuments';
 
 export const findAllDocuments = async () => {
-  const res = await api.get<Document[]>('/document');
+  const res = await api.get<Document[]>('/documents');
   return res.data;
 };
 
