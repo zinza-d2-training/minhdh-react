@@ -202,7 +202,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
     handleSubmit,
     watch,
     control,
-    setValue,
+    reset,
     formState: { errors, isValid }
   } = useForm<InputsInfo>(validationOpt);
 
@@ -294,16 +294,15 @@ const EditInfo: React.FC<MyProps> = (props) => {
 
   React.useEffect(() => {
     if (props.editInfo) {
-      setValue('name', currentUser?.name as string);
-      setValue(
-        'identity_card_number',
-        currentUser?.identity_card_number as string
-      );
-      setValue('birthday', currentUser?.birthday as Date);
-      setValue('gender', currentUser?.gender as string);
+      reset({
+        name: currentUser?.name as string,
+        identity_card_number: currentUser?.identity_card_number as string,
+        birthday: currentUser?.birthday as Date,
+        gender: currentUser?.gender as string
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.editInfo, setValue]);
+  }, [props.editInfo]);
 
   return (
     <FormEditInfo onSubmit={handleSubmit(onSubmit)}>
