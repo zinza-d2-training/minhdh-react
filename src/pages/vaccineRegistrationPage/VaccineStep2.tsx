@@ -15,6 +15,7 @@ import api from '../../utils/axios/instance';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { useMutation } from '@tanstack/react-query';
 import { LoadingButton } from '@mui/lab';
+import { Status } from '../../hooks/statusRegistration';
 
 const VaccineRegistrationStep2 = styled.div``;
 
@@ -300,14 +301,16 @@ const ButtonContinue = styled(LoadingButton)`
 `;
 
 interface Inputs {
-  numBHYT: number;
+  numBHYT: number | null | undefined;
   group_id: number;
-  job: string;
-  work_unit: string;
-  address: string;
-  date_injection: Date;
-  session_injection: string;
-  user_id?: number;
+  job: string | null | undefined;
+  work_unit: string | null | undefined;
+  address: string | null | undefined;
+  date_injection: Date | null | undefined;
+  session_injection: string | null | undefined;
+  user_id: number;
+  status: number;
+  registration_code: string;
 }
 
 export const vaccineRegistration = async (dataInputs: Inputs) => {
@@ -327,7 +330,12 @@ const VaccineStep2 = () => {
     setChecked(event.target.checked);
   };
 
-  const newRegistration: Inputs = { ...dataInput, user_id: currentUser?.id };
+  const newRegistration: Inputs = {
+    ...dataInput,
+    user_id: currentUser?.id,
+    status: Status.SUCCESS,
+    registration_code: `${new Date().getTime()}${currentUser?.id}`
+  };
 
   const { mutate, data } = useMutation({
     mutationFn: (dataInputs: Inputs) => {
@@ -345,7 +353,10 @@ const VaccineStep2 = () => {
     if (data) {
       setTimeout(() => {
         navigate('/vaccine-register-step3', {
-          state: { data: newRegistration.numBHYT }
+          state: {
+            numBHYT: newRegistration.numBHYT,
+            registration_code: newRegistration.registration_code
+          }
         });
       }, 3000);
     }

@@ -5,6 +5,9 @@ import * as Yup from 'yup';
 import styled from '@emotion/styled';
 import { Typography, TextField, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../../utils/axios/instance';
+import { useCurrentUser } from '../../../hooks/useCurrentUser';
 
 const FormPassword = styled.div`
   display: flex;
@@ -123,10 +126,33 @@ const EditPassword: React.FC<MyProps> = (props) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid }
   } = useForm<InputPassword>(validationOpt);
+  const currentUser = useCurrentUser();
 
-  const onSubmit = () => {};
+  const password = watch('password');
+
+  const updateUser = async (password: string) => {
+    const res = await api.post(`/users/password/${currentUser?.id}`, password);
+    return res.data;
+  };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (password: string) => {
+      return updateUser(password);
+    }
+  });
+
+  const onSubmit = () => {
+    mutate(password);
+  };
+
+  React.useEffect(() => {
+    if (data) {
+      alert(data.msg);
+    }
+  }, [data]);
 
   return (
     <FormPassword onSubmit={handleSubmit(onSubmit)}>
@@ -139,6 +165,7 @@ const EditPassword: React.FC<MyProps> = (props) => {
               inputProps={{
                 readOnly: !props.editPassword
               }}
+              disabled={!props.editPassword}
               size="small"
               helperText={errors.password?.message && errors.password.message}
               type="password"
@@ -158,6 +185,7 @@ const EditPassword: React.FC<MyProps> = (props) => {
               inputProps={{
                 readOnly: !props.editPassword
               }}
+              disabled={!props.editPassword}
               size="small"
               helperText={
                 errors.verifyPassword?.message && errors.verifyPassword.message

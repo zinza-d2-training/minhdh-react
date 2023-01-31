@@ -334,13 +334,13 @@ const ButtonContinue = styled(Button)`
 `;
 
 export interface Inputs {
-  numBHYT: number;
+  numBHYT: string | null | undefined;
   group_id: number;
-  job: string;
-  work_unit: string;
-  address: string;
-  date_injection: Date;
-  session_injection: string;
+  job: string | null | undefined;
+  work_unit: string | null | undefined;
+  address: string | null | undefined;
+  date_injection: Date | null | undefined;
+  session_injection: string | null | undefined;
 }
 
 export interface Group {
@@ -350,29 +350,32 @@ export interface Group {
 
 const VaccineStep1 = () => {
   const formSchema = Yup.object().shape({
-    numBHYT: Yup.number().required('Số thẻ BHYT không được bỏ trống'),
+    numBHYT: Yup.string(),
     group_id: Yup.number().required('Nhóm ưu tiên không được bỏ trống'),
-    job: Yup.string().required('Nghề nghiệp không được bỏ trống'),
-    work_unit: Yup.string().required('Đơn vị công tác không được bỏ trống'),
-    address: Yup.string().required('Địa chỉ hiện tại không được bỏ trống'),
-    date_injection: Yup.date().required(
-      'Ngày tiêm dự kiến không được bỏ trống'
-    ),
-    session_injection: Yup.string().required('Buổi tiêm không được bỏ trống')
+    job: Yup.string(),
+    work_unit: Yup.string(),
+    address: Yup.string(),
+    date_injection: Yup.date(),
+    session_injection: Yup.string()
   });
 
   const validationOpt = {
     resolver: yupResolver(formSchema)
   };
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isValid }
-  } = useForm<Inputs>(validationOpt);
+  const { register, handleSubmit, control, watch } =
+    useForm<Inputs>(validationOpt);
 
+  const group_id = watch('group_id');
   const navigate = useNavigate();
+
+  const [isDisabled, setIsDisabled] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    if (group_id) {
+      setIsDisabled(false);
+    }
+  }, [group_id]);
 
   const groupsQuery = useGroupsQuery();
 
@@ -556,14 +559,12 @@ const VaccineStep1 = () => {
                 <TextField
                   {...register('numBHYT')}
                   size="small"
-                  helperText={errors.numBHYT?.message && errors.numBHYT.message}
                   type="text"
                   id="numBHYT"
                   placeholder="Số thẻ BHYT"
                   sx={{
                     width: '100%'
                   }}
-                  required
                 />
               </InputComponent>
             </BoxInputLine1>
@@ -573,14 +574,12 @@ const VaccineStep1 = () => {
                 <TextField
                   {...register('job')}
                   size="small"
-                  helperText={errors.job?.message && errors.job.message}
                   type="text"
                   id="job"
                   placeholder="Nghề nghiệp"
                   sx={{
                     width: '100%'
                   }}
-                  required
                 />
               </InputComponent>
               <InputComponent>
@@ -588,16 +587,12 @@ const VaccineStep1 = () => {
                 <TextField
                   {...register('work_unit')}
                   size="small"
-                  helperText={
-                    errors.work_unit?.message && errors.work_unit.message
-                  }
                   type="text"
                   id="work_unit"
                   placeholder="Đơn vị công tác"
                   sx={{
                     width: '100%'
                   }}
-                  required
                 />
               </InputComponent>
               <InputComponent>
@@ -605,14 +600,12 @@ const VaccineStep1 = () => {
                 <TextField
                   {...register('address')}
                   size="small"
-                  helperText={errors.address?.message && errors.address.message}
                   type="text"
                   id="address"
                   placeholder="Địa chỉ hiện tại"
                   sx={{
                     width: '100%'
                   }}
-                  required
                 />
               </InputComponent>
             </BoxInputLine2>
@@ -645,8 +638,9 @@ const VaccineStep1 = () => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateInjection>
                         <DatePicker
+                          disablePast
                           {...fieldProps}
-                          label="Ngày/Tháng/Năm"
+                          label="Ngày muốn được tiêm"
                           value={value}
                           className="inputDate"
                           renderInput={(params: any) => (
@@ -663,17 +657,12 @@ const VaccineStep1 = () => {
                 <TextField
                   {...register('session_injection')}
                   size="small"
-                  helperText={
-                    errors.session_injection?.message &&
-                    errors.session_injection.message
-                  }
                   type="text"
                   id="session_injection"
                   placeholder="Buổi tiêm mong muốn"
                   sx={{
                     width: '100%'
                   }}
-                  required
                 />
               </InputComponent>
             </BoxInputLine3>
@@ -739,7 +728,10 @@ const VaccineStep1 = () => {
                   </Typography>
                 </ButtonCancel>
               </Link>
-              <ButtonContinue type="submit" disabled={!isValid}>
+              <ButtonContinue
+                type="submit"
+                disabled={isDisabled}
+                variant="contained">
                 <Typography
                   sx={{
                     width: '90px',

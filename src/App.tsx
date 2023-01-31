@@ -52,13 +52,15 @@ function App() {
         <Route path="/account" element={<PrivateRouteForUser />}>
           <Route path="/account" element={<Account />} />
         </Route>
-        <Route element={<PrivateRouteForUser />}>
-          <Route element={<PrivateRouteForAdmin />}>
-            <Route path="/admin-place" element={<AdminPlace />} />
-          </Route>
+        <Route element={<PrivateRouteForAdmin />}>
+          <Route path="/admin-place" element={<AdminPlace />} />
         </Route>
-        <Route path="/admin-document" element={<AdminDocuments />} />
-        <Route path="/admin-register" element={<AdminRegister />} />
+        <Route element={<PrivateRouteForUser />}>
+          <Route path="/admin-document" element={<AdminDocuments />} />
+        </Route>
+        <Route element={<PrivateRouteForAdmin />}>
+          <Route path="/admin-register" element={<AdminRegister />} />
+        </Route>
       </Routes>
     </div>
   );

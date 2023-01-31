@@ -11,7 +11,6 @@ import { login, selectError } from '../../features/user/userSlice';
 import { useMutation } from '@tanstack/react-query';
 import api from '../../utils/axios/instance';
 import { useEffect, useState } from 'react';
-import { useLogin } from '../../hooks/useLogin';
 
 type Inputs = {
   email: string;
@@ -258,16 +257,14 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  useLogin();
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (data) {
-      dispatch(login(data));
       setTimeout(() => {
+        dispatch(login(data));
         navigate('/');
-      }, 3000);
+      }, 2000);
     }
   }, [data, dispatch, navigate]);
 

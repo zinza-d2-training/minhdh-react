@@ -16,6 +16,22 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
+import { useRegistrationQuery } from './hooks/useRegistrationQuery';
+import moment from 'moment';
+import { useMemo } from 'react';
+import React from 'react';
+import {
+  Ward,
+  District,
+  Province
+} from '../homePage/componentsHome/InjectionSite';
+import { useAllDistrictsQuery } from '../vaccineRegistrationPage/hooks/useAllDistrictsQuery';
+import { useAllProvincesQuery } from '../vaccineRegistrationPage/hooks/useAllProvincesQuery';
+import { useAllWardsQuery } from '../vaccineRegistrationPage/hooks/useAllWardsQuery';
+import { useAllVaccineQuery } from './hooks/useAllVaccineQuery';
+import { useAllVaccinationSitesQuery } from '../homePage/componentsHome/hooks/useAllVaccinationSitesQuery';
+import { Status } from '../../hooks/statusRegistration';
 
 const Menu = styled.div`
   display: flex;
@@ -158,7 +174,7 @@ const ButtonRegister = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
-const Card = styled.div`
+const Card = styled.div<{ numRegis: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -167,7 +183,7 @@ const Card = styled.div`
   gap: 24px;
   width: 340px;
   height: 668px;
-  background: #43a047;
+  background: ${(props) => (props.numRegis ? '#43A047' : '#e6e600')};
   box-shadow: 0px 16px 48px rgba(0, 0, 0, 0.175);
   border-radius: 8px 8px 8px 0px;
 `;
@@ -246,7 +262,104 @@ const StyledTableCell = styled(TableCell)(() => ({
   }
 }));
 
+export interface Vaccine {
+  id: number;
+  name: string;
+}
+
+export interface VaccineRegistration {
+  id: number;
+  numBHYT?: string;
+  job?: string;
+  work_unit?: string;
+  address?: string;
+  date_injection?: Date;
+  session_injection?: string;
+  vaccine_code?: string | null | undefined;
+  status: number;
+  registration_code?: string;
+  user_id: number;
+  group_id: number;
+  vaccine_id?: number | null | undefined;
+  vaccination_site_id?: number | null | undefined;
+}
+
 const VaccineCertificate = () => {
+  const currentUser = useCurrentUser();
+  const registrationQuery = useRegistrationQuery(currentUser?.id);
+  const registrations = useMemo(() => {
+    return registrationQuery.data ?? [];
+  }, [registrationQuery.data]);
+  const [filterRegistration, setFilterRegistration] = React.useState<
+    VaccineRegistration[]
+  >([]);
+
+  const allProvincesQuery = useAllProvincesQuery();
+  const allDistrictsQuery = useAllDistrictsQuery();
+  const allWardsQuery = useAllWardsQuery();
+  const allVaccineQuery = useAllVaccineQuery();
+  const allVaccinationSitesQuery = useAllVaccinationSitesQuery();
+
+  const allVaccinationSites = React.useMemo(() => {
+    return allVaccinationSitesQuery.data ?? [];
+  }, [allVaccinationSitesQuery.data]);
+
+  const allVaccine = React.useMemo(() => {
+    return allVaccineQuery.data ?? [];
+  }, [allVaccineQuery.data]);
+
+  const allProvinces = React.useMemo(() => {
+    return allProvincesQuery.data ?? [];
+  }, [allProvincesQuery.data]);
+
+  const allDistricts = React.useMemo(() => {
+    return allDistrictsQuery.data ?? [];
+  }, [allDistrictsQuery.data]);
+
+  const allWards = React.useMemo(() => {
+    return allWardsQuery.data ?? [];
+  }, [allWardsQuery.data]);
+
+  const findNameWard = (id: any) => {
+    return allWards.find((element: Ward) => element.id === id)?.name;
+  };
+
+  const findNameDistrict = (id: any) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    return allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    )?.name;
+  };
+
+  const findNameProvince = (id: any) => {
+    const ward = allWards.find((element: Ward) => element.id === id);
+    const district = allDistricts.find(
+      (element: District) => element.id === ward?.district_id
+    );
+    return allProvinces.find(
+      (element: Province) => element.id === district?.province_id
+    )?.name;
+  };
+
+  const findNameVaccine = (id: any) => {
+    return id !== null
+      ? allVaccine.find((element: Vaccine) => element.id === id)?.name
+      : 'Chưa có';
+  };
+
+  const findNameSite = (id: any) => {
+    return id !== null
+      ? allVaccinationSites.find((site) => site.id === id)?.name
+      : 'Chưa có';
+  };
+
+  React.useEffect(() => {
+    const result = registrations.filter(
+      (item) => item.status === Status.ACCEPT
+    );
+    setFilterRegistration(result);
+  }, [registrations]);
+
   return (
     <div>
       <Header />
@@ -388,7 +501,7 @@ const VaccineCertificate = () => {
                         letterSpacing: '-0.04px',
                         color: 'rgba(0, 0, 0, 0.87)'
                       }}>
-                      Nguyễn Văn A
+                      {currentUser?.name}
                     </Typography>
                   </Item>
                 </Grid>
@@ -420,7 +533,7 @@ const VaccineCertificate = () => {
                         letterSpacing: '-0.04px',
                         color: 'rgba(0, 0, 0, 0.87)'
                       }}>
-                      16/10/1994
+                      {moment(currentUser?.birthday).format('DD/MM/YYYY')}
                     </Typography>
                   </Item>
                 </Grid>
@@ -452,7 +565,7 @@ const VaccineCertificate = () => {
                         letterSpacing: '-0.04px',
                         color: 'rgba(0, 0, 0, 0.87)'
                       }}>
-                      030012345678
+                      {currentUser?.identity_card_number}
                     </Typography>
                   </Item>
                 </Grid>
@@ -484,7 +597,7 @@ const VaccineCertificate = () => {
                         letterSpacing: '-0.04px',
                         color: 'rgba(0, 0, 0, 0.87)'
                       }}>
-                      030094005102
+                      {filterRegistration[0]?.numBHYT}
                     </Typography>
                   </Item>
                 </Grid>
@@ -516,7 +629,9 @@ const VaccineCertificate = () => {
                         letterSpacing: '-0.04px',
                         color: 'rgba(0, 0, 0, 0.87)'
                       }}>
-                      Phường Giang Biên - Quận Long Biên - Thành phố Hà Nội
+                      {findNameWard(currentUser?.ward_id)} -{' '}
+                      {findNameDistrict(currentUser?.ward_id)} -{' '}
+                      {findNameProvince(currentUser?.ward_id)}
                     </Typography>
                   </Item>
                 </Grid>
@@ -549,7 +664,9 @@ const VaccineCertificate = () => {
                   letterSpacing: '-0.04px',
                   color: 'rgba(0, 0, 0, 0.87)'
                 }}>
-                Đã được tiêm phòng vắc xin phòng bệnh Covid-19
+                {filterRegistration.length > 0
+                  ? 'Đã được tiêm phòng vắc xin phòng bệnh Covid-19'
+                  : 'Chưa được tiêm phòng vắc xin phòng bệnh Covid-19'}
               </Typography>
             </Conclusion>
             <InfoVaccine>
@@ -568,34 +685,36 @@ const VaccineCertificate = () => {
                       <StyledTableCell align="center">Nơi tiêm</StyledTableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <StyledTableCell align="center">1</StyledTableCell>
-                      <StyledTableCell align="center">
-                        08/09/2021 - 16:56
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        AstraZeneca
-                      </StyledTableCell>
-                      <StyledTableCell align="center">NJ0342</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Bệnh viện Bạch Mai
-                      </StyledTableCell>
-                    </TableRow>
-                    <TableRow>
-                      <StyledTableCell align="center">2</StyledTableCell>
-                      <StyledTableCell align="center">
-                        11/04/2022 - 17:00
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        AstraZeneca
-                      </StyledTableCell>
-                      <StyledTableCell align="center">NJ0347</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Bệnh viện Bạch Mai
-                      </StyledTableCell>
-                    </TableRow>
-                  </TableBody>
+                  {filterRegistration.length > 0 && (
+                    <TableBody>
+                      {filterRegistration.map((element, index) => (
+                        <TableRow key={index + 1}>
+                          <StyledTableCell
+                            align="center"
+                            component="th"
+                            scope="row">
+                            {index + 1}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {element.date_injection
+                              ? moment(element.date_injection).format(
+                                  'DD/MM/YYYY'
+                                )
+                              : 'Chưa có'}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {findNameVaccine(element.vaccine_id)}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {element.vaccine_code}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {findNameSite(element.vaccination_site_id)}
+                          </StyledTableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  )}
                 </Table>
               </TableContainer>
             </InfoVaccine>
@@ -623,124 +742,126 @@ const VaccineCertificate = () => {
               </Link>
             </BoxRegisterVaccine>
           </Cert>
-          <Card>
-            <LogoCard src={logoCard} />
-            <Typography
-              sx={{
-                width: '290px',
-                height: '32px',
-                fontFamily: 'Roboto',
-                fontStyle: 'normal',
-                fontWeight: '700',
-                fontSize: '24px',
-                lineHeight: '133.4%',
-                color: '#FFFFFF'
-              }}>
-              ĐÃ TIÊM 2 MŨI VẮC XIN
-            </Typography>
-            <QRcode src={qrcode} />
-            <InfoCard>
-              <ItemInfoCard>
-                <PersonIcon />
-                <TextInfoCard>
-                  <Typography
-                    sx={{
-                      width: '68px',
-                      height: '24px',
-                      fontFamily: 'Roboto',
-                      fontStyle: 'normal',
-                      fontWeight: '400',
-                      fontSize: '16px',
-                      lineHeight: '150%',
-                      letterSpacing: ' -0.04px',
-                      color: 'rgba(0, 0, 0, 0.87)'
-                    }}>
-                    Họ và tên
-                  </Typography>
-                  <Typography
-                    sx={{
-                      width: '101px',
-                      height: '24px',
-                      fontFamily: 'Roboto',
-                      fontStyle: 'normal',
-                      fontWeight: '500',
-                      fontSize: '16px',
-                      lineHeight: '150%',
-                      letterSpacing: ' -0.04px',
-                      color: 'rgba(0, 0, 0, 0.87)'
-                    }}>
-                    Nguyễn Văn A
-                  </Typography>
-                </TextInfoCard>
-              </ItemInfoCard>
-              <ItemInfoCard>
-                <DateRangeIcon />
-                <TextInfoCard>
-                  <Typography
-                    sx={{
-                      width: '71px',
-                      height: '24px',
-                      fontFamily: 'Roboto',
-                      fontStyle: 'normal',
-                      fontWeight: '400',
-                      fontSize: '16px',
-                      lineHeight: '150%',
-                      letterSpacing: ' -0.04px',
-                      color: 'rgba(0, 0, 0, 0.87)'
-                    }}>
-                    Ngày sinh
-                  </Typography>
-                  <Typography
-                    sx={{
-                      width: '85px',
-                      height: '24px',
-                      fontFamily: 'Roboto',
-                      fontStyle: 'normal',
-                      fontWeight: '500',
-                      fontSize: '16px',
-                      lineHeight: '150%',
-                      letterSpacing: ' -0.04px',
-                      color: 'rgba(0, 0, 0, 0.87)'
-                    }}>
-                    16/10/1994
-                  </Typography>
-                </TextInfoCard>
-              </ItemInfoCard>
-              <ItemInfoCard>
-                <FeaturedVideoIcon />
-                <TextInfoCard>
-                  <Typography
-                    sx={{
-                      width: '117px',
-                      height: '24px',
-                      fontFamily: 'Roboto',
-                      fontStyle: 'normal',
-                      fontWeight: '400',
-                      fontSize: '16px',
-                      lineHeight: '150%',
-                      letterSpacing: ' -0.04px',
-                      color: 'rgba(0, 0, 0, 0.87)'
-                    }}>
-                    Số CMND/CCCD
-                  </Typography>
-                  <Typography
-                    sx={{
-                      width: '109px',
-                      height: '24px',
-                      fontFamily: 'Roboto',
-                      fontStyle: 'normal',
-                      fontWeight: '500',
-                      fontSize: '16px',
-                      lineHeight: '150%',
-                      letterSpacing: ' -0.04px',
-                      color: 'rgba(0, 0, 0, 0.87)'
-                    }}>
-                    030012345678
-                  </Typography>
-                </TextInfoCard>
-              </ItemInfoCard>
-            </InfoCard>
-          </Card>
+          {filterRegistration.length > 0 && (
+            <Card numRegis={filterRegistration.length > 1}>
+              <LogoCard src={logoCard} />
+              <Typography
+                sx={{
+                  width: '290px',
+                  height: '32px',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'normal',
+                  fontWeight: '700',
+                  fontSize: '24px',
+                  lineHeight: '133.4%',
+                  color: '#FFFFFF'
+                }}>
+                ĐÃ TIÊM {filterRegistration.length} MŨI VẮC XIN
+              </Typography>
+              <QRcode src={qrcode} />
+              <InfoCard>
+                <ItemInfoCard>
+                  <PersonIcon />
+                  <TextInfoCard>
+                    <Typography
+                      sx={{
+                        width: '68px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: ' -0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Họ và tên
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '101px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '500',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: ' -0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      {currentUser?.name}
+                    </Typography>
+                  </TextInfoCard>
+                </ItemInfoCard>
+                <ItemInfoCard>
+                  <DateRangeIcon />
+                  <TextInfoCard>
+                    <Typography
+                      sx={{
+                        width: '71px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: ' -0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Ngày sinh
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '85px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '500',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: ' -0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      {moment(currentUser?.birthday).format('DD/MM/YYYY')}
+                    </Typography>
+                  </TextInfoCard>
+                </ItemInfoCard>
+                <ItemInfoCard>
+                  <FeaturedVideoIcon />
+                  <TextInfoCard>
+                    <Typography
+                      sx={{
+                        width: '117px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: ' -0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      Số CMND/CCCD
+                    </Typography>
+                    <Typography
+                      sx={{
+                        width: '109px',
+                        height: '24px',
+                        fontFamily: 'Roboto',
+                        fontStyle: 'normal',
+                        fontWeight: '500',
+                        fontSize: '16px',
+                        lineHeight: '150%',
+                        letterSpacing: ' -0.04px',
+                        color: 'rgba(0, 0, 0, 0.87)'
+                      }}>
+                      {currentUser?.identity_card_number}
+                    </Typography>
+                  </TextInfoCard>
+                </ItemInfoCard>
+              </InfoCard>
+            </Card>
+          )}
         </ContainerResult>
       </Result>
       <Footer />

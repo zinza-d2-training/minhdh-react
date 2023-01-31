@@ -8,7 +8,7 @@ import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { logout, selectIsAdmin } from '../features/auth/authSlice';
 import { Logout } from '@mui/icons-material';
-import { useLogin } from '../hooks/useLogin';
+import { removeTokenUser } from '../features/user/userSlice';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { LoadingButton } from '@mui/lab';
 
@@ -218,22 +218,18 @@ const Header = () => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const [loading, setLoading] = React.useState(false);
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  useLogin();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const currentUser = useCurrentUser();
   const isAdmin = useAppSelector(selectIsAdmin);
-  const handleLogout = () => {
+  const handleLogout = async () => {
     dispatch(logout());
-    setTimeout(() => {
-      setLoading(true);
-      navigate('/');
-    }, 3000);
+    dispatch(removeTokenUser());
+    navigate('/');
   };
 
   return (
@@ -369,7 +365,6 @@ const Header = () => {
             <ItemLogout>
               <ButtonLogout
                 onClick={handleLogout}
-                loading={loading}
                 variant="contained"
                 loadingPosition="start"
                 endIcon={<Logout />}>

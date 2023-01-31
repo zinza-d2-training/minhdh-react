@@ -19,9 +19,10 @@ export function useLogin() {
   const dispatch = useAppDispatch();
   const token = useAccessToken();
   const { data } = useQuery({
-    queryKey: [QueryKey.fetchUserLogin],
+    queryKey: [QueryKey.fetchUserLogin, token],
     queryFn: () => fetchLoggedUser(token)
   });
+
   useEffect(() => {
     if (data) {
       dispatch(updateUser(data));

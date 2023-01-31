@@ -276,6 +276,11 @@ type Inputs = {
   number_table: number;
 };
 
+export interface InputsSearch {
+  name: string | null | undefined;
+  address: string | null | undefined;
+}
+
 interface VaccinationSites {
   id: number;
   name: string;
@@ -376,10 +381,40 @@ const AdminPlace = () => {
     formState: { errors, isValid }
   } = useForm<Inputs>(validationOpt);
 
+  const [filterNameSite, setFilterNameSite] = React.useState('');
+  const [filterAddressSite, setFilterAddressSite] = React.useState('');
+
   const vaccinationSitesQuery = useVaccinationSitesQuery();
-  const injectionSitesRow = React.useMemo(() => {
+  const [dataRows, setDataRows] = React.useState<VaccinationSites[]>([]);
+
+  const onFilter = async () => {
+    if (filterNameSite && !filterAddressSite) {
+      const result = allSites.filter((item) => item.name === filterNameSite);
+      setDataRows(result);
+    } else if (filterAddressSite && !filterNameSite) {
+      const result = allSites.filter(
+        (item) => item.address === filterAddressSite
+      );
+      setDataRows(result);
+    } else if (filterNameSite && filterAddressSite) {
+      const result = allSites.filter((item) => {
+        return (
+          item.address === filterAddressSite && item.name === filterNameSite
+        );
+      });
+      setDataRows(result);
+    } else {
+      setDataRows(allSites);
+    }
+  };
+
+  const allSites = React.useMemo(() => {
     return vaccinationSitesQuery.data ?? [];
   }, [vaccinationSitesQuery.data]);
+
+  React.useEffect(() => {
+    setDataRows(allSites);
+  }, [allSites]);
 
   const updateVaccinationSites = async (dataUpdate: Inputs) => {
     const res = await api.post(
@@ -389,11 +424,17 @@ const AdminPlace = () => {
     return res.data;
   };
 
-  const { mutate } = useMutation({
+  const { mutate, data } = useMutation({
     mutationFn: (dataUpdate: Inputs) => {
       return updateVaccinationSites(dataUpdate);
     }
   });
+
+  React.useEffect(() => {
+    if (data) {
+      alert(data.msg);
+    }
+  }, [data]);
 
   const name = watch('name');
   const address = watch('address');
@@ -415,7 +456,6 @@ const AdminPlace = () => {
 
   const [rowSelected, setRowSelected] = React.useState<VaccinationSites>();
   const [open, setOpen] = React.useState<boolean>(false);
-  const filterData = () => {};
 
   React.useEffect(() => {
     if (rowSelected) {
@@ -501,6 +541,8 @@ const AdminPlace = () => {
         <FormFilter>
           <InputFilter>
             <TextField
+              value={filterNameSite}
+              onChange={(e: any) => setFilterNameSite(e.target.value)}
               size="small"
               type="text"
               id="name"
@@ -512,6 +554,8 @@ const AdminPlace = () => {
           </InputFilter>
           <InputFilter>
             <TextField
+              value={filterAddressSite}
+              onChange={(e: any) => setFilterAddressSite(e.target.value)}
               size="small"
               type="text"
               id="address"
@@ -521,7 +565,7 @@ const AdminPlace = () => {
               }}
             />
           </InputFilter>
-          <ButtonSubmit onClick={filterData}>
+          <ButtonSubmit onClick={onFilter}>
             <SearchIcon />
             <span>Tìm kiếm</span>
           </ButtonSubmit>
@@ -534,7 +578,7 @@ const AdminPlace = () => {
             }
             autoPageSize
             autoHeight
-            rows={injectionSitesRow}
+            rows={dataRows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
@@ -576,7 +620,7 @@ const AdminPlace = () => {
           <DialogContent>
             <ContainerContent>
               <InputComponent>
-                <Label htmlFor="name">Họ và tên</Label>
+                <Label htmlFor="name">Tên điểm tiêm</Label>
                 <TextField
                   {...register('name')}
                   size="small"
@@ -625,9 +669,6 @@ const AdminPlace = () => {
                 <TextField
                   {...register('number_table')}
                   size="small"
-                  helperText={
-                    errors.number_table?.message && errors.number_table.message
-                  }
                   type="text"
                   id="number_table"
                   placeholder="Số bàn tiêm"
@@ -658,7 +699,10 @@ const AdminPlace = () => {
                   Hủy Bỏ
                 </Typography>
               </ButtonCancel>
-              <ButtonConfirm type="submit" disabled={!isValid}>
+              <ButtonConfirm
+                type="submit"
+                disabled={!isValid}
+                variant="contained">
                 <Typography
                   sx={{
                     width: '100px',

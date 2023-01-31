@@ -22,6 +22,8 @@ import { useWardsQuery } from '../../homePage/componentsHome/hooks/useWardsQuery
 import { useAllDistrictsQuery } from '../../vaccineRegistrationPage/hooks/useAllDistrictsQuery';
 import { useAllWardsQuery } from '../../vaccineRegistrationPage/hooks/useAllWardsQuery';
 import InputLabel from '@mui/material/InputLabel';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../../utils/axios/instance';
 
 const FormEditInfo = styled.form``;
 
@@ -149,6 +151,14 @@ interface InputsInfo {
   ward_id: number;
 }
 
+export interface InputsUpdateUser {
+  identity_card_number: string;
+  name: string;
+  birthday: Date;
+  gender: string;
+  ward_id: number;
+}
+
 interface Province {
   id: number;
   name: string;
@@ -192,14 +202,13 @@ const EditInfo: React.FC<MyProps> = (props) => {
     handleSubmit,
     watch,
     control,
+    reset,
     formState: { errors, isValid }
   } = useForm<InputsInfo>(validationOpt);
 
   const province_id = watch('province_id');
   const district_id = watch('district_id');
   const currentUser = useCurrentUser();
-
-  const onSubmit = () => {};
 
   const findNameWard = (id: any) => {
     return allWards.find((element: Ward) => element.id === id)?.name;
@@ -248,6 +257,53 @@ const EditInfo: React.FC<MyProps> = (props) => {
     return allWardsQuery.data ?? [];
   }, [allWardsQuery.data]);
 
+  const updateUser = async (dataUpdate: InputsUpdateUser) => {
+    const res = await api.post(`/users/info/${currentUser?.id}`, dataUpdate);
+    return res.data;
+  };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (dataUpdate: InputsUpdateUser) => {
+      return updateUser(dataUpdate);
+    }
+  });
+
+  const identity_card_number = watch('identity_card_number');
+  const name = watch('name');
+  const birthday = watch('birthday');
+  const gender = watch('gender');
+  const ward_id = watch('ward_id');
+
+  const formUpdateUser: InputsUpdateUser = {
+    identity_card_number: identity_card_number,
+    name: name,
+    birthday: birthday,
+    gender: gender,
+    ward_id: ward_id
+  };
+
+  const onSubmit = () => {
+    mutate(formUpdateUser);
+  };
+
+  React.useEffect(() => {
+    if (data) {
+      alert(data.msg);
+    }
+  }, [data]);
+
+  React.useEffect(() => {
+    if (props.editInfo) {
+      reset({
+        name: currentUser?.name as string,
+        identity_card_number: currentUser?.identity_card_number as string,
+        birthday: currentUser?.birthday as Date,
+        gender: currentUser?.gender as string
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.editInfo]);
+
   return (
     <FormEditInfo onSubmit={handleSubmit(onSubmit)}>
       <Section1>
@@ -274,7 +330,6 @@ const EditInfo: React.FC<MyProps> = (props) => {
                   width: '100%'
                 }}
                 required
-                defaultValue={currentUser?.identity_card_number}
               />
             </InputComponent>
           </RowInputs>
@@ -299,7 +354,6 @@ const EditInfo: React.FC<MyProps> = (props) => {
                   width: '100%'
                 }}
                 required
-                defaultValue={currentUser?.name}
               />
             </InputComponent>
             <InputComponent>
@@ -316,7 +370,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
                         readOnly={!props.editInfo}
                         disableFuture
                         label="Ngày sinh"
-                        value={value || currentUser?.birthday}
+                        value={value}
                         className="inputBirthday"
                         renderInput={(params) => (
                           <TextField {...params} size="small" />
@@ -343,7 +397,6 @@ const EditInfo: React.FC<MyProps> = (props) => {
                   width: '100%'
                 }}
                 required
-                defaultValue={currentUser?.gender}
               />
             </InputComponent>
           </RowInputs>

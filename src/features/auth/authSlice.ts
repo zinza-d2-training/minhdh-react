@@ -8,7 +8,7 @@ export interface User {
   identity_card_number: string;
   isAdmin: number;
   birthday: Date;
-  gender: number;
+  gender: string;
   ward_id: number;
   reset_token: string;
 }

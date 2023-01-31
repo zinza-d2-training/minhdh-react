@@ -3,7 +3,9 @@ import {
   Button,
   TextField,
   Pagination,
-  PaginationItem
+  PaginationItem,
+  Slide,
+  Dialog
 } from '@mui/material';
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
@@ -19,7 +21,16 @@ import {
   useGridApiContext,
   useGridSelector
 } from '@mui/x-data-grid';
-import DownloadIcon from '@mui/icons-material/Download';
+import { useAllDocumentsQuery } from './hooks/useAllDocumentsQuery';
+import moment from 'moment';
+import { TransitionProps } from '@mui/material/transitions';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../utils/axios/instance';
+import CloseIcon from '@mui/icons-material/Close';
+import LinkIcon from '@mui/icons-material/Link';
 
 const Menu = styled.div`
   display: flex;
@@ -122,6 +133,7 @@ const InputFilter = styled.div`
   height: 40px;
   background: #ffffff;
 `;
+
 const ButtonSubmit = styled(Button)`
   display: flex;
   flex-direction: row;
@@ -147,27 +159,141 @@ const ButtonSubmit = styled(Button)`
   }
 `;
 
-interface Document {
+const Title = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px;
+  width: 98%;
+  height: 64px;
+`;
+
+const TextTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 24px;
+  width: 98%;
+  height: 64px;
+`;
+
+const FormDialog = styled.form``;
+
+const DialogContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px;
+  width: 98%;
+  height: 200px;
+`;
+
+const ContainerContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  gap: 24px;
+  width: 98%;
+  height: 200px;
+`;
+
+const InputComponent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 5px;
+  width: 98%;
+  height: 69px;
+  background: #ffffff;
+`;
+
+const Label = styled.label`
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.87);
+`;
+
+const DialogActions = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 12px 24px;
+  gap: 16px;
+  width: 90%;
+  height: 60px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 16px;
+  height: 36px;
+  margin-bottom: -30px;
+`;
+
+const ButtonCancel = styled(Button)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 16px;
+  gap: 4px;
+  width: 100px;
+  height: 36px;
+  border: 1px solid #303f9f;
+  border-radius: 8px 8px 8px 0px;
+`;
+
+const ButtonConfirm = styled(Button)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 16px;
+  gap: 4px;
+  width: 120px;
+  height: 36px;
+  background: #303f9f;
+  border-radius: 8px 8px 8px 0px;
+`;
+
+const ButtonClose = styled(Button)`
+  padding-right: 10px; ;
+`;
+
+export interface Document {
   id: number;
   name: string;
-  dateRelease: string;
-  linkDownload: string;
+  date_release: Date;
+  link: string;
 }
 
-const documents: Document[] = [
-  {
-    id: 1,
-    name: 'Tài liệu 1',
-    dateRelease: '1/1/ 2021',
-    linkDownload: 'Buoi chieu'
-  }
-];
+export type Inputs = {
+  name: string;
+  date_release: Date;
+  link: string;
+};
+
+export interface InputsSearch {
+  name: string | null | undefined;
+}
 
 const columns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'STT',
-    width: 200,
+    width: 250,
     headerAlign: 'center',
     align: 'center'
   },
@@ -180,22 +306,27 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: 'dateRelease',
+    field: 'date_release',
     headerName: 'Ngày phát hành',
     minWidth: 400,
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    renderCell: (params: any) => {
+      return moment(params.row.date_release).format('DD/MM/YYYY');
+    }
   },
   {
     field: 'link',
-    headerName: 'Tải xuống',
+    headerName: 'Link tài liệu',
     minWidth: 300,
     headerAlign: 'center',
     align: 'center',
     renderCell: (params: any) => {
       return (
         <div>
-          <DownloadIcon />
+          <a href={params.row.link}>
+            <LinkIcon />
+          </a>
         </div>
       );
     }
@@ -220,8 +351,107 @@ function PaginationData() {
   );
 }
 
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const AdminDocuments = () => {
-  const filterData = () => {};
+  const formSchema = Yup.object().shape({
+    name: Yup.string().required('Tên tài liệu không được bỏ trống'),
+    date_release: Yup.date().required('Ngày phát hành không được bỏ trống'),
+    link: Yup.string().required('Link tài liệu không được bỏ trống')
+  });
+
+  const validationOpt = {
+    resolver: yupResolver(formSchema)
+  };
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isValid }
+  } = useForm<Inputs>(validationOpt);
+  const [filterName, setFilterName] = React.useState('');
+
+  const allDocumentsQuery = useAllDocumentsQuery();
+  const [dataRows, setDataRows] = React.useState<Document[]>([]);
+
+  const allDocuments = React.useMemo(() => {
+    return allDocumentsQuery.data ?? [];
+  }, [allDocumentsQuery.data]);
+
+  React.useEffect(() => {
+    setDataRows(allDocuments);
+  }, [allDocuments]);
+
+  const onFilter = async () => {
+    if (filterName) {
+      const result = allDocuments.filter((item) => item.name === filterName);
+      setDataRows(result);
+    } else {
+      setDataRows(allDocuments);
+    }
+  };
+
+  const updateDocument = async (dataUpdate: Inputs) => {
+    const res = await api.post(`/document/${rowSelected?.id}`, dataUpdate);
+    return res.data;
+  };
+
+  const { mutate, data } = useMutation({
+    mutationFn: (dataUpdate: Inputs) => {
+      return updateDocument(dataUpdate);
+    }
+  });
+
+  React.useEffect(() => {
+    if (data) {
+      alert(data.msg);
+    }
+  }, [data]);
+
+  const name = watch('name');
+  const link = watch('link');
+  const date_release = watch('date_release');
+
+  const formUpdate: Inputs = {
+    name: name,
+    date_release: date_release,
+    link: link
+  };
+
+  const onSubmitUpdate = async () => {
+    mutate(formUpdate);
+    setOpen(false);
+    allDocumentsQuery.refetch();
+  };
+
+  const [rowSelected, setRowSelected] = React.useState<Document>();
+  const [open, setOpen] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (rowSelected) {
+      setValue('name', rowSelected?.name as string);
+      setValue('date_release', rowSelected?.date_release as Date);
+      setValue('link', rowSelected?.link as string);
+    }
+  }, [rowSelected, setValue]);
+
+  const handleClickOpen = (param: Document) => {
+    setRowSelected(param);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -289,6 +519,8 @@ const AdminDocuments = () => {
         <FormFilter>
           <InputFilter>
             <TextField
+              value={filterName}
+              onChange={(e: any) => setFilterName(e.target.value)}
               size="small"
               type="text"
               id="name"
@@ -298,28 +530,18 @@ const AdminDocuments = () => {
               }}
             />
           </InputFilter>
-          <InputFilter>
-            <TextField
-              size="small"
-              type="text"
-              id="location"
-              placeholder="Ngày phát hành"
-              sx={{
-                width: '100%'
-              }}
-            />
-          </InputFilter>
-          <ButtonSubmit onClick={filterData}>
+          <ButtonSubmit onClick={onFilter}>
             <SearchIcon />
             <span>Tìm kiếm</span>
           </ButtonSubmit>
         </FormFilter>
         <Data>
           <DataGrid
+            onRowClick={(param) => handleClickOpen(param.row as Document)}
             disableColumnMenu
             autoPageSize
             autoHeight
-            rows={documents}
+            rows={dataRows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
@@ -328,6 +550,113 @@ const AdminDocuments = () => {
           />
         </Data>
       </ContainerTable>
+      <Dialog
+        fullWidth
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description">
+        <Title>
+          <TextTitle>
+            <Typography
+              sx={{
+                width: '184px',
+                height: '32px',
+                fontFamily: 'Roboto',
+                fontStyle: 'normal',
+                fontWeight: '700',
+                fontSize: '20px',
+                lineHeight: '160%',
+                letterSpacing: '-0.05px',
+                color: 'rgba(0, 0, 0, 0.87)'
+              }}>
+              Cập Nhật Tài Liệu
+            </Typography>
+          </TextTitle>
+          <ButtonClose onClick={handleClose}>
+            <CloseIcon htmlColor="rgba(0, 0, 0, 0.54)" />
+          </ButtonClose>
+        </Title>
+        <Divider />
+        <FormDialog onSubmit={handleSubmit(onSubmitUpdate)}>
+          <DialogContent>
+            <ContainerContent>
+              <InputComponent>
+                <Label htmlFor="name">Tên tài liệu</Label>
+                <TextField
+                  {...register('name')}
+                  size="small"
+                  helperText={errors.name?.message && errors.name.message}
+                  type="text"
+                  id="name"
+                  placeholder="Tên tài liệu"
+                  sx={{
+                    width: '100%'
+                  }}
+                  required
+                />
+              </InputComponent>
+              <InputComponent>
+                <Label htmlFor="link">Link</Label>
+                <TextField
+                  {...register('link')}
+                  helperText={errors.link?.message && errors.link.message}
+                  size="small"
+                  type="text"
+                  id="link"
+                  placeholder="Link"
+                  sx={{
+                    width: '100%'
+                  }}
+                  required
+                />
+              </InputComponent>
+            </ContainerContent>
+          </DialogContent>
+          <DialogActions>
+            <ButtonGroup>
+              <ButtonCancel onClick={handleClose}>
+                <Typography
+                  sx={{
+                    width: '70px',
+                    height: '24px',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    fontSize: '16px',
+                    lineHeight: '150%',
+                    letterSpacing: '-0.04px',
+                    textTransform: 'uppercase',
+                    color: '#303F9F'
+                  }}>
+                  Hủy Bỏ
+                </Typography>
+              </ButtonCancel>
+              <ButtonConfirm
+                type="submit"
+                disabled={!isValid}
+                variant="contained">
+                <Typography
+                  sx={{
+                    width: '100px',
+                    height: '24px',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    fontSize: '16px',
+                    textTransform: 'uppercase',
+                    lineHeight: '150%',
+                    letterSpacing: '-0.04px',
+                    color: 'white'
+                  }}>
+                  Xác Nhận
+                </Typography>
+              </ButtonConfirm>
+            </ButtonGroup>
+          </DialogActions>
+        </FormDialog>
+      </Dialog>
       <Footer />
     </div>
   );
