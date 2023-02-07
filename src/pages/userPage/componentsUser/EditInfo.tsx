@@ -258,7 +258,7 @@ const EditInfo: React.FC<MyProps> = (props) => {
   }, [allWardsQuery.data]);
 
   const updateUser = async (dataUpdate: InputsUpdateUser) => {
-    const res = await api.post(`/users/info/${currentUser?.id}`, dataUpdate);
+    const res = await api.post(`/users/${currentUser?.id}`, dataUpdate);
     return res.data;
   };
 
