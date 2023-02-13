@@ -530,7 +530,7 @@ const AdminDocuments = () => {
               }}
             />
           </InputFilter>
-          <ButtonSubmit onClick={onFilter}>
+          <ButtonSubmit variant="contained" onClick={onFilter}>
             <SearchIcon />
             <span>Tìm kiếm</span>
           </ButtonSubmit>

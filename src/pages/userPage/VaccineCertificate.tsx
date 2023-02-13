@@ -168,7 +168,7 @@ const ButtonRegister = styled(Button)`
   align-items: center;
   padding: 6px 16px;
   gap: 4px;
-  width: 255px;
+  width: 275px;
   height: 36px;
   background: #303f9f;
   border-radius: 8px 8px 8px 0px;
@@ -722,10 +722,10 @@ const VaccineCertificate = () => {
               <Link
                 style={{ textDecoration: 'none' }}
                 to="/vaccine-register-step1">
-                <ButtonRegister>
+                <ButtonRegister variant="contained">
                   <Typography
                     sx={{
-                      width: '223px',
+                      width: '243px',
                       height: '24px',
                       fontFamily: 'Roboto',
                       fontStyle: 'normal',

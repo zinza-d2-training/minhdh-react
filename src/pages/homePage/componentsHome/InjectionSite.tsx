@@ -54,7 +54,7 @@ const ContainerInjectionSite = styled.div`
   align-items: flex-start;
   padding: 0px 12px;
   width: 1368px;
-  height: 637px;
+  height: 532px;
   background: #ffffff;
   border: 1px solid rgba(38, 56, 150, 0.14);
   box-shadow: 0px 4px 12px rgba(34, 41, 47, 0.12);
@@ -449,7 +449,7 @@ const InjectionSites = () => {
               )}
             />
           </InputComponent>
-          <ButtonSubmit type="submit">
+          <ButtonSubmit variant="contained" type="submit">
             <SearchIcon />
             <span>Tìm kiếm</span>
           </ButtonSubmit>

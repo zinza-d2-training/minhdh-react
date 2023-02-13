@@ -394,9 +394,9 @@ const columns: GridColDef[] = [
     align: 'center',
     valueGetter: (params: GridValueGetterParams) => {
       return params.row.status === Status.ACCEPT
-        ? 'Chấp nhận'
+        ? 'Đã tiêm'
         : params.row.status === Status.SUCCESS
-        ? 'Chờ phê duyệt'
+        ? 'Đã đăng ký'
         : 'Hủy bỏ';
     }
   }
@@ -686,7 +686,7 @@ const AdminRegister = () => {
               }}
             />
           </InputFilter>
-          <ButtonSubmit onClick={onFilter}>
+          <ButtonSubmit variant='contained' onClick={onFilter}>
             <SearchIcon />
             <span>Tìm kiếm</span>
           </ButtonSubmit>
@@ -827,7 +827,7 @@ const AdminRegister = () => {
                           Hủy bỏ
                         </MenuItem>
                         <MenuItem key={Status.ACCEPT} value={Status.ACCEPT}>
-                          Chấp nhận
+                          Đã tiêm
                         </MenuItem>
                       </Select>
                     </FormControl>

@@ -13,7 +13,7 @@ import {
 import styled from '@emotion/styled';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InputLabel from '@mui/material/InputLabel';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -278,14 +278,23 @@ const Register = () => {
     ward_id: ward_id
   };
 
+  const [load, setLoad] = useState(false);
+
   const onSubmit = async () => {
     mutate(dataForm);
+    setLoad(true);
   };
 
   useEffect(() => {
-    if (data) {
+    if (data?.msgSuccess) {
+      alert(data.msgSuccess);
       navigate('/login');
+    } else {
+      if (load) {
+        alert(data.msgError);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, navigate]);
 
   return (

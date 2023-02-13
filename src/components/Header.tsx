@@ -10,7 +10,6 @@ import { logout, selectIsAdmin } from '../features/auth/authSlice';
 import { Logout } from '@mui/icons-material';
 import { removeTokenUser } from '../features/user/userSlice';
 import { useCurrentUser } from '../hooks/useCurrentUser';
-import { LoadingButton } from '@mui/lab';
 
 const HeaderApp = styled.div`
   display: flex;
@@ -166,7 +165,7 @@ const ItemLogout = styled.div`
     line-height: 150%;
     letter-spacing: -0.04px;
     text-transform: uppercase;
-    color: #303f9f;
+    color: white;
   }
   & > a {
     text-decoration: none;
@@ -186,7 +185,7 @@ const ButtonUser = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
-const ButtonLogout = styled(LoadingButton)`
+const ButtonLogout = styled(Button)`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -195,7 +194,7 @@ const ButtonLogout = styled(LoadingButton)`
   gap: 4px;
   width: 130px;
   height: 40px;
-  background: red;
+  // background: red;
   border-radius: 8px 8px 8px 0px;
 `;
 
@@ -347,7 +346,7 @@ const Header = () => {
           {currentUser !== null ? (
             <ItemUser>
               <Link to="/account">
-                <ButtonUser>
+                <ButtonUser variant="contained">
                   <span className="text-user">{currentUser?.name}</span>
                 </ButtonUser>
               </Link>
@@ -364,9 +363,9 @@ const Header = () => {
           {currentUser !== null && (
             <ItemLogout>
               <ButtonLogout
+                color="error"
                 onClick={handleLogout}
                 variant="contained"
-                loadingPosition="start"
                 endIcon={<Logout />}>
                 <span className="text-logout">Đăng xuất</span>
               </ButtonLogout>
