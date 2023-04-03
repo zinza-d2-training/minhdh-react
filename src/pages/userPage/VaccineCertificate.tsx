@@ -181,7 +181,7 @@ const Card = styled.div<{ numRegis: boolean }>`
   align-items: center;
   padding: 24px;
   gap: 24px;
-  width: 340px;
+  width: 335px;
   height: 668px;
   background: ${(props) => (props.numRegis ? '#43A047' : '#e6e600')};
   box-shadow: 0px 16px 48px rgba(0, 0, 0, 0.175);
