@@ -10,6 +10,7 @@ import { logout, selectIsAdmin } from '../features/auth/authSlice';
 import { Logout } from '@mui/icons-material';
 import { removeTokenUser } from '../features/user/userSlice';
 import { useCurrentUser } from '../hooks/useCurrentUser';
+import { LoadingButton } from '@mui/lab';
 
 const HeaderApp = styled.div`
   display: flex;
@@ -185,7 +186,7 @@ const ButtonUser = styled(Button)`
   border-radius: 8px 8px 8px 0px;
 `;
 
-const ButtonLogout = styled(Button)`
+const ButtonLogout = styled(LoadingButton)`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -194,7 +195,7 @@ const ButtonLogout = styled(Button)`
   gap: 4px;
   width: 130px;
   height: 40px;
-  // background: red;
+  background: red;
   border-radius: 8px 8px 8px 0px;
 `;
 
@@ -343,6 +344,27 @@ const Header = () => {
               </Typography>
             </Link>
           </ItemDocs>
+          {/* {isAdmin === 1 && ( */}
+          <ItemInject>
+            <Link to="/messages" style={{ textDecoration: 'none' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  width: '71px',
+                  height: '24px',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  letterSpacing: '-0.04px',
+                  color: '#FFFFFF'
+                }}>
+                Tin nhắn
+              </Typography>
+            </Link>
+          </ItemInject>
+          {/* )} */}
           {currentUser !== null ? (
             <ItemUser>
               <Link to="/account">
@@ -354,7 +376,7 @@ const Header = () => {
           ) : (
             <ItemLogin>
               <Link to="/login">
-                <ButtonLogin>
+                <ButtonLogin variant="contained">
                   <span className="textLogin">Đăng nhập</span>
                 </ButtonLogin>
               </Link>
