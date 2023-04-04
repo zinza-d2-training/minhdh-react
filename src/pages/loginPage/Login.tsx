@@ -6,8 +6,8 @@ import { Typography, Button, TextField } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import styled from '@emotion/styled';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { login, selectError } from '../../features/user/userSlice';
+import { useAppDispatch } from '../../store';
+import { login } from '../../features/user/userSlice';
 import { useMutation } from '@tanstack/react-query';
 import api from '../../utils/axios/instance';
 import { useEffect, useState } from 'react';
@@ -237,7 +237,6 @@ const Login = () => {
   const email = watch('email');
   const password = watch('password');
 
-  const loginFailed = useAppSelector(selectError);
   const dispatch = useAppDispatch();
   const dataForm: Inputs = {
     email: email,
@@ -250,7 +249,7 @@ const Login = () => {
     }
   });
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     mutate(dataForm);
     setLoading(true);
   };
@@ -258,14 +257,21 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
 
   useEffect(() => {
-    if (data) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (data?.token) {
         dispatch(login(data));
         navigate('/');
-      }, 2000);
-    }
+      } else {
+        if (loading) {
+          setLoginFailed(true);
+          setLoading(false);
+        }
+      }
+    }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, dispatch, navigate]);
 
   return (
@@ -301,7 +307,7 @@ const Login = () => {
                   helperText={errors.email?.message && errors.email.message}
                   type="text"
                   id="email"
-                  placeholder="Email: Nguyễn Văn A"
+                  placeholder="Email"
                   sx={{
                     width: '100%'
                   }}

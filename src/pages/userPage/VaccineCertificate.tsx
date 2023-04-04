@@ -168,7 +168,7 @@ const ButtonRegister = styled(Button)`
   align-items: center;
   padding: 6px 16px;
   gap: 4px;
-  width: 255px;
+  width: 275px;
   height: 36px;
   background: #303f9f;
   border-radius: 8px 8px 8px 0px;
@@ -181,7 +181,7 @@ const Card = styled.div<{ numRegis: boolean }>`
   align-items: center;
   padding: 24px;
   gap: 24px;
-  width: 340px;
+  width: 335px;
   height: 668px;
   background: ${(props) => (props.numRegis ? '#43A047' : '#e6e600')};
   box-shadow: 0px 16px 48px rgba(0, 0, 0, 0.175);
@@ -722,10 +722,10 @@ const VaccineCertificate = () => {
               <Link
                 style={{ textDecoration: 'none' }}
                 to="/vaccine-register-step1">
-                <ButtonRegister>
+                <ButtonRegister variant="contained">
                   <Typography
                     sx={{
-                      width: '223px',
+                      width: '243px',
                       height: '24px',
                       fontFamily: 'Roboto',
                       fontStyle: 'normal',

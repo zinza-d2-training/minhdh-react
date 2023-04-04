@@ -27,8 +27,7 @@ const ContainerHeader = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 90px;
-  width: 100%;
+  padding: 0px 0px 0px 90px;
   height: 50px;
 `;
 
@@ -51,11 +50,9 @@ const Logo = styled.img`
 const MenuItemHeader = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
-  padding: 0px;
+  margin-left: 180px;
   gap: 24px;
-  width: 524px;
   height: 50px;
 `;
 
@@ -166,7 +163,7 @@ const ItemLogout = styled.div`
     line-height: 150%;
     letter-spacing: -0.04px;
     text-transform: uppercase;
-    color: #303f9f;
+    color: white;
   }
   & > a {
     text-decoration: none;
@@ -235,25 +232,27 @@ const Header = () => {
   return (
     <HeaderApp>
       <ContainerHeader>
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <Brand>
-            <Logo src={logo} alt="" />
-            <Typography
-              variant="h6"
-              sx={{
-                width: '420px',
-                height: '32px',
-                fontFamily: 'Roboto',
-                fontStyle: 'normal',
-                fontWeight: '700',
-                fontSize: '19px',
-                lineHeight: '160%',
-                color: '#FFFFFF'
-              }}>
-              CỔNG THÔNG TIN TIÊM CHỦNG COVID-19
-            </Typography>
-          </Brand>
-        </Link>
+        <div>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Brand>
+              <Logo src={logo} alt="" />
+              <Typography
+                variant="h6"
+                sx={{
+                  width: '420px',
+                  height: '32px',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'normal',
+                  fontWeight: '700',
+                  fontSize: '19px',
+                  lineHeight: '160%',
+                  color: '#FFFFFF'
+                }}>
+                CỔNG THÔNG TIN TIÊM CHỦNG COVID-19
+              </Typography>
+            </Brand>
+          </Link>
+        </div>
         <MenuItemHeader>
           <ItemHome>
             <Link to="/" style={{ textDecoration: 'none' }}>
@@ -344,10 +343,31 @@ const Header = () => {
               </Typography>
             </Link>
           </ItemDocs>
+          {/* {isAdmin === 1 && ( */}
+          <ItemDocs>
+            <Link to="/messages" style={{ textDecoration: 'none' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  width: '71px',
+                  height: '24px',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  letterSpacing: '-0.04px',
+                  color: '#FFFFFF'
+                }}>
+                Tin nhắn
+              </Typography>
+            </Link>
+          </ItemDocs>
+          {/* )} */}
           {currentUser !== null ? (
             <ItemUser>
               <Link to="/account">
-                <ButtonUser>
+                <ButtonUser variant="contained">
                   <span className="text-user">{currentUser?.name}</span>
                 </ButtonUser>
               </Link>
@@ -355,7 +375,7 @@ const Header = () => {
           ) : (
             <ItemLogin>
               <Link to="/login">
-                <ButtonLogin>
+                <ButtonLogin variant="contained">
                   <span className="textLogin">Đăng nhập</span>
                 </ButtonLogin>
               </Link>
@@ -364,9 +384,9 @@ const Header = () => {
           {currentUser !== null && (
             <ItemLogout>
               <ButtonLogout
+                color="error"
                 onClick={handleLogout}
                 variant="contained"
-                loadingPosition="start"
                 endIcon={<Logout />}>
                 <span className="text-logout">Đăng xuất</span>
               </ButtonLogout>

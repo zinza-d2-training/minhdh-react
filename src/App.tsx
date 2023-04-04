@@ -17,6 +17,7 @@ import AdminPlace from './pages/adminPage/AdminPlace';
 import AdminDocuments from './pages/adminPage/AdminDocuments';
 import AdminRegister from './pages/adminPage/AdminRegister';
 import { useLogin } from './hooks/useLogin';
+import AdminMessages from './pages/adminPage/AdminMessages';
 
 function App() {
   useLogin();
@@ -25,42 +26,45 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<PrivateRoute />}>
-          <Route path="/login" element={<Login />} />
-        </Route>
-        <Route path="/forgot-password" element={<PrivateRoute />}>
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-        </Route>
-        <Route path="/register" element={<PrivateRoute />}>
-          <Route path="/register" element={<Register />} />
-        </Route>
-        <Route path="/vaccine-register-step1" element={<PrivateRouteForUser />}>
-          <Route path="/vaccine-register-step1" element={<VaccineStep1 />} />
-        </Route>
-        <Route path="/vaccine-register-step2" element={<PrivateRouteForUser />}>
-          <Route path="/vaccine-register-step2" element={<VaccineStep2 />} />
-        </Route>
-        <Route path="/vaccine-register-step3" element={<PrivateRouteForUser />}>
-          <Route path="/vaccine-register-step3" element={<VaccineStep3 />} />
-        </Route>
-        <Route path="/vaccine-certificate" element={<PrivateRouteForUser />}>
-          <Route path="/vaccine-certificate" element={<VaccineCertificate />} />
-        </Route>
-        <Route path="/registration-result" element={<PrivateRouteForUser />}>
-          <Route path="/registration-result" element={<RegistrationResult />} />
-        </Route>
-        <Route path="/account" element={<PrivateRouteForUser />}>
-          <Route path="/account" element={<Account />} />
-        </Route>
-        <Route element={<PrivateRouteForAdmin />}>
-          <Route path="/admin-place" element={<AdminPlace />} />
-        </Route>
-        <Route element={<PrivateRouteForUser />}>
-          <Route path="/admin-document" element={<AdminDocuments />} />
-        </Route>
-        <Route element={<PrivateRouteForAdmin />}>
-          <Route path="/admin-register" element={<AdminRegister />} />
-        </Route>
+        {/* <Route path="/login" element={<PrivateRoute />}> */}
+        <Route path="/login" element={<Login />} />
+        {/* </Route> */}
+        {/* <Route path="/forgot-password" element={<PrivateRoute />}> */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* </Route> */}
+        {/* <Route path="/register" element={<PrivateRoute />}> */}
+        <Route path="/register" element={<Register />} />
+        {/* </Route> */}
+        {/* <Route path="/vaccine-register-step1" element={<PrivateRouteForUser />}> */}
+        <Route path="/vaccine-register-step1" element={<VaccineStep1 />} />
+        {/* </Route> */}
+        {/* <Route path="/vaccine-register-step2" element={<PrivateRouteForUser />}> */}
+        <Route path="/vaccine-register-step2" element={<VaccineStep2 />} />
+        {/* </Route> */}
+        {/* <Route path="/vaccine-register-step3" element={<PrivateRouteForUser />}> */}
+        <Route path="/vaccine-register-step3" element={<VaccineStep3 />} />
+        {/* </Route> */}
+        {/* <Route path="/vaccine-certificate" element={<PrivateRouteForUser />}> */}
+        <Route path="/vaccine-certificate" element={<VaccineCertificate />} />
+        {/* </Route> */}
+        {/* <Route path="/registration-result" element={<PrivateRouteForUser />}> */}
+        <Route path="/registration-result" element={<RegistrationResult />} />
+        {/* </Route> */}
+        {/* <Route path="/account" element={<PrivateRouteForUser />}> */}
+        <Route path="/account" element={<Account />} />
+        {/* </Route> */}
+        {/* <Route element={<PrivateRouteForAdmin />}> */}
+        <Route path="/admin-place" element={<AdminPlace />} />
+        {/* </Route> */}
+        {/* <Route element={<PrivateRouteForUser />}> */}
+        <Route path="/admin-document" element={<AdminDocuments />} />
+        {/* </Route> */}
+        {/* <Route element={<PrivateRouteForAdmin />}> */}
+        <Route path="/admin-register" element={<AdminRegister />} />
+        {/* </Route> */}
+        {/* <Route element={<PrivateRouteForAdmin />}> */}
+        <Route path="/messages" element={<AdminMessages />} />
+        {/* </Route> */}
       </Routes>
     </div>
   );

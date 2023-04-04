@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: minhdh-react
+    networks:
+      - minhdh-network
+    tty: true
+    stdin_open: true
+    build: ./docker
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumes:
+      - .:/app
+    environment:
+      - REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
+
+networks:
+  minhdh-network:
+    driver: bridge
