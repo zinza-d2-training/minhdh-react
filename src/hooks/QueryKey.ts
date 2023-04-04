@@ -15,5 +15,7 @@ export enum QueryKey {
   getAllUsers = 'getAllUsers',
   getRegistration = 'getRegistration',
   getAllVaccine = 'getAllVaccine',
-  getAllDocuments = 'getAllDocuments'
+  getAllDocuments = 'getAllDocuments',
+  getChat = 'getChat',
+  getMessages = 'getMessages'
 }

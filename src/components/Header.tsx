@@ -343,27 +343,27 @@ const Header = () => {
               </Typography>
             </Link>
           </ItemDocs>
-          {/* {isAdmin === 1 && ( */}
-          <ItemDocs>
-            <Link to="/messages" style={{ textDecoration: 'none' }}>
-              <Typography
-                variant="body1"
-                sx={{
-                  width: '71px',
-                  height: '24px',
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: '500',
-                  fontSize: '16px',
-                  lineHeight: '150%',
-                  letterSpacing: '-0.04px',
-                  color: '#FFFFFF'
-                }}>
-                Tin nhắn
-              </Typography>
-            </Link>
-          </ItemDocs>
-          {/* )} */}
+          {isAdmin === 1 && (
+            <ItemDocs>
+              <Link to="/messages" style={{ textDecoration: 'none' }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    width: '71px',
+                    height: '24px',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    fontSize: '16px',
+                    lineHeight: '150%',
+                    letterSpacing: '-0.04px',
+                    color: '#FFFFFF'
+                  }}>
+                  Tin nhắn
+                </Typography>
+              </Link>
+            </ItemDocs>
+          )}
           {currentUser !== null ? (
             <ItemUser>
               <Link to="/account">

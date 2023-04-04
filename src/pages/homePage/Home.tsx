@@ -7,12 +7,17 @@ import InjectionSite from './componentsHome/InjectionSite';
 import * as React from 'react';
 import { useLogin } from '../../hooks/useLogin';
 import BoxChat from './componentsHome/BoxChat';
+import { useAppSelector } from '../../store';
+import { selectIsAdmin, selectUser } from '../../features/auth/authSlice';
 
 const HomePage = styled.div`
 position: relative
 `;
 
 const Home = () => {
+  const isAdmin = useAppSelector(selectIsAdmin);
+  const user = useAppSelector(selectUser);
+
   useLogin();
   return (
     <HomePage>
@@ -21,7 +26,9 @@ const Home = () => {
       <ChartOne />
       <InjectionSite />
       <Footer />
-      <BoxChat />
+      {user && isAdmin !== 1 && (
+        <BoxChat />
+      )}
     </HomePage>
   );
 };
