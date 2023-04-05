@@ -17,5 +17,7 @@ export enum QueryKey {
   getAllVaccine = 'getAllVaccine',
   getAllDocuments = 'getAllDocuments',
   getChat = 'getChat',
-  getMessages = 'getMessages'
+  getMessages = 'getMessages',
+  getChatById = 'getChatById',
+  getUserByChatId = 'getUserByChatId'
 }

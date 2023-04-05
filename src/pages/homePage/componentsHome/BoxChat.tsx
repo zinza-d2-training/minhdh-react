@@ -6,15 +6,15 @@ import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import styled from '@emotion/styled';
-import { BsEmojiSmileFill } from 'react-icons/bs'
-import Picker from "emoji-picker-react";
+import { BsEmojiSmileFill } from 'react-icons/bs';
+import Picker from 'emoji-picker-react';
 import { AttachFile, Mic } from '@mui/icons-material';
 import animationData from './animation/typing.json';
 import CircularProgress from '@mui/material/CircularProgress';
-import { v4 as uuidv4 } from 'uuid'
-import Lottie from "react-lottie";
+import { v4 as uuidv4 } from 'uuid';
+import Lottie from 'react-lottie';
 import Message from './Message';
-import io from "socket.io-client";
+import io from 'socket.io-client';
 import { useMessageCreateMutation } from './hooks/useMessageCreateMutation';
 import { useCurrentUser } from '../../../hooks/useCurrentUser';
 import api from '../../../utils/axios/instance';
@@ -49,67 +49,65 @@ export interface MessageCreate {
   chat_id: number | undefined;
 }
 
-
 const Header = styled(Stack)``;
 
 const Footer = styled(Stack)`
-width: 310px;
-    height: 55px;
-    background: #ededed;
-    padding: 0 10px;
-    &  > * {
-        margin: 5px;
-        color: #919191;
-    }
-    border-radius: 0 0 10px 10px;
+  width: 310px;
+  height: 55px;
+  background: #ededed;
+  padding: 0 10px;
+  & > * {
+    margin: 5px;
+    color: #919191;
+  }
+  border-radius: 0 0 10px 10px;
 `;
 
 const Emo = styled(Box)`
-      position: relative;
-      svg {
-        font-size: 1rem;
-        color: #ccc;
-        cursor: pointer;
-          }
+  position: relative;
+  svg {
+    font-size: 1rem;
+    color: #ccc;
+    cursor: pointer;
+  }
 `;
 
 const PickEmo = styled(Box)`
-position: absolute;
-bottom: 120%;
-left: 0;
+  position: absolute;
+  bottom: 120%;
+  left: 0;
 `;
 
 const ClipIcon = styled(AttachFile)`
-    transform: rotate(40deg);
-    cursor: pointer
+  transform: rotate(40deg);
+  cursor: pointer;
 `;
 
 const InputField = styled(InputBase)`
-    padding: 10px;
-    font-size: 14px;
-    height: 20px;
+  padding: 10px;
+  font-size: 14px;
+  height: 20px;
 `;
 
 const BoxLoading = styled(Box)`
-    display: flex;
-    height: 300px;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  height: 300px;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Component = styled(Box)`
-    height: 300px;
-    overflow-y: scroll;
-    border-left: 1px solid #ccc;
-    background-color: white
+  height: 300px;
+  overflow-y: scroll;
+  border-left: 1px solid #ccc;
+  background-color: white;
 `;
 
 const Container = styled(Box)`
-    padding: 1px 10px;
+  padding: 1px 10px;
 `;
 
-const ContainerType = styled(Box)`
-`;
+const ContainerType = styled(Box)``;
 
 let socket: any;
 const BoxChat = () => {
@@ -126,40 +124,34 @@ const BoxChat = () => {
   const [messages, setMessages] = useState([]);
   const [load, setLoad] = useState(true);
 
-  // const messagesQuery = useMessagesQuery(user?.chat_id)
-  // const messages = useMemo(() => {
-  //   return messagesQuery.data ?? [];
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [messagesQuery.data, incomingMessage])
-
   useEffect(() => {
     const getMess = async (id: number | undefined) => {
       const res = await api.get(`/messages/${id}`);
       setMessages(res.data);
-    }
-    getMess(user?.chat_id)
+    };
+    getMess(user?.chat_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [load, incomingMessage])
+  }, [load, incomingMessage]);
 
   const messageCreateMutation = useMessageCreateMutation();
 
   useEffect(() => {
-    socket = io("http://localhost:8001");
+    socket = io('http://localhost:8001');
     // socket.on("typing", () => setIsTyping(true));
     // socket.on("stop typing", () => setIsTyping(false));
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping, image]);
 
   useEffect(() => {
     socket.on('message received from admin', (data: any) => {
       setIncomingMessage({
-        ...data,
+        ...data
       });
-    })
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -170,8 +162,8 @@ const BoxChat = () => {
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
+      preserveAspectRatio: 'xMidYMid slice'
+    }
   };
 
   const handleEmojiPickerHideShow = () => {
@@ -195,13 +187,13 @@ const BoxChat = () => {
   const onFileChange = (e: any) => {
     setValue(e.target.files[0].name);
     setFile(e.target.files[0]);
-  }
+  };
 
   const typingHandler = (e: any) => {
     setValue(e.target.value);
     if (!typing) {
       setTyping(true);
-      socket.emit("typing", 1);
+      socket.emit('typing', 1);
     }
     let lastTypingTime = new Date().getTime();
     var timerLength = 6000;
@@ -209,7 +201,7 @@ const BoxChat = () => {
       var timeNow = new Date().getTime();
       var timeDiff = timeNow - lastTypingTime;
       if (timeDiff >= timerLength && typing) {
-        socket.emit("stop typing", 1);
+        socket.emit('stop typing', 1);
         setTyping(false);
       }
     }, timerLength);
@@ -240,7 +232,7 @@ const BoxChat = () => {
         receiver_id: 1,
         text: '',
         type: '',
-        chat_id: user?.chat_id,
+        chat_id: user?.chat_id
       };
       // socket.current.emit("stop typing", 1)
       if (!file) {
@@ -256,9 +248,9 @@ const BoxChat = () => {
       setValue('');
       setFile(undefined);
       setImage('');
-      setShowEmojiPicker(false)
+      setShowEmojiPicker(false);
     }
-  }
+  };
 
   return (
     <Stack position="fixed" bottom="5%" right="5%">
@@ -281,7 +273,14 @@ const BoxChat = () => {
         transition>
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Stack direction="column" alignItems="center" justifyContent="center">
+            <Stack
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
+              sx={{
+                boxShadow:
+                  'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px'
+              }}>
               <Header
                 direction="row"
                 spacing={2}
@@ -320,44 +319,48 @@ const BoxChat = () => {
                   </BoxLoading>
                 ) : (
                   <Component>
-                    {
-                      messages && messages.map((message) => (
+                    {messages &&
+                      messages.map((message) => (
                         <Container ref={scrollRef} key={uuidv4()}>
                           <Message message={message} />
                         </Container>
-                      ))
-                    }
+                      ))}
                     {isTyping ? (
                       <ContainerType ref={scrollRef}>
                         <Lottie
                           options={defaultOptions}
                           width={30}
-                          style={{ marginBottom: '10px', marginLeft: '20px', marginTop: "10px" }}
+                          style={{
+                            marginBottom: '10px',
+                            marginLeft: '20px',
+                            marginTop: '10px'
+                          }}
                         />
                       </ContainerType>
                     ) : (
                       <></>
-                    )
-                    }
+                    )}
                   </Component>
                 )}
                 <Footer direction="row" alignItems="center" spacing={1}>
                   <Emo>
                     <BsEmojiSmileFill onClick={handleEmojiPickerHideShow} />
                     <PickEmo>
-                      {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
+                      {showEmojiPicker && (
+                        <Picker onEmojiClick={handleEmojiClick} />
+                      )}
                     </PickEmo>
                   </Emo>
                   <label htmlFor="fileInput">
                     <ClipIcon />
                   </label>
                   <input
-                    type='file'
+                    type="file"
                     id="fileInput"
                     style={{ display: 'none' }}
                     onChange={(e) => onFileChange(e)}
                   />
-                  <div className='inp'>
+                  <div className="inp">
                     <InputField
                       placeholder="Type a message"
                       inputProps={{ 'aria-label': 'search' }}
@@ -373,7 +376,7 @@ const BoxChat = () => {
           </Fade>
         )}
       </Popper>
-    </Stack >
+    </Stack>
   );
 };
 

@@ -12,7 +12,7 @@ import iconPpt from './img/ppt.png';
 import iconZip from './img/zip.png';
 
 const Wrapper = styled(Box)`
-    background: #FFFFFF;
+    background: #ccc;
     padding: 5px;
     max-width: 50%;
     width: fit-content;

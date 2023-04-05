@@ -51,8 +51,8 @@ const MenuItemHeader = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 180px;
-  gap: 24px;
+  margin-left: 250px;
+  gap: 15px;
   height: 50px;
 `;
 
@@ -152,7 +152,7 @@ const ItemLogout = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0px;
-  width: 145px;
+  width: 120px;
   height: 50px;
   & .text-logout {
     text-decoration: none;
@@ -177,7 +177,7 @@ const ButtonUser = styled(Button)`
   align-items: center;
   padding: 8px 10px;
   gap: 4px;
-  width: 145px;
+  width: 120px;
   height: 40px;
   background: #ffffff;
   border-radius: 8px 8px 8px 0px;
@@ -189,8 +189,7 @@ const ButtonLogout = styled(LoadingButton)`
   justify-content: center;
   align-items: center;
   padding: 8px 10px;
-  gap: 4px;
-  width: 130px;
+  width: 120px;
   height: 40px;
   background: red;
   border-radius: 8px 8px 8px 0px;
