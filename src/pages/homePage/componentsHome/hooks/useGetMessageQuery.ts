@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { QueryKey } from '../../../../hooks/QueryKey';
 import api from '../../../../utils/axios/instance';
-import { Message } from '../BoxChat';
+import { MessageInterface } from '../BoxChat';
 
 export const getMessages = async (id?: number) => {
-  const res = await api.get<Message[]>(`/messages/${id}`);
+  const res = await api.get<MessageInterface[]>(`/messages/${id}`);
   return res.data;
 };
 

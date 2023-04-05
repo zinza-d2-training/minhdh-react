@@ -11,6 +11,7 @@ export interface User {
   gender: string;
   ward_id: number;
   reset_token: string;
+  chat_id: number;
 }
 
 export interface AuthState {

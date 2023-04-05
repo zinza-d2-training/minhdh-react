@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { GetApp as GetAppIcon } from '@mui/icons-material';
 import moment from 'moment/moment';
@@ -14,7 +14,7 @@ import iconZip from './img/zip.png';
 const Wrapper = styled(Box)`
     background: #FFFFFF;
     padding: 5px;
-    max-width: 60%;
+    max-width: 50%;
     width: fit-content;
     display: flex;
     border-radius: 10px;
@@ -24,7 +24,7 @@ const Wrapper = styled(Box)`
 const Own = styled(Box)`
     background: #dcf8c6;
     padding: 5px;
-    max-width: 60%;
+    max-width: 50%;
     width: fit-content;
     margin-left: auto;
     display: flex;
@@ -33,12 +33,12 @@ const Own = styled(Box)`
 `;
 
 const Text = styled(Typography)`
-    font-size: 10px;
-    padding: 0 15px 0 5px;
+    font-size: 14px;
+    padding: 0 20px 0 5px;
 `;
 
 const Time = styled(Typography)`
-    font-size: 7px;
+    font-size: 10px;
     color: #919191;
     margin-top: 6px;
     word-break: keep-all;
@@ -117,48 +117,42 @@ const TextMessage: FC<MyProps> = ({ message }) => {
 }
 
 const ImageMessage: FC<MyProps> = ({ message }) => {
-  const { preview, setPreview, setImagePreview } = useContext(AccountContext);
 
-  const handlePreviewImg = (e: any) => {
-    e.preventDefault();
-    setPreview(true);
-    setImagePreview(message.text);
-  }
   return (
     <div style={{ position: 'relative' }}>
       {
         message?.text?.includes('.pdf') ?
           <div style={{ display: 'flex' }}>
             <img src={iconPDF} alt="pdf-icon" style={{ width: 80 }} />
-            <Typography style={{ fontSize: 14 }} >{message.text.split("/").pop()}</Typography>
+            <Typography style={{ fontSize: 10 }} >{message.text.split("/").pop()}</Typography>
           </div>
           :
           message?.text?.includes('.docx') ?
             <div style={{ display: 'flex' }}>
               <img src={iconWord} alt="docx-icon" style={{ width: 80 }} />
-              <Typography style={{ fontSize: 14, marginLeft: 10 }} >{message.text.split("/").pop()}</Typography>
+              <Typography style={{ fontSize: 10, marginLeft: 5 }} >{message.text.split("/").pop()}</Typography>
             </div>
             :
             message?.text?.includes('.xlsx') ?
               <div style={{ display: 'flex' }}>
                 <img src={iconExcel} alt="xlsx-icon" style={{ width: 80 }} />
-                <Typography style={{ fontSize: 14, marginLeft: 10 }} >{message.text.split("/").pop()}</Typography>
+                <Typography style={{ fontSize: 10, marginLeft: 5 }} >{message.text.split("/").pop()}</Typography>
               </div>
               :
               message?.text?.includes('.pptx') ?
                 <div style={{ display: 'flex' }}>
                   <img src={iconPpt} alt="pptx-icon" style={{ width: 80 }} />
-                  <Typography style={{ fontSize: 14, marginLeft: 10 }} >{message.text.split("/").pop()}</Typography>
+                  <Typography style={{ fontSize: 10, marginLeft: 5 }} >{message.text.split("/").pop()}</Typography>
                 </div>
                 :
                 message?.text?.includes('.zip') ?
                   <div style={{ display: 'flex' }}>
                     <img src={iconZip} alt="zip-icon" style={{ width: 80 }} />
-                    <Typography style={{ fontSize: 14, marginLeft: 10 }} >{message.text.split("/").pop()}</Typography>
+                    <Typography style={{ fontSize: 10, marginLeft: 5 }} >{message.text.split("/").pop()}</Typography>
                   </div>
                   :
                   message?.text?.includes('.mp4') ?
-                    <video style={{ width: 400, height: '100%' }} src={message.text} controls />
+                    <video style={{ width: 400, height: '100%' }} src={message.text} datatype="video/mp4" controls />
                     :
                     message?.text?.includes('.m4a') ?
                       <audio controls>
@@ -166,7 +160,7 @@ const ImageMessage: FC<MyProps> = ({ message }) => {
                         <source src={message.text} type="audio/mpeg" />
                       </audio>
                       :
-                      <img onClick={handlePreviewImg} style={{ width: 300, height: '100%', objectFit: 'cover', cursor: 'pointer' }} src={message.text} alt={message.text} />
+                      <img style={{ width: 300, height: '100%', objectFit: 'cover', cursor: 'pointer' }} src={message.text} alt={message.text} />
       }
       <Time style={{ position: 'absolute', bottom: 0, right: 0 }}>
         <GetAppIcon

@@ -1,0 +1,19 @@
+.personItem {
+    height: 45px;
+    display: flex;
+    padding: 13px 0;
+    cursor: pointer;
+    /* background-color: blue; */
+}
+
+.personItem:hover {
+    background-color: rgb(227, 227, 227);
+}
+
+.personItemNotSelect {
+    height: 45px;
+    display: flex;
+    padding: 13px 0;
+    cursor: pointer;
+    background-color: red;
+}
